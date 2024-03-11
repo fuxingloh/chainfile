@@ -1,0 +1,22 @@
+{
+  "name": "karfia",
+  "version": "0.0.0",
+  "private": false,
+  "license": "MPL 2.0",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "lint-staged": {
+    "*": [
+      "prettier --write --ignore-unknown"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@workspace/tsconfig": "workspace:*"
+  }
+}
