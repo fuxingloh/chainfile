@@ -1,0 +1,33 @@
+{
+  "$schema": "./node_modules/karfia-definition/index.json",
+  "id": "eip155:31337/hardhat:2.19.4",
+  "caip2": "eip155:31337",
+  "name": "Hardhat",
+  "containers": {
+    "hardhat": {
+      "image": "docker.io/karfia/eip155-31337:hardhat-2.19.4",
+      "source": "https://github.com/fuxingloh/karfia/tree/main/definitions/eip155-31337/hardhat.Dockerfile",
+      "resources": {
+        "cpu": 0.25,
+        "memory": 256
+      },
+      "endpoints": {
+        "rpc": {
+          "port": 8545,
+          "protocol": "HTTP JSON-RPC 2.0",
+          "probes": {
+            "readiness": {
+              "params": [],
+              "method": "eth_blockNumber",
+              "match": {
+                "result": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

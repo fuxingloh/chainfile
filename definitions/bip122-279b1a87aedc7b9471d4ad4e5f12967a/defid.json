@@ -1,0 +1,82 @@
+{
+  "$schema": "./node_modules/karfia-definition/index.json",
+  "id": "bip122:279b1a87aedc7b9471d4ad4e5f12967a/defichain:4.0.1",
+  "caip2": "bip122:279b1a87aedc7b9471d4ad4e5f12967a",
+  "name": "DeFiChain Mainnet",
+  "environment": {
+    "RPC_USER": {
+      "type": "RandomBytes",
+      "length": 16,
+      "encoding": "hex"
+    },
+    "RPC_PASSWORD": {
+      "type": "RandomBytes",
+      "length": 16,
+      "encoding": "hex"
+    }
+  },
+  "containers": {
+    "defid": {
+      "image": "docker.io/defi/defichain@sha256:ddb70eabe4d7337f570e779378e7c453c5ec2a3ee7c3c050f285edf24789eb5a",
+      "source": "https://github.com/DeFiCh/ain",
+      "endpoints": {
+        "p2p": {
+          "port": 8555
+        },
+        "rpc": {
+          "port": 8554,
+          "protocol": "HTTP JSON-RPC 2.0",
+          "authorization": {
+            "type": "HttpBasic",
+            "username": {
+              "key": "RPC_USER"
+            },
+            "password": {
+              "key": "RPC_PASSWORD"
+            }
+          },
+          "probes": {
+            "readiness": {
+              "method": "getblockchaininfo",
+              "params": [],
+              "match": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "blocks": {
+                      "type": "number"
+                    }
+                  },
+                  "required": ["blocks"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "resources": {
+        "cpu": 1,
+        "memory": 4096
+      },
+      "command": [
+        "sh",
+        "-c",
+        "defid -maxconnections=512 -printtoconsole -rpcallowip=0.0.0.0/0 -rpcbind=0.0.0.0 -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} -txindex=1 -acindex=1"
+      ],
+      "environment": {
+        "RPC_USER": {
+          "key": "RPC_USER"
+        },
+        "RPC_PASSWORD": {
+          "key": "RPC_PASSWORD"
+        }
+      },
+      "volumes": {
+        "persistent": {
+          "paths": ["/data"],
+          "size": "100G"
+        }
+      }
+    }
+  }
+}

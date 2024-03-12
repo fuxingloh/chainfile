@@ -1,0 +1,10 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "pipeline": {
+    "build": {
+      "inputs": ["Dockerfile", "hardhat.config.js", "hardhat.package.json"],
+      "dependsOn": ["^build"]
+    }
+  }
+}

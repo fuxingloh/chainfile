@@ -1,0 +1,38 @@
+{
+  "name": "karfia-definition",
+  "version": "0.0.0",
+  "private": false,
+  "description": "Karfia definition defines the instructions on how to package complex blockchain nodes into a Container that can be easily deployed and managed on Container-capable platforms such as Kubernetes, Compose, and ECS.",
+  "license": "MPL 2.0",
+  "main": "index.json",
+  "types": "index.d.ts",
+  "files": [
+    "index.json",
+    "index.d.ts",
+    "schema.js",
+    "schema.d.ts",
+    "schema.d.ts.map"
+  ],
+  "scripts": {
+    "build": "json2ts index.json > index.d.ts && tsc --project tsconfig.build.json",
+    "clean": "rm -f index.d.ts && tsc --build --clean",
+    "lint": "eslint ."
+  },
+  "lint-staged": {
+    "*": [
+      "prettier --write --ignore-unknown"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
+  },
+  "devDependencies": {
+    "@workspace/tsconfig": "workspace:*",
+    "json-schema-to-typescript": "^13.1.2"
+  }
+}

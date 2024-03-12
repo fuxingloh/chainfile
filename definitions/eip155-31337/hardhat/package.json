@@ -1,0 +1,8 @@
+{
+  "name": "@karfia/eip155-31337-hardhat",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "docker build --tag docker.io/karfia/eip155-31337:hardhat-2.19.4 ."
+  }
+}
