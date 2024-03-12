@@ -1,5 +1,8 @@
 {
   "name": "karfia-core",
   "version": "0.0.0",
-  "private": false
+  "private": false,
+  "repository": {
+    "url": "git+https://github.com/fuxingloh/karfia"
+  }
 }

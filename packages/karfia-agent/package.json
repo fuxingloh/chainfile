@@ -2,7 +2,9 @@
   "name": "karfia-agent",
   "version": "0.0.0",
   "private": false,
-  "license": "MPL-2.0",
+  "repository": {
+    "url": "git+https://github.com/fuxingloh/karfia"
+  },
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "build:docker": "docker build -t docker.io/karfia/karfia-agent:$(node -p \"require('./package.json').version\") -f Dockerfile ../../",
@@ -33,5 +35,6 @@
   "devDependencies": {
     "@workspace/jest-preset": "workspace:*",
     "@workspace/tsconfig": "workspace:*"
-  }
+  },
+  "licnese": "MPL-2.0"
 }

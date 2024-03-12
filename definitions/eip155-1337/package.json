@@ -2,7 +2,9 @@
   "name": "@karfia/eip155-1337",
   "version": "0.0.0",
   "private": false,
-  "license": "MPL-2.0",
+  "repository": {
+    "url": "git+https://github.com/fuxingloh/karfia"
+  },
   "scripts": {
     "lint": "eslint .",
     "test": "jest"
@@ -24,5 +26,6 @@
     "@workspace/tsconfig": "workspace:*",
     "karfia-definition": "workspace:*",
     "karfia-testcontainers": "workspace:*"
-  }
+  },
+  "licnese": "MPL-2.0"
 }
