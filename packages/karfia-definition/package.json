@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": false,
   "description": "Karfia definition defines the instructions on how to package complex blockchain nodes into a Container that can be easily deployed and managed on Container-capable platforms such as Kubernetes, Compose, and ECS.",
-  "license": "MPL 2.0",
+  "license": "MPL-2.0",
   "main": "index.json",
   "types": "index.d.ts",
   "files": [

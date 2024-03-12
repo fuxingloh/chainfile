@@ -2,7 +2,7 @@
   "name": "@karfia/bip122-000000000019d6689c085ae165831e93",
   "version": "0.0.0",
   "private": false,
-  "license": "MPL 2.0",
+  "license": "MPL-2.0",
   "scripts": {
     "lint": "eslint .",
     "test": "jest"
