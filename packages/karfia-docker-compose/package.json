@@ -5,6 +5,7 @@
   "repository": {
     "url": "git+https://github.com/fuxingloh/karfia"
   },
+  "license": "MIT",
   "bin": {
     "karfia-docker-compose": "./bin.js"
   },
@@ -41,6 +42,5 @@
     "@types/js-yaml": "^4.0.9",
     "@workspace/jest-preset": "workspace:*",
     "@workspace/tsconfig": "workspace:*"
-  },
-  "licnese": "MIT"
+  }
 }

@@ -2,6 +2,9 @@
   "name": "@karfia/bip122-0f9188f13cb7b2c71f2a335e3a4fc328",
   "version": "0.0.0",
   "private": false,
+  "repository": {
+    "url": "git+https://github.com/fuxingloh/karfia"
+  },
   "license": "MPL-2.0",
   "scripts": {
     "lint": "eslint .",

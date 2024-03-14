@@ -5,6 +5,7 @@
   "repository": {
     "url": "git+https://github.com/fuxingloh/karfia"
   },
+  "license": "MPL-2.0",
   "scripts": {
     "lint": "eslint .",
     "test": "jest"
@@ -22,11 +23,9 @@
     "preset": "@workspace/jest-preset"
   },
   "devDependencies": {
-    "@karfia/eip155-31337-hardhat": "workspace:*",
     "@workspace/jest-preset": "workspace:*",
     "@workspace/tsconfig": "workspace:*",
     "karfia-definition": "workspace:*",
     "karfia-testcontainers": "workspace:*"
-  },
-  "licnese": "MPL-2.0"
+  }
 }

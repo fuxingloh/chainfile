@@ -5,6 +5,7 @@
   "repository": {
     "url": "git+https://github.com/fuxingloh/karfia"
   },
+  "license": "MIT",
   "files": [
     "**/*.d.ts",
     "**/*.d.ts.map",
@@ -36,6 +37,5 @@
   "devDependencies": {
     "@workspace/jest-preset": "workspace:*",
     "@workspace/tsconfig": "workspace:*"
-  },
-  "licnese": "MIT"
+  }
 }

@@ -43,12 +43,12 @@ RUN pnpm turbo run build --filter=karfia-agent
 
 # Run agent
 FROM node:20-alpine AS runner
-RUN addgroup --system --gid 1001 karfia-agent && \
-    adduser --system --uid 1001 karfia-agent
-USER karfia-agent
+RUN addgroup --system --gid 1001 karfia && \
+    adduser --system --uid 1001 karfia
+USER karfia
 
 EXPOSE 1194
 WORKDIR /app/packages/karfia-agent
 
-COPY --from=builder --chown=karfia-agent:karfia-agent /app /app
+COPY --from=builder --chown=karfia:karfia /app /app
 CMD node "server.js"

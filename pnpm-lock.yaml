@@ -128,9 +128,6 @@ importers:
 
   definitions/eip155-31337:
     devDependencies:
-      '@karfia/eip155-31337-hardhat':
-        specifier: workspace:*
-        version: link:hardhat
       '@workspace/jest-preset':
         specifier: workspace:*
         version: link:../../workspace/jest-preset
@@ -143,10 +140,6 @@ importers:
       karfia-testcontainers:
         specifier: workspace:*
         version: link:../../packages/karfia-testcontainers
-
-  definitions/eip155-31337/hardhat: {}
-
-  packages/karfia: {}
 
   packages/karfia-agent:
     dependencies:
@@ -175,10 +168,6 @@ importers:
       '@workspace/tsconfig':
         specifier: workspace:*
         version: link:../../workspace/tsconfig
-
-  packages/karfia-cdk8s: {}
-
-  packages/karfia-core: {}
 
   packages/karfia-definition:
     dependencies:

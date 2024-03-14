@@ -1,6 +1,4 @@
 packages:
-  - 'definitions'
   - 'definitions/*'
-  - 'definitions/*/*'
   - 'packages/*'
   - 'workspace/*'

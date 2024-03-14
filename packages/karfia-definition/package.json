@@ -6,6 +6,7 @@
   "repository": {
     "url": "git+https://github.com/fuxingloh/karfia"
   },
+  "license": "MPL-2.0",
   "main": "index.json",
   "types": "index.d.ts",
   "files": [
@@ -36,6 +37,5 @@
   "devDependencies": {
     "@workspace/tsconfig": "workspace:*",
     "json-schema-to-typescript": "^13.1.2"
-  },
-  "licnese": "MPL-2.0"
+  }
 }

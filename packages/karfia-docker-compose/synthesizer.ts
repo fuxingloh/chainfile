@@ -100,7 +100,7 @@ export class Synthesizer {
     return {
       'karfia-agent': {
         container_name: 'karfia-agent-${KARFIA_DEPLOYMENT_ID}',
-        image: `docker.io/karfia/karfia-agent:${version}`,
+        image: `ghcr.io/fuxingloh/karfia-agent:${version}`,
         ports: ['0:1194'],
         environment: {
           // Docker compose automatically evaluate environment literals here

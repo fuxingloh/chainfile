@@ -5,8 +5,8 @@
   "name": "Hardhat",
   "containers": {
     "hardhat": {
-      "image": "docker.io/karfia/eip155-31337:hardhat-2.19.4",
-      "source": "https://github.com/fuxingloh/karfia/tree/main/definitions/eip155-31337/hardhat.Dockerfile",
+      "image": "ghcr.io/fuxingloh/hardhat-container:2.19.4",
+      "source": "https://github.com/fuxingloh/hardhat-container",
       "resources": {
         "cpu": 0.25,
         "memory": 256
