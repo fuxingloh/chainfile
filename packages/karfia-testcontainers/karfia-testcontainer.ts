@@ -56,6 +56,7 @@ export class KarfiaTestContainer extends AbstractStartedContainer {
     const hostPort = this.getMappedPort(endpoint.port);
     const hostEndpoint = `${scheme}://${this.getHost()}:${hostPort}${jsonRpc.path ?? ''}`;
     const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
       ...(jsonRpc.authorization ? this.getHttpAuthorizationHeaders(jsonRpc.authorization) : {}),
       ...(options.headers ?? {}),
     };

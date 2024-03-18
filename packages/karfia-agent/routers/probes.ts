@@ -134,6 +134,7 @@ function createProbeFunctionHttp(
   const scheme = endpoint.protocol.startsWith('HTTPS') ? 'https' : 'http';
   const url = `${scheme}://${containerName}:${endpoint.port}${probe.path ?? ''}`;
   const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
     ...(endpoint.authorization ? getHttpAuthorizationHeaders(endpoint.authorization) : {}),
   };
   const body = probe.body ? JSON.stringify(probe.body) : undefined;
@@ -180,6 +181,7 @@ function createProbeFunctionHttpJsonRpc(
   const url = `${scheme}://${containerName}:${endpoint.port}${endpoint.path ?? ''}`;
   const version = endpoint.protocol.endsWith('2.0') ? '2.0' : '1.0';
   const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
     ...(endpoint.authorization ? getHttpAuthorizationHeaders(endpoint.authorization) : {}),
   };
 
