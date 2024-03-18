@@ -11,7 +11,7 @@
     "build:docker": "docker build -t ghcr.io/fuxingloh/karfia-agent:$(node -p \"require('./package.json').version\") -f Dockerfile ../../",
     "clean": "tsc --build --clean",
     "lint": "eslint .",
-    "push:docker": "docker buildx build -t ghcr.io/fuxingloh/karfia-agent:$(node -p \"require('./package.json').version\") -f Dockerfile ../../ --output type=registry  --platform linux/amd64,linux/arm64",
+    "push:docker": "docker buildx build -t ghcr.io/fuxingloh/karfia-agent:$(node -p \"require('./package.json').version\") -f Dockerfile ../../ --output type=registry --platform linux/amd64,linux/arm64",
     "test": "jest --passWithNoTests"
   },
   "lint-staged": {

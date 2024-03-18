@@ -1,27 +1,27 @@
 {
   "$schema": "./node_modules/karfia-definition/index.json",
-  "id": "eip155:31337/hardhat:2.19.4",
-  "caip2": "eip155:31337",
-  "name": "Hardhat",
+  "id": "solana:test-validator/solana-test-validator:1.17.26",
+  "caip2": "solana:test-validator",
+  "name": "Solana Test Validator",
   "containers": {
-    "hardhat": {
-      "image": "ghcr.io/fuxingloh/hardhat-container:2.22.1",
-      "source": "https://github.com/fuxingloh/hardhat-container",
+    "solana-test-validator": {
+      "image": "ghcr.io/fuxingloh/solana-container:1.17.26",
+      "source": "https://github.com/fuxingloh/solana-container",
       "resources": {
         "cpu": 0.25,
         "memory": 256
       },
       "endpoints": {
         "rpc": {
-          "port": 8545,
+          "port": 8899,
           "protocol": "HTTP JSON-RPC 2.0",
           "probes": {
             "readiness": {
               "params": [],
-              "method": "eth_blockNumber",
+              "method": "getBlockHeight",
               "match": {
                 "result": {
-                  "type": "string"
+                  "type": "number"
                 }
               }
             }

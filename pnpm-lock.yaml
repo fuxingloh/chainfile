@@ -141,6 +141,21 @@ importers:
         specifier: workspace:*
         version: link:../../packages/karfia-testcontainers
 
+  definitions/solana-test-validator:
+    devDependencies:
+      '@workspace/jest-preset':
+        specifier: workspace:*
+        version: link:../../workspace/jest-preset
+      '@workspace/tsconfig':
+        specifier: workspace:*
+        version: link:../../workspace/tsconfig
+      karfia-definition:
+        specifier: workspace:*
+        version: link:../../packages/karfia-definition
+      karfia-testcontainers:
+        specifier: workspace:*
+        version: link:../../packages/karfia-testcontainers
+
   packages/karfia-agent:
     dependencies:
       '@trpc/server':

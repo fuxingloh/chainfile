@@ -1,0 +1,31 @@
+{
+  "name": "@karfia/solana-test-validator",
+  "version": "0.0.0",
+  "private": false,
+  "repository": {
+    "url": "git+https://github.com/fuxingloh/karfia"
+  },
+  "license": "MPL-2.0",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "jest"
+  },
+  "lint-staged": {
+    "*": [
+      "prettier --write --ignore-unknown"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "jest": {
+    "preset": "@workspace/jest-preset"
+  },
+  "devDependencies": {
+    "@workspace/jest-preset": "workspace:*",
+    "@workspace/tsconfig": "workspace:*",
+    "karfia-definition": "workspace:*",
+    "karfia-testcontainers": "workspace:*"
+  }
+}
