@@ -14,9 +14,6 @@ permissions:
   contents: read
   packages: read
 
-env:
-  BUILDKIT_PROGRESS: plain
-
 jobs:
   build:
     name: Build

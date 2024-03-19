@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/karfia-definition/index.json",
-  "id": "solana:test-validator/solana-test-validator:1.17.26",
-  "caip2": "solana:test-validator",
+  "id": "solana:00000000000000000000000000000000/solana-test-validator:1.17.26",
+  "caip2": "solana:00000000000000000000000000000000",
   "name": "Solana Test Validator",
   "containers": {
     "solana-test-validator": {
