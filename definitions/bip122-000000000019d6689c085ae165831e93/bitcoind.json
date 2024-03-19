@@ -59,7 +59,7 @@
         "memory": 2048
       },
       "environment": {
-        "DISABLE_WALLET": "1",
+        "DISABLEWALLET": "1",
         "RPCUSER": {
           "key": "RPC_USER"
         },
