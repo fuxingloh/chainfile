@@ -38,7 +38,6 @@ COPY --from=pruner /app/out/full/ .
 # To relink dependencies with ./bin links
 RUN pnpm install --frozen-lockfile --offline
 
-ARG PACKAGE_PATH
 RUN pnpm turbo run build --filter=karfia-agent
 
 # Run agent
