@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "clipanion": "3.2.1",
-    "dotenv-expand": "^5.1.0",
+    "dotenv-expand": "^11.0.6",
     "js-yaml": "^4.1.0",
     "karfia-definition": "workspace:^"
   },

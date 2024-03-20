@@ -206,8 +206,8 @@ importers:
         specifier: 3.2.1
         version: 3.2.1(typanion@3.14.0)
       dotenv-expand:
-        specifier: ^5.1.0
-        version: 5.1.0
+        specifier: ^11.0.6
+        version: 11.0.6
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0
@@ -2351,8 +2351,16 @@ packages:
     dependencies:
       esutils: 2.0.3
 
-  /dotenv-expand@5.1.0:
-    resolution: {integrity: sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==}
+  /dotenv-expand@11.0.6:
+    resolution: {integrity: sha512-8NHi73otpWsZGBSZwwknTXS5pqMOrk9+Ssrna8xCaxkzEpU9OTf9R5ArQGVw03//Zmk9MOwLPng9WwndvpAJ5g==}
+    engines: {node: '>=12'}
+    dependencies:
+      dotenv: 16.4.5
+    dev: false
+
+  /dotenv@16.4.5:
+    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
+    engines: {node: '>=12'}
     dev: false
 
   /electron-to-chromium@1.4.699:
