@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
 
-      - uses: fuxingloh/turbo-plan@v1
+      - uses: fuxingloh/turbo-plan@098f9436e9453dd3aa861ebac72c4b9bc17dca63 # v1
         id: plan
         with:
           task: test
