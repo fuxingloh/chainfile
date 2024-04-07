@@ -234,8 +234,8 @@ importers:
         specifier: workspace:^
         version: link:../karfia-docker-compose
       testcontainers:
-        specifier: ^10.7.2
-        version: 10.7.2
+        specifier: ^10.8.1
+        version: 10.8.1
     devDependencies:
       '@workspace/jest-preset':
         specifier: workspace:*
@@ -5173,8 +5173,8 @@ packages:
       minimatch: 3.1.2
     dev: true
 
-  /testcontainers@10.7.2:
-    resolution: {integrity: sha512-7d+LVd/4YKp/cutiVMLL5cnj/8p8oYELAVRRyNUM4FyUDz1OLQuwW868nDl7Vd1ZAQxzGeCR+F86FlR9Yw9fMA==}
+  /testcontainers@10.8.1:
+    resolution: {integrity: sha512-2Kzeu3UfnILkhpdz2+YDu1FBFerAusdMCsltErBCJouP5j5xuxrV8BHxhlDt0xsJdM8YnhHgA2B32LmDr5AToA==}
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 3.3.26
