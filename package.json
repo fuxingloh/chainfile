@@ -16,7 +16,7 @@
     "@jest/globals": "^29.7.0",
     "@swc/core": "^1.4.12",
     "@swc/jest": "^0.2.36",
-    "@types/node": "^20.11.29",
+    "@types/node": "^20.11.30",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/prettier-config": "workspace:*",
     "eslint": "^8.57.0",
@@ -28,7 +28,7 @@
     "typescript": "5.3.3",
     "wait-for-expect": "^3.0.2"
   },
-  "packageManager": "pnpm@8.15.5",
+  "packageManager": "pnpm@8.15.6",
   "engines": {
     "node": "^20 <21",
     "pnpm": "^8 <9"
