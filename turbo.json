@@ -10,9 +10,7 @@
       "dependsOn": ["^build"]
     },
     "build:docker": {
-      "inputs": ["Dockerfile", "tsconfig.json", "tsconfig.build.json", "./**/*.ts"],
-      "outputs": [],
-      "dependsOn": []
+      "cache": false
     },
     "push:docker": {
       "cache": false
