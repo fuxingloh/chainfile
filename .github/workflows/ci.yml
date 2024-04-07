@@ -35,11 +35,11 @@ jobs:
     name: Test [plan]
     runs-on: ubuntu-latest
     outputs:
-      packages: ${{ steps.plan.outputs.result }}
+      packages: ${{ steps.plan.outputs.packages }}
     steps:
       - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
 
-      - uses: fuxingloh/turbo-plan@main
+      - uses: fuxingloh/turbo-plan@v1
         id: plan
         with:
           task: test
