@@ -27,13 +27,13 @@ export class KarfiaTestContainer extends AbstractStartedContainer {
     return this.getMappedPort(endpoint.port);
   }
 
-  async rpc(options: {
-    method: string;
-    params?: any[];
-    headers?: Record<string, string>;
-    endpoint?: string;
-  }): Promise<Response> {
-    const name = options.endpoint ?? 'rpc';
+  /**
+   * Get the host endpoint for a given name.
+   * @param {string} name of the endpoint to get
+   * @param {string} host to use, defaults to the container host,
+   * use `host.docker.internal` if you need to access the host from a container
+   */
+  getHostEndpoint(name: string, host = this.getHost()): string {
     const endpoint = this.container.endpoints?.[name];
     if (endpoint === undefined) {
       throw new Error(`Endpoint not found, please define a '${name}' endpoint to use rpc()`);
@@ -51,19 +51,31 @@ export class KarfiaTestContainer extends AbstractStartedContainer {
 
     const jsonRpc = endpoint as ContainerEndpointHttpJsonRpc;
     const scheme = jsonRpc.protocol.startsWith('HTTPS') ? 'https' : 'http';
-    const jsonRpcVersion = jsonRpc.protocol.endsWith('2.0') ? '2.0' : '1.0';
 
     const hostPort = this.getMappedPort(endpoint.port);
-    const hostEndpoint = `${scheme}://${this.getHost()}:${hostPort}${jsonRpc.path ?? ''}`;
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      ...(jsonRpc.authorization ? this.getHttpAuthorizationHeaders(jsonRpc.authorization) : {}),
-      ...(options.headers ?? {}),
-    };
+    return `${scheme}://${host}:${hostPort}${jsonRpc.path ?? ''}`;
+  }
+
+  async rpc(options: {
+    method: string;
+    params?: any[];
+    headers?: Record<string, string>;
+    endpoint?: string;
+  }): Promise<Response> {
+    const name = options.endpoint ?? 'rpc';
+    const hostEndpoint = this.getHostEndpoint(name);
+
+    const endpoint = this.container.endpoints?.[name];
+    const jsonRpc = endpoint as ContainerEndpointHttpJsonRpc;
+    const jsonRpcVersion = jsonRpc.protocol.endsWith('2.0') ? '2.0' : '1.0';
 
     return await fetch(hostEndpoint, {
       method: 'POST',
-      headers: headers,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(jsonRpc.authorization ? this.getHttpAuthorizationHeaders(jsonRpc.authorization) : {}),
+        ...(options.headers ?? {}),
+      },
       body: JSON.stringify({
         jsonrpc: jsonRpcVersion,
         method: options.method,

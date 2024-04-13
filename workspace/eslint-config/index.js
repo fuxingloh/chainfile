@@ -1,10 +1,9 @@
 const tseslint = require('typescript-eslint');
-const globals = require('globals');
 
 module.exports = tseslint.config(
   {
     languageOptions: {
-      globals: globals.node,
+      globals: require('globals').node,
     },
   },
   {
