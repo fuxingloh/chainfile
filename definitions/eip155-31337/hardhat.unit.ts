@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
-import { KarfiaAgentContainer, KarfiaTestContainer, KarfiaTestcontainers } from 'karfia-testcontainers';
+import { KarfiaAgentContainer, KarfiaContainer, KarfiaTestcontainers } from 'karfia-testcontainers';
 
 import definition from './hardhat.json';
 
@@ -15,7 +15,7 @@ describe('testcontainers', () => {
   });
 
   describe('hardhat', () => {
-    let hardhat: KarfiaTestContainer;
+    let hardhat: KarfiaContainer;
 
     beforeAll(() => {
       hardhat = testcontainers.getContainer('hardhat');

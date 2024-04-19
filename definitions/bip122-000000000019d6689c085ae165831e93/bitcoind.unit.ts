@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
-import { KarfiaAgentContainer, KarfiaTestContainer, KarfiaTestcontainers } from 'karfia-testcontainers';
+import { KarfiaAgentContainer, KarfiaContainer, KarfiaTestcontainers } from 'karfia-testcontainers';
 import waitForExpect from 'wait-for-expect';
 
 import definition from './bitcoind.json';
@@ -15,7 +15,7 @@ afterAll(async () => {
 });
 
 describe('bitcoind', () => {
-  let bitcoind: KarfiaTestContainer;
+  let bitcoind: KarfiaContainer;
 
   beforeAll(() => {
     bitcoind = testcontainers.getContainer('bitcoind');

@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
-import { KarfiaAgentContainer, KarfiaTestContainer, KarfiaTestcontainers } from 'karfia-testcontainers';
+import { KarfiaAgentContainer, KarfiaContainer, KarfiaTestcontainers } from 'karfia-testcontainers';
 
 import definition from './solana-test-validator.json';
 
@@ -15,7 +15,7 @@ describe('testcontainers', () => {
   });
 
   describe('solana-test-validator', () => {
-    let validator: KarfiaTestContainer;
+    let validator: KarfiaContainer;
 
     beforeAll(() => {
       validator = testcontainers.getContainer('solana-test-validator');

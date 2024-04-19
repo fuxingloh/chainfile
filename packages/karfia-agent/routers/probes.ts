@@ -8,8 +8,8 @@ import {
   ContainerEndpointHttpAuthorization,
   ContainerEndpointHttpJsonRpc,
   ContainerEndpointHttpRest,
+  EnvironmentReference,
   KarfiaDefinition,
-  KarfiaEnvironmentReference,
 } from 'karfia-definition';
 import { z } from 'zod';
 
@@ -236,7 +236,7 @@ function getHttpAuthorizationHeaders(auth: ContainerEndpointHttpAuthorization): 
  *
  * If the value is not a reference, it is returned as is.
  */
-function resolveValue(value: string | KarfiaEnvironmentReference): string {
+function resolveValue(value: string | EnvironmentReference): string {
   if (typeof value === 'string') {
     return value;
   }

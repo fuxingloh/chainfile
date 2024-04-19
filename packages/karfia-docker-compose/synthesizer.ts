@@ -1,10 +1,10 @@
 import { randomBytes } from 'node:crypto';
 
-import expand from 'dotenv-expand';
 import yaml from 'js-yaml';
-import { KarfiaContainer, KarfiaDefinition } from 'karfia-definition';
+import { Container, KarfiaDefinition } from 'karfia-definition';
 import { validate } from 'karfia-definition/schema';
 
+import { expand } from './environment';
 import { version } from './package.json';
 
 /**
@@ -24,30 +24,28 @@ export class Synthesizer {
 
   public synthEnv(): string {
     const env = expand({
-      parsed: {
-        KARFIA_DEPLOYMENT_ID: this.deploymentId,
-        ...Object.entries(this.definition.environment ?? {}).reduce(
-          (env, [key, factory]) => {
-            if (factory.type === 'RandomBytes') {
-              env[key] = randomBytes(factory.length).toString(factory.encoding);
-              return env;
-            }
-            if (factory.type === 'Expansion') {
-              env[key] = factory.value;
-              return env;
-            }
+      KARFIA_DEPLOYMENT_ID: this.deploymentId,
+      ...Object.entries(this.definition.environment ?? {}).reduce(
+        (env, [key, factory]) => {
+          if (factory.type === 'RandomBytes') {
+            env[key] = randomBytes(factory.length).toString(factory.encoding);
+            return env;
+          }
+          if (factory.type === 'Value') {
+            env[key] = factory.value;
+            return env;
+          }
 
-            // if (factory.type === 'Injection') {
-            // TODO: Prompt if CLI, inject if constructs.
-            //  To allow for simple configuration, e.g. Masternode Keys.
+          // if (factory.type === 'Injection') {
+          // TODO: Prompt if CLI, inject if constructs.
+          //  To allow for simple configuration, e.g. Masternode Keys.
 
-            // @ts-expect-error so that we error if we forget to handle a new factory type
-            throw new Error(`Unsupported Environment Factory: ${factory.type}`);
-          },
-          {} as Record<string, string>,
-        ),
-      },
-    }).parsed;
+          // @ts-expect-error so that we error if we forget to handle a new factory type
+          throw new Error(`Unsupported Environment Factory: ${factory.type}`);
+        },
+        {} as Record<string, string>,
+      ),
+    });
 
     return Object.entries(env ?? {})
       .map(([key, value]) => `${key}=${value}`)
@@ -89,7 +87,7 @@ export class Synthesizer {
       $schema: undefined,
     }).replaceAll('$', '$$$');
 
-    const karfiaEnvironmentMapping = Object.keys(this.definition.environment ?? {}).reduce(
+    const EnvironmentMapping = Object.keys(this.definition.environment ?? {}).reduce(
       (env, key) => {
         env[`KARFIA_ENVIRONMENT_${key}`] = `$\{${key}}`;
         return env;
@@ -106,7 +104,7 @@ export class Synthesizer {
           // Docker compose automatically evaluate environment literals here
           KARFIA_DEFINITION_JSON: definitionJson,
           KARFIA_DEPLOYMENT_ID: '${KARFIA_DEPLOYMENT_ID}',
-          ...karfiaEnvironmentMapping,
+          ...EnvironmentMapping,
         },
         volumes: [
           {
@@ -131,7 +129,7 @@ export class Synthesizer {
     //  Adding them would make the compose hard limit the resources of the host even if the host
     //  has more resources available.
 
-    function createPorts(container: KarfiaContainer): string[] {
+    function createPorts(container: Container): string[] {
       return Object.values(container.endpoints).map((endpoint) => {
         // TODO: Support Binding P2P Port Statically
         return `0:${endpoint.port}`;
@@ -144,7 +142,7 @@ export class Synthesizer {
       target: string;
     }
 
-    function createVolumes(container: KarfiaContainer): Volume[] {
+    function createVolumes(container: Container): Volume[] {
       const volumes: Volume[] = [
         {
           type: 'volume',

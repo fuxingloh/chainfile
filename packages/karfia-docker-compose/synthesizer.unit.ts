@@ -24,7 +24,7 @@ it('should synthesize with valid definition', async () => {
         encoding: 'hex',
       },
       URL: {
-        type: 'Expansion',
+        type: 'Value',
         value: 'http://${RPC_USER}:${RPC_PASSWORD}@ganache:8554',
       },
     },
@@ -98,4 +98,27 @@ it('should synthesize with valid definition', async () => {
     expect.stringMatching(/^RPC_PASSWORD=[0-9a-f]{32}$/),
     expect.stringMatching(/^URL=http:\/\/[0-9a-f]{32}:[0-9a-f]{32}@ganache:8554$/),
   ]);
+});
+
+it('should have different deploymentId when using different Synthesizer', async () => {
+  const definition: KarfiaDefinition = {
+    id: 'eip155:1337/ganache:7.9.1',
+    caip2: 'eip155:1337',
+    name: 'Ganache',
+    containers: {
+      ganache: {
+        image: 'docker.io/trufflesuite/ganache@sha256:c62c58290c28e24b427f74c6f597ff696257bd2d8e8d517ce4cf46b29b304a3f',
+        source: 'https://github.com/trufflesuite/ganache',
+        resources: {
+          cpu: 0.25,
+          memory: 256,
+        },
+        endpoints: {},
+      },
+    },
+  };
+
+  const synthesizer1 = new Synthesizer(definition);
+  const synthesizer2 = new Synthesizer(definition);
+  expect(synthesizer1.deploymentId).not.toEqual(synthesizer2.deploymentId);
 });
