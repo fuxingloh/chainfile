@@ -15,7 +15,7 @@
       "encoding": "hex"
     },
     "DEFID_URL": {
-      "type": "Expansion",
+      "type": "Value",
       "value": "http://${RPC_USER}:${RPC_PASSWORD}@defid:8554"
     }
   },

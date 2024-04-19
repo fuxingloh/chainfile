@@ -24,7 +24,7 @@ it('should synthesize with valid definition', async () => {
         encoding: 'hex',
       },
       URL: {
-        type: 'Expansion',
+        type: 'Value',
         value: 'http://${RPC_USER}:${RPC_PASSWORD}@ganache:8554',
       },
     },

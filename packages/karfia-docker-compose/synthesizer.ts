@@ -4,7 +4,7 @@ import yaml from 'js-yaml';
 import { Container, KarfiaDefinition } from 'karfia-definition';
 import { validate } from 'karfia-definition/schema';
 
-import { expand } from './expansion';
+import { expand } from './environment';
 import { version } from './package.json';
 
 /**
@@ -31,8 +31,7 @@ export class Synthesizer {
             env[key] = randomBytes(factory.length).toString(factory.encoding);
             return env;
           }
-          // TODO(fuxingloh): change to Value
-          if (factory.type === 'Expansion') {
+          if (factory.type === 'Value') {
             env[key] = factory.value;
             return env;
           }

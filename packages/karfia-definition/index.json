@@ -77,7 +77,7 @@
           "type": "object",
           "properties": {
             "type": {
-              "const": "Expansion"
+              "const": "Value"
             },
             "value": {
               "type": "string"
