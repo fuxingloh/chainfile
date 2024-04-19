@@ -1,10 +1,10 @@
 import { randomBytes } from 'node:crypto';
 
-import expand from 'dotenv-expand';
 import yaml from 'js-yaml';
 import { Container, KarfiaDefinition } from 'karfia-definition';
 import { validate } from 'karfia-definition/schema';
 
+import { expand } from './expansion';
 import { version } from './package.json';
 
 /**
@@ -24,30 +24,29 @@ export class Synthesizer {
 
   public synthEnv(): string {
     const env = expand({
-      parsed: {
-        KARFIA_DEPLOYMENT_ID: this.deploymentId,
-        ...Object.entries(this.definition.environment ?? {}).reduce(
-          (env, [key, factory]) => {
-            if (factory.type === 'RandomBytes') {
-              env[key] = randomBytes(factory.length).toString(factory.encoding);
-              return env;
-            }
-            if (factory.type === 'Expansion') {
-              env[key] = factory.value;
-              return env;
-            }
+      KARFIA_DEPLOYMENT_ID: this.deploymentId,
+      ...Object.entries(this.definition.environment ?? {}).reduce(
+        (env, [key, factory]) => {
+          if (factory.type === 'RandomBytes') {
+            env[key] = randomBytes(factory.length).toString(factory.encoding);
+            return env;
+          }
+          // TODO(fuxingloh): change to Value
+          if (factory.type === 'Expansion') {
+            env[key] = factory.value;
+            return env;
+          }
 
-            // if (factory.type === 'Injection') {
-            // TODO: Prompt if CLI, inject if constructs.
-            //  To allow for simple configuration, e.g. Masternode Keys.
+          // if (factory.type === 'Injection') {
+          // TODO: Prompt if CLI, inject if constructs.
+          //  To allow for simple configuration, e.g. Masternode Keys.
 
-            // @ts-expect-error so that we error if we forget to handle a new factory type
-            throw new Error(`Unsupported Environment Factory: ${factory.type}`);
-          },
-          {} as Record<string, string>,
-        ),
-      },
-    }).parsed;
+          // @ts-expect-error so that we error if we forget to handle a new factory type
+          throw new Error(`Unsupported Environment Factory: ${factory.type}`);
+        },
+        {} as Record<string, string>,
+      ),
+    });
 
     return Object.entries(env ?? {})
       .map(([key, value]) => `${key}=${value}`)

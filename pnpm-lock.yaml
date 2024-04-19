@@ -205,9 +205,6 @@ importers:
       clipanion:
         specifier: 3.2.1
         version: 3.2.1(typanion@3.14.0)
-      dotenv-expand:
-        specifier: ^5.1.0
-        version: 5.1.0
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0
@@ -1348,9 +1345,6 @@ packages:
   doctrine@3.0.0:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
     engines: {node: '>=6.0.0'}
-
-  dotenv-expand@5.1.0:
-    resolution: {integrity: sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==}
 
   electron-to-chromium@1.4.699:
     resolution: {integrity: sha512-I7q3BbQi6e4tJJN5CRcyvxhK0iJb34TV8eJQcgh+fR2fQ8miMgZcEInckCo1U9exDHbfz7DLDnFn8oqH/VcRKw==}
@@ -4427,8 +4421,6 @@ snapshots:
   doctrine@3.0.0:
     dependencies:
       esutils: 2.0.3
-
-  dotenv-expand@5.1.0: {}
 
   electron-to-chromium@1.4.699: {}
 
