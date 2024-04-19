@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@swc/core": "^1.4.13",
+    "@swc/core": "^1.4.16",
     "@swc/jest": "^0.2.36",
     "@types/node": "^20.11.30",
     "@workspace/eslint-config": "workspace:*",
@@ -28,9 +28,9 @@
     "typescript": "5.3.3",
     "wait-for-expect": "^3.0.2"
   },
-  "packageManager": "pnpm@8.15.7",
+  "packageManager": "pnpm@9.0.4",
   "engines": {
     "node": "^20 <21",
-    "pnpm": "^8 <9"
+    "pnpm": "^9 <10"
   }
 }

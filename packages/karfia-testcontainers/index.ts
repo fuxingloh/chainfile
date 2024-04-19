@@ -6,7 +6,7 @@ import { Synthesizer } from 'karfia-docker-compose/synthesizer';
 import { DockerComposeEnvironment, StartedDockerComposeEnvironment as ComposeStarted, Wait } from 'testcontainers';
 
 import { KarfiaAgentContainer } from './karfia-agent';
-import { KarfiaTestContainer } from './karfia-testcontainer';
+import { KarfiaContainer } from './karfia-container';
 
 export class KarfiaTestcontainers {
   protected cwd: string = join(process.cwd(), '.karfia');
@@ -65,12 +65,12 @@ export class KarfiaTestcontainers {
     return this.deploymentId;
   }
 
-  getContainer(name: string): KarfiaTestContainer {
+  getContainer(name: string): KarfiaContainer {
     const containerDef = this.definition.containers[name];
     if (containerDef === undefined) {
       throw new Error(`Container ${name} not found`);
     }
-    return new KarfiaTestContainer(
+    return new KarfiaContainer(
       this.composeStarted.getContainer(`${name}-${this.deploymentId}`),
       containerDef,
       this.environment,
@@ -82,4 +82,4 @@ export class KarfiaTestcontainers {
   }
 }
 
-export { KarfiaAgentContainer, KarfiaTestContainer };
+export { KarfiaAgentContainer, KarfiaContainer };

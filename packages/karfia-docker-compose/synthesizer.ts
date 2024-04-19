@@ -2,7 +2,7 @@ import { randomBytes } from 'node:crypto';
 
 import expand from 'dotenv-expand';
 import yaml from 'js-yaml';
-import { KarfiaContainer, KarfiaDefinition } from 'karfia-definition';
+import { Container, KarfiaDefinition } from 'karfia-definition';
 import { validate } from 'karfia-definition/schema';
 
 import { version } from './package.json';
@@ -89,7 +89,7 @@ export class Synthesizer {
       $schema: undefined,
     }).replaceAll('$', '$$$');
 
-    const karfiaEnvironmentMapping = Object.keys(this.definition.environment ?? {}).reduce(
+    const EnvironmentMapping = Object.keys(this.definition.environment ?? {}).reduce(
       (env, key) => {
         env[`KARFIA_ENVIRONMENT_${key}`] = `$\{${key}}`;
         return env;
@@ -106,7 +106,7 @@ export class Synthesizer {
           // Docker compose automatically evaluate environment literals here
           KARFIA_DEFINITION_JSON: definitionJson,
           KARFIA_DEPLOYMENT_ID: '${KARFIA_DEPLOYMENT_ID}',
-          ...karfiaEnvironmentMapping,
+          ...EnvironmentMapping,
         },
         volumes: [
           {
@@ -131,7 +131,7 @@ export class Synthesizer {
     //  Adding them would make the compose hard limit the resources of the host even if the host
     //  has more resources available.
 
-    function createPorts(container: KarfiaContainer): string[] {
+    function createPorts(container: Container): string[] {
       return Object.values(container.endpoints).map((endpoint) => {
         // TODO: Support Binding P2P Port Statically
         return `0:${endpoint.port}`;
@@ -144,7 +144,7 @@ export class Synthesizer {
       target: string;
     }
 
-    function createVolumes(container: KarfiaContainer): Volume[] {
+    function createVolumes(container: Container): Volume[] {
       const volumes: Volume[] = [
         {
           type: 'volume',

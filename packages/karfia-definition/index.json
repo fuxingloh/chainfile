@@ -25,7 +25,7 @@
       "maxLength": 128
     },
     "environment": {
-      "$ref": "#/definitions/KarfiaEnvironment"
+      "$ref": "#/definitions/Environment"
     },
     "containers": {
       "type": "object",
@@ -33,7 +33,7 @@
       "maxProperties": 6,
       "patternProperties": {
         "^(?!karfia)[a-z0-9][a-z0-9-]{0,28}[a-z0-9]$": {
-          "$ref": "#/definitions/KarfiaContainer"
+          "$ref": "#/definitions/Container"
         }
       },
       "additionalProperties": false
@@ -42,17 +42,17 @@
   "required": ["id", "caip2", "name", "containers"],
   "additionalProperties": false,
   "definitions": {
-    "KarfiaEnvironment": {
+    "Environment": {
       "type": "object",
       "maxProperties": 30,
       "patternProperties": {
         "^[a-zA-Z_]+[a-zA-Z0-9_]*$": {
-          "$ref": "#/definitions/KarfiaEnvironmentFactory"
+          "$ref": "#/definitions/EnvironmentFactory"
         }
       },
       "additionalProperties": false
     },
-    "KarfiaEnvironmentFactory": {
+    "EnvironmentFactory": {
       "oneOf": [
         {
           "type": "object",
@@ -88,7 +88,7 @@
         }
       ]
     },
-    "KarfiaEnvironmentReference": {
+    "EnvironmentReference": {
       "type": "object",
       "properties": {
         "key": {
@@ -98,7 +98,7 @@
       "required": ["key"],
       "additionalProperties": false
     },
-    "KarfiaContainer": {
+    "Container": {
       "type": "object",
       "properties": {
         "image": {
@@ -145,7 +145,7 @@
           "maxProperties": 30,
           "patternProperties": {
             "^[a-zA-Z_]+[a-zA-Z0-9_]*$": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/KarfiaEnvironmentReference" }]
+              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvironmentReference" }]
             }
           },
           "additionalProperties": false
@@ -360,10 +360,10 @@
               "const": "HttpBasic"
             },
             "username": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/KarfiaEnvironmentReference" }]
+              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvironmentReference" }]
             },
             "password": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/KarfiaEnvironmentReference" }]
+              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvironmentReference" }]
             }
           },
           "required": ["type", "username", "password"],
@@ -376,7 +376,7 @@
               "const": "HttpBearer"
             },
             "token": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/KarfiaEnvironmentReference" }]
+              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvironmentReference" }]
             }
           },
           "required": ["type", "token"],

@@ -7,14 +7,19 @@ RUN corepack enable pnpm
 
 ENV PNPM_HOME="/root/.local/share/pnpm/global" \
     PATH="$PATH:/root/.local/share/pnpm/global"
-RUN pnpm config set store-dir /root/.local/share/pnpm/global/store/v3
 
-# renovate: datasource=npm depName=turbo
-ENV TURBO_VERSION=1.12.5
-RUN pnpm add -g turbo@${TURBO_VERSION}
+COPY package.json package.json
+RUN pnpm -v
+ENV COREPACK_ENABLE_NETWORK=0
+
+RUN pnpm config set store-dir /root/.local/share/pnpm/global/store/v3
 
 # Isolate workspace by pruning non-related services.
 FROM base AS pruner
+
+# renovate: datasource=npm depName=turbo
+ENV TURBO_VERSION=1.13.2
+RUN pnpm add -g turbo@${TURBO_VERSION}
 
 COPY . .
 
@@ -30,15 +35,15 @@ COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 
 # Mount cache to copy from content-addressable store; ignore cross-device link errors due to different mount points.
 RUN --mount=type=cache,target=/root/.local/share/pnpm/global/store/v3\
-  pnpm install --frozen-lockfile\
-  | grep -v "cross-device link not permitted\|Falling back to copying packages from store"
+  pnpm install --frozen-lockfile
 
 COPY --from=pruner /app/out/full/ .
 
 # To relink dependencies with ./bin links
 RUN pnpm install --frozen-lockfile --offline
 
-RUN pnpm turbo run build --filter=karfia-agent
+RUN --mount=type=cache,id=turborepo-cache,target=node_modules/.cache/turbo\
+  pnpm turbo run build --filter=karfia-agent
 
 # Run agent
 FROM node:20-alpine AS runner

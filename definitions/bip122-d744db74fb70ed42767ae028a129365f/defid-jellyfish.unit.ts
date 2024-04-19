@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
-import { KarfiaAgentContainer, KarfiaTestContainer, KarfiaTestcontainers } from 'karfia-testcontainers';
+import { KarfiaAgentContainer, KarfiaContainer, KarfiaTestcontainers } from 'karfia-testcontainers';
 
 import definition from './defid-jellyfish.json';
 
@@ -14,8 +14,8 @@ afterAll(async () => {
 });
 
 describe('defid + whale', () => {
-  let defid: KarfiaTestContainer;
-  let whale: KarfiaTestContainer;
+  let defid: KarfiaContainer;
+  let whale: KarfiaContainer;
 
   beforeAll(() => {
     defid = testcontainers.getContainer('defid');

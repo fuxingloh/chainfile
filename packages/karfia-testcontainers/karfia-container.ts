@@ -2,18 +2,18 @@ import { Buffer } from 'node:buffer';
 import { randomInt } from 'node:crypto';
 
 import {
+  Container,
   ContainerEndpointHttpAuthorization,
   ContainerEndpointHttpJsonRpc,
   ContainerEndpointHttpRest,
-  KarfiaContainer,
-  KarfiaEnvironmentReference,
+  EnvironmentReference,
 } from 'karfia-definition';
 import { AbstractStartedContainer, StartedTestContainer } from 'testcontainers';
 
-export class KarfiaTestContainer extends AbstractStartedContainer {
+export class KarfiaContainer extends AbstractStartedContainer {
   constructor(
     started: StartedTestContainer,
-    protected container: KarfiaContainer,
+    protected container: Container,
     protected environment: Record<string, string>,
   ) {
     super(started);
@@ -140,7 +140,7 @@ export class KarfiaTestContainer extends AbstractStartedContainer {
     }
   }
 
-  private resolveValue(value: string | KarfiaEnvironmentReference): string {
+  private resolveValue(value: string | EnvironmentReference): string {
     if (typeof value === 'string') {
       return value;
     }
