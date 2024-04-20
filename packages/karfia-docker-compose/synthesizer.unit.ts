@@ -93,10 +93,10 @@ it('should synthesize with valid definition', async () => {
   const synthesizer = new Synthesizer(definition);
   expect(synthesizer.synthCompose()).toMatchSnapshot();
   expect(synthesizer.synthEnv().split('\n')).toStrictEqual([
-    expect.stringMatching(/^KARFIA_DEPLOYMENT_ID=[0-9a-f]{16}$/),
     expect.stringMatching(/^RPC_USER=[0-9a-f]{32}$/),
     expect.stringMatching(/^RPC_PASSWORD=[0-9a-f]{32}$/),
     expect.stringMatching(/^URL=http:\/\/[0-9a-f]{32}:[0-9a-f]{32}@ganache:8554$/),
+    expect.stringMatching(/^KARFIA_DEPLOYMENT_ID=[0-9a-f]{16}$/),
   ]);
 });
 

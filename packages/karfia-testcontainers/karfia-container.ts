@@ -119,6 +119,8 @@ export class KarfiaContainer extends AbstractStartedContainer {
       case 'HTTPS JSON-RPC 1.0':
       case 'HTTP JSON-RPC 2.0':
       case 'HTTPS JSON-RPC 2.0':
+      case 'HTTP REST':
+      case 'HTTPS REST':
         return getHttpAuthHeaders(endpoint.authorization);
       default:
         throw new Error(`Endpoint: '${name}' does not support getAuthHeaders()`);
