@@ -65,6 +65,10 @@ export class KarfiaTestcontainers {
     return this.deploymentId;
   }
 
+  getEnvironment(): Record<string, string> {
+    return this.environment;
+  }
+
   getContainer(name: string): KarfiaContainer {
     const containerDef = this.definition.containers[name];
     if (containerDef === undefined) {

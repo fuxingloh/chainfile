@@ -273,7 +273,7 @@
               ]
             },
             "body": {
-              "$ref": "http://json-schema.org/draft-07/schema"
+              "$ref": "http://json-schema.org/draft-07/schema#"
             }
           },
           "required": ["status"]

@@ -177,9 +177,6 @@ importers:
         specifier: ^3.22.5
         version: 3.22.5
     devDependencies:
-      '@workspace/jest-preset':
-        specifier: workspace:*
-        version: link:../../workspace/jest-preset
       '@workspace/tsconfig':
         specifier: workspace:*
         version: link:../../workspace/tsconfig
@@ -193,6 +190,9 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1(ajv@8.12.0)
     devDependencies:
+      '@workspace/jest-preset':
+        specifier: workspace:*
+        version: link:../../workspace/jest-preset
       '@workspace/tsconfig':
         specifier: workspace:*
         version: link:../../workspace/tsconfig
