@@ -3,6 +3,7 @@ import { randomInt } from 'node:crypto';
 
 import {
   Container,
+  ContainerEndpoint,
   ContainerEndpointHttpAuthorization,
   ContainerEndpointHttpJsonRpc,
   ContainerEndpointHttpRest,
@@ -19,6 +20,12 @@ export class KarfiaContainer extends AbstractStartedContainer {
     super(started);
   }
 
+  /**
+   * Get the host port for a given endpoint name.
+   * To make a request to the container, you need to use the host and the port.
+   * The port is the port on the host machine that is mapped to the container port.
+   * @param name of the endpoint to get
+   */
   getHostPort(name: string): number {
     const endpoint = this.container.endpoints[name];
     if (endpoint === undefined) {
@@ -27,33 +34,97 @@ export class KarfiaContainer extends AbstractStartedContainer {
     return this.getMappedPort(endpoint.port);
   }
 
+  private getEndpoint<E extends ContainerEndpoint>(name: string): E {
+    const endpoint = this.container.endpoints?.[name];
+    if (endpoint === undefined) {
+      throw new Error(`Endpoint: '${name}' not found.`);
+    }
+    return endpoint as E;
+  }
+
   /**
-   * Get the host endpoint for a given name.
-   * @param {string} name of the endpoint to get
-   * @param {string} host to use, defaults to the container host,
+   * Get the host endpoint for a given endpoint name.
+   * @param name of the endpoint to get
+   * @param host to use, defaults to the container host,
    * use `host.docker.internal` if you need to access the host from a container
    */
   getHostEndpoint(name: string, host = this.getHost()): string {
-    const endpoint = this.container.endpoints?.[name];
-    if (endpoint === undefined) {
-      throw new Error(`Endpoint not found, please define a '${name}' endpoint to use rpc()`);
-    }
-
-    const protocol = (endpoint as any).protocol;
-    switch (protocol) {
+    const endpoint = this.getEndpoint<ContainerEndpointHttpJsonRpc | ContainerEndpointHttpRest>(name);
+    const port = this.getMappedPort(endpoint.port);
+    switch (endpoint.protocol) {
+      case 'HTTP JSON-RPC 1.0':
+      case 'HTTP JSON-RPC 2.0':
+        return `http://${host}:${port}/${endpoint.path ?? ''}`;
+      case 'HTTPS JSON-RPC 1.0':
+      case 'HTTPS JSON-RPC 2.0':
+        return `https://${host}:${port}/${endpoint.path ?? ''}`;
+      case 'HTTP REST':
+        return `http://${host}:${port}`;
+      case 'HTTPS REST':
+        return `https://${host}:${port}`;
       default:
-        throw new Error(`Unsupported protocol: ${protocol} for rpc()`);
+        throw new Error(`Endpoint: '${name}' does not support getHostEndpoint()`);
+    }
+  }
+
+  /**
+   * Get the authorization headers for a given endpoint name.
+   *
+   * ### Usage Example
+   *
+   * Given you want to call a rpc method on a container that requires authorization:
+   *
+   * ```ts
+   * const endpoint = container.getHostEndpoint('rpc');
+   * const headers = container.getAuthorizationHeaders('rpc');
+   * const response = await fetch(endpoint, {
+   *   method: 'POST',
+   *   headers: headers,
+   *   body: JSON.stringify({
+   *     jsonrpc: '2.0',
+   *     method: 'rpc_method',
+   *   })
+   * })
+   * ```
+   *
+   * @param name of the endpoint to get
+   */
+  getAuthHeaders(name: string): Record<string, string> {
+    const endpoint = this.getEndpoint<ContainerEndpointHttpJsonRpc | ContainerEndpointHttpRest>(name);
+
+    const getHttpAuthHeaders = (auth?: ContainerEndpointHttpAuthorization): Record<string, string> => {
+      if (auth === undefined) {
+        return {};
+      }
+
+      const type = auth.type;
+      if (type === 'HttpBasic') {
+        const username = this.resolveValue(auth.username);
+        const password = this.resolveValue(auth.password);
+        return {
+          Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`,
+        };
+      } else if (type === 'HttpBearer') {
+        const token = this.resolveValue(auth.token);
+        return {
+          Authorization: `Bearer ${token}`,
+        };
+      } else {
+        throw new Error(`Unknown authorization type: ${type}`);
+      }
+    };
+
+    switch (endpoint.protocol) {
       case 'HTTP JSON-RPC 1.0':
       case 'HTTPS JSON-RPC 1.0':
       case 'HTTP JSON-RPC 2.0':
       case 'HTTPS JSON-RPC 2.0':
+      case 'HTTP REST':
+      case 'HTTPS REST':
+        return getHttpAuthHeaders(endpoint.authorization);
+      default:
+        throw new Error(`Endpoint: '${name}' does not support getAuthHeaders()`);
     }
-
-    const jsonRpc = endpoint as ContainerEndpointHttpJsonRpc;
-    const scheme = jsonRpc.protocol.startsWith('HTTPS') ? 'https' : 'http';
-
-    const hostPort = this.getMappedPort(endpoint.port);
-    return `${scheme}://${host}:${hostPort}${jsonRpc.path ?? ''}`;
   }
 
   async rpc(options: {
@@ -63,17 +134,24 @@ export class KarfiaContainer extends AbstractStartedContainer {
     endpoint?: string;
   }): Promise<Response> {
     const name = options.endpoint ?? 'rpc';
-    const hostEndpoint = this.getHostEndpoint(name);
-
     const endpoint = this.container.endpoints?.[name];
-    const jsonRpc = endpoint as ContainerEndpointHttpJsonRpc;
-    const jsonRpcVersion = jsonRpc.protocol.endsWith('2.0') ? '2.0' : '1.0';
+    const protocol = (endpoint as ContainerEndpointHttpJsonRpc).protocol;
+    switch (protocol) {
+      default:
+        throw new Error(`Unsupported protocol: ${protocol} for rpc()`);
+      case 'HTTP JSON-RPC 1.0':
+      case 'HTTPS JSON-RPC 1.0':
+      case 'HTTP JSON-RPC 2.0':
+      case 'HTTPS JSON-RPC 2.0':
+    }
 
-    return await fetch(hostEndpoint, {
+    const jsonRpcVersion = protocol.endsWith('2.0') ? '2.0' : '1.0';
+
+    return await fetch(this.getHostEndpoint(name), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(jsonRpc.authorization ? this.getHttpAuthorizationHeaders(jsonRpc.authorization) : {}),
+        ...this.getAuthHeaders(name),
         ...(options.headers ?? {}),
       },
       body: JSON.stringify({
@@ -94,10 +172,10 @@ export class KarfiaContainer extends AbstractStartedContainer {
   }): Promise<Response> {
     const endpoint = this.container.endpoints?.[options.endpoint];
     if (endpoint === undefined) {
-      throw new Error(`Endpoint not found, please define a '${options.endpoint}' endpoint to use api()`);
+      throw new Error(`Endpoint not found, please define a '${options.endpoint}' endpoint to use fetch()`);
     }
 
-    const protocol = (endpoint as any).protocol;
+    const protocol = (endpoint as ContainerEndpointHttpRest).protocol;
     switch (protocol) {
       default:
         throw new Error(`Unsupported protocol: ${protocol} for fetch()`);
@@ -105,39 +183,17 @@ export class KarfiaContainer extends AbstractStartedContainer {
       case 'HTTPS REST':
     }
 
-    const rest = endpoint as ContainerEndpointHttpRest;
-    const scheme = rest.protocol.startsWith('HTTPS') ? 'https' : 'http';
-
-    const hostPort = this.getMappedPort(endpoint.port);
-    const hostEndpoint = `${scheme}://${this.getHost()}:${hostPort}${options.path}`;
-    const headers: Record<string, string> = {
-      ...(rest.authorization ? this.getHttpAuthorizationHeaders(rest.authorization) : {}),
-      ...(options.headers ?? {}),
-    };
-
-    return await fetch(hostEndpoint, {
+    const scheme = protocol.startsWith('HTTPS') ? 'https' : 'http';
+    const host = this.getHost();
+    const port = this.getMappedPort(endpoint.port);
+    return await fetch(`${scheme}://${host}:${port}${options.path}`, {
       method: options.method,
-      headers: headers,
+      headers: {
+        ...this.getAuthHeaders(options.endpoint),
+        ...(options.headers ?? {}),
+      },
       body: options.body,
     });
-  }
-
-  private getHttpAuthorizationHeaders(auth: ContainerEndpointHttpAuthorization): Record<string, string> {
-    const type = auth.type;
-    if (type === 'HttpBasic') {
-      const username = this.resolveValue(auth.username);
-      const password = this.resolveValue(auth.password);
-      return {
-        Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`,
-      };
-    } else if (type === 'HttpBearer') {
-      const token = this.resolveValue(auth.token);
-      return {
-        Authorization: `Bearer ${token}`,
-      };
-    } else {
-      throw new Error(`Unknown authorization type: ${type}`);
-    }
   }
 
   private resolveValue(value: string | EnvironmentReference): string {

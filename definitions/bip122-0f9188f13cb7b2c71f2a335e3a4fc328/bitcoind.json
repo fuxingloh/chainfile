@@ -5,14 +5,12 @@
   "name": "Bitcoin Regtest",
   "environment": {
     "RPC_USER": {
-      "type": "RandomBytes",
-      "length": 16,
-      "encoding": "hex"
+      "type": "Value",
+      "value": "karfia"
     },
     "RPC_PASSWORD": {
-      "type": "RandomBytes",
-      "length": 16,
-      "encoding": "hex"
+      "type": "Value",
+      "value": "karfia"
     }
   },
   "containers": {
