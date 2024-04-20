@@ -44,6 +44,6 @@
   "devDependencies": {
     "@workspace/jest-preset": "workspace:*",
     "@workspace/tsconfig": "workspace:*",
-    "json-schema-to-typescript": "^13.1.2"
+    "json-schema-to-typescript": "^14.0.0"
   }
 }
