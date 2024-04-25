@@ -32,7 +32,7 @@
   "dependencies": {
     "karfia-definition": "workspace:^",
     "karfia-docker-compose": "workspace:^",
-    "testcontainers": "^10.8.2"
+    "testcontainers": "^10.9.0"
   },
   "devDependencies": {
     "@workspace/jest-preset": "workspace:*",
