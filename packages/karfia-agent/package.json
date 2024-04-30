@@ -28,7 +28,7 @@
     "ajv-formats": "^3.0.1",
     "karfia-definition": "workspace:^",
     "trpc-openapi": "^1.2.0",
-    "zod": "^3.23.4"
+    "zod": "^3.23.5"
   },
   "devDependencies": {
     "@workspace/tsconfig": "workspace:*"

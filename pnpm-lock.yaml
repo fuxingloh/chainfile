@@ -172,10 +172,10 @@ importers:
         version: link:../karfia-definition
       trpc-openapi:
         specifier: ^1.2.0
-        version: 1.2.0(@trpc/server@10.45.2)(zod@3.23.4)
+        version: 1.2.0(@trpc/server@10.45.2)(zod@3.23.5)
       zod:
-        specifier: ^3.23.4
-        version: 3.23.4
+        specifier: ^3.23.5
+        version: 3.23.5
     devDependencies:
       '@workspace/tsconfig':
         specifier: workspace:*
@@ -5352,7 +5352,7 @@ packages:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
     dev: false
 
-  /trpc-openapi@1.2.0(@trpc/server@10.45.2)(zod@3.23.4):
+  /trpc-openapi@1.2.0(@trpc/server@10.45.2)(zod@3.23.5):
     resolution: {integrity: sha512-pfYoCd/3KYXWXvUPZBKJw455OOwngKN/6SIcj7Yit19OMLJ+8yVZkEvGEeg5wUSwfsiTdRsKuvqkRPXVSwV7ew==}
     peerDependencies:
       '@trpc/server': ^10.0.0
@@ -5364,8 +5364,8 @@ packages:
       lodash.clonedeep: 4.5.0
       node-mocks-http: 1.14.1
       openapi-types: 12.1.3
-      zod: 3.23.4
-      zod-to-json-schema: 3.22.5(zod@3.23.4)
+      zod: 3.23.5
+      zod-to-json-schema: 3.22.5(zod@3.23.5)
     transitivePeerDependencies:
       - uWebSockets.js
     dev: false
@@ -5770,14 +5770,14 @@ packages:
       readable-stream: 3.6.2
     dev: false
 
-  /zod-to-json-schema@3.22.5(zod@3.23.4):
+  /zod-to-json-schema@3.22.5(zod@3.23.5):
     resolution: {integrity: sha512-+akaPo6a0zpVCCseDed504KBJUQpEW5QZw7RMneNmKw+fGaML1Z9tUNLnHHAC8x6dzVRO1eB2oEMyZRnuBZg7Q==}
     peerDependencies:
       zod: ^3.22.4
     dependencies:
-      zod: 3.23.4
+      zod: 3.23.5
     dev: false
 
-  /zod@3.23.4:
-    resolution: {integrity: sha512-/AtWOKbBgjzEYYQRNfoGKHObgfAZag6qUJX1VbHo2PRBgS+wfWagEY2mizjfyAPcGesrJOcx/wcl0L9WnVrHFw==}
+  /zod@3.23.5:
+    resolution: {integrity: sha512-fkwiq0VIQTksNNA131rDOsVJcns0pfVUjHzLrNBiF/O/Xxb5lQyEXkhZWcJ7npWsYlvs+h0jFWXXy4X46Em1JA==}
     dev: false
