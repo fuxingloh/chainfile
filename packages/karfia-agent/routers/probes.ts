@@ -23,17 +23,17 @@ const probeProcedure = publicProcedure.input(z.void()).output(
 );
 
 export const probesRouter = router({
-  probeStartup: probeProcedure
+  ProbeStartup: probeProcedure
     .meta({ openapi: { method: 'GET', path: '/probes/startup', tags: ['probes'] } })
     .query(async ({ ctx }) => {
       return query(ctx.definition, ProbeType.startup);
     }),
-  probeLiveness: probeProcedure
+  ProbeLiveness: probeProcedure
     .meta({ openapi: { method: 'GET', path: '/probes/liveness', tags: ['probes'] } })
     .query(async ({ ctx }) => {
       return query(ctx.definition, ProbeType.liveness);
     }),
-  probeReadiness: probeProcedure
+  ProbeReadiness: probeProcedure
     .meta({ openapi: { method: 'GET', path: '/probes/readiness', tags: ['probes'] } })
     .query(async ({ ctx }) => {
       return query(ctx.definition, ProbeType.readiness);

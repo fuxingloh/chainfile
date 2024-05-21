@@ -11,7 +11,8 @@
     "build:docker": "docker buildx build --progress=plain -t ghcr.io/fuxingloh/karfia-agent:$(node -p \"require('./package.json').version\") -f Dockerfile ../../",
     "clean": "tsc --build --clean",
     "lint": "eslint .",
-    "push:docker": "docker buildx build --progress=plain -t ghcr.io/fuxingloh/karfia-agent:$(node -p \"require('./package.json').version\") -f Dockerfile ../../ --output type=registry --platform linux/amd64,linux/arm64"
+    "push:docker": "docker buildx build --progress=plain -t ghcr.io/fuxingloh/karfia-agent:$(node -p \"require('./package.json').version\") -f Dockerfile ../../ --output type=registry --platform linux/amd64,linux/arm64",
+    "test": "jest"
   },
   "lint-staged": {
     "*": [
@@ -22,6 +23,9 @@
       "prettier --write"
     ]
   },
+  "jest": {
+    "preset": "@workspace/jest-preset"
+  },
   "dependencies": {
     "@trpc/server": "^10.45.2",
     "ajv": "^8.13.0",
@@ -31,6 +35,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@workspace/jest-preset": "workspace:*",
     "@workspace/tsconfig": "workspace:*"
   }
 }

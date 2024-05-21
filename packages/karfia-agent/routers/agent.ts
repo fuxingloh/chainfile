@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { publicProcedure, router } from '../trpc';
 
 export const agentRouter = router({
-  getDefinition: publicProcedure
+  GetDefinition: publicProcedure
     .meta({ openapi: { method: 'GET', path: '/definition', tags: ['agent'] } })
     .input(z.void())
     .output(
@@ -19,7 +19,7 @@ export const agentRouter = router({
     .query(async ({ ctx }) => {
       return ctx.definition;
     }),
-  getDeployment: publicProcedure
+  GetDeployment: publicProcedure
     .meta({ openapi: { method: 'GET', path: '/deployment', tags: ['agent'] } })
     .input(z.void())
     .output(
