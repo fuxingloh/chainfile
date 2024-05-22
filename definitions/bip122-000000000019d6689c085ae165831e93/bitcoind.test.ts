@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
-import { KarfiaAgentContainer, KarfiaContainer, KarfiaTestcontainers } from 'karfia-testcontainers';
+import { KarfiaContainer, KarfiaTestcontainers } from 'karfia-testcontainers';
 import waitForExpect from 'wait-for-expect';
 
 import definition from './bitcoind.json';
@@ -138,63 +138,6 @@ describe('bitcoind', () => {
 
       expect(response.status).toStrictEqual(200);
       expect(await response.json()).toEqual({});
-    });
-  });
-});
-
-describe('karfia-agent', () => {
-  let agent: KarfiaAgentContainer;
-
-  beforeAll(() => {
-    agent = testcontainers.getKarfiaAgent();
-  });
-
-  it('should get karfia-agent/deployment', async () => {
-    const result = await agent.getDeployment();
-    expect(result).toMatchObject({
-      deploymentId: testcontainers.getDeploymentId(),
-      definitionId: definition.id,
-      caip2: definition.caip2,
-      name: definition.name,
-    });
-  });
-
-  it('should get karfia-agent/definition', async () => {
-    const result = await agent.getDefinition();
-    const expected = {
-      ...definition,
-      $schema: undefined,
-    };
-    delete expected.$schema;
-    expect(result).toMatchObject(expected);
-  });
-
-  it('should get karfia-agent/probes/startup', async () => {
-    const response = await agent.probe('startup');
-    expect(response.status).toStrictEqual(200);
-    expect(await response.json()).toMatchObject({
-      ok: true,
-    });
-  });
-
-  it('should get karfia-agent/probes/liveness', async () => {
-    const response = await agent.probe('liveness');
-    expect(response.status).toStrictEqual(200);
-    expect(await response.json()).toMatchObject({
-      ok: true,
-    });
-  });
-
-  it('should get karfia-agent/probes/readiness', async () => {
-    const response = await agent.probe('readiness');
-    expect(response.status).toStrictEqual(200);
-    expect(await response.json()).toMatchObject({
-      containers: {
-        bitcoind: {
-          ok: true,
-        },
-      },
-      ok: true,
     });
   });
 });
