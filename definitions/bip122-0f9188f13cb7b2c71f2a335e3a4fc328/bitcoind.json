@@ -17,6 +17,7 @@
     "bitcoind": {
       "image": "docker.io/kylemanna/bitcoind@sha256:1492fa0306cb7eb5de8d50ba60367cff8d29b00b516e45e93e05f8b54fa2970e",
       "source": "https://github.com/kylemanna/docker-bitcoind",
+      "command": ["btc_oneshot", "-fallbackfee=0.00000200", "-rpcbind=:8332", "-rpcallowip=0.0.0.0/0"],
       "endpoints": {
         "p2p": {
           "port": 18445
@@ -58,6 +59,7 @@
       },
       "environment": {
         "REGTEST": "1",
+        "DISABLEWALLET": "0",
         "RPCUSER": {
           "key": "RPC_USER"
         },

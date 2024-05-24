@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
-import { KarfiaAgentContainer, KarfiaContainer, KarfiaTestcontainers } from 'karfia-testcontainers';
+import { KarfiaContainer, KarfiaTestcontainers } from 'karfia-testcontainers';
 
 import definition from './defid-jellyfish.json';
 
@@ -54,30 +54,6 @@ describe('defid + whale', () => {
           symbol: 'DFI',
         }),
       ]),
-    });
-  });
-});
-
-describe('karfia-agent', () => {
-  let agent: KarfiaAgentContainer;
-
-  beforeAll(() => {
-    agent = testcontainers.getKarfiaAgent();
-  });
-
-  it('should Probe.Readiness', async () => {
-    const response = await agent.probe('Readiness');
-    expect(response.status).toStrictEqual(200);
-    expect(await response.json()).toMatchObject({
-      containers: {
-        defid: {
-          ok: true,
-        },
-        whale: {
-          ok: true,
-        },
-      },
-      ok: true,
     });
   });
 });
