@@ -21,12 +21,7 @@ describe('bitcoind', () => {
     bitcoind = testcontainers.getContainer('bitcoind');
   });
 
-  it('should get rpc port', async () => {
-    const port = bitcoind.getHostPort('rpc');
-    expect(port).toStrictEqual(expect.any(Number));
-  });
-
-  it('should rpc getblockchaininfo', async () => {
+  it('should rpc(getblockchaininfo)', async () => {
     const response = await bitcoind.rpc({
       method: 'getblockchaininfo',
     });
@@ -41,7 +36,7 @@ describe('bitcoind', () => {
     });
   });
 
-  it('should rpc getblockcount', async () => {
+  it('should rpc(getblockcount)', async () => {
     const response = await bitcoind.rpc({
       method: 'getblockcount',
     });
@@ -53,7 +48,7 @@ describe('bitcoind', () => {
     });
   });
 
-  it('should rpc getblock', async () => {
+  it('should rpc(getblock)', async () => {
     const response = await bitcoind.rpc({
       method: 'getblock',
       params: ['000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f', 2],

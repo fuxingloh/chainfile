@@ -20,12 +20,7 @@ describe('bitcoind', () => {
     bitcoind = testcontainers.getContainer('bitcoind');
   });
 
-  it('should get rpc port', async () => {
-    const port = bitcoind.getHostPort('rpc');
-    expect(port).toStrictEqual(expect.any(Number));
-  });
-
-  it('should rpc getblockchaininfo', async () => {
+  it('should rpc(getblockchaininfo)', async () => {
     const response = await bitcoind.rpc({
       method: 'getblockchaininfo',
     });
@@ -41,7 +36,7 @@ describe('bitcoind', () => {
     });
   });
 
-  it('should rpc getblockcount', async () => {
+  it('should rpc(getblockcount)', async () => {
     const response = await bitcoind.rpc({
       method: 'getblockcount',
     });
@@ -53,7 +48,7 @@ describe('bitcoind', () => {
     });
   });
 
-  it('should rpc getblock', async () => {
+  it('should rpc(getblock)', async () => {
     const response = await bitcoind.rpc({
       method: 'getblock',
       params: ['0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206', 2],
@@ -113,6 +108,36 @@ describe('bitcoind', () => {
         versionHex: '00000001',
         weight: 1140,
       },
+    });
+  });
+
+  it('should rpc(sendtoaddress)', async () => {
+    const createwallet: any = await bitcoind
+      .rpc({ method: 'createwallet', params: ['test'] })
+      .then((res) => res.json());
+    expect(createwallet).toMatchObject({ error: null });
+
+    const getnewaddress: any = await bitcoind.rpc({ method: 'getnewaddress' }).then((res) => res.json());
+    expect(getnewaddress).toMatchObject({ error: null, result: expect.any(String) });
+
+    // Wait for coinbase maturity
+    const generatetoaddress = await bitcoind
+      .rpc({
+        method: 'generatetoaddress',
+        params: [101, getnewaddress.result],
+      })
+      .then((res) => res.json());
+    expect(generatetoaddress).toMatchObject({ error: null });
+
+    const sendtoaddress: any = await bitcoind
+      .rpc({
+        method: 'sendtoaddress',
+        params: ['bcrt1q4u4nsgk6ug0sqz7r3rj9tykjxrsl0yy4d0wwte', 1.23456789],
+      })
+      .then((res) => res.json());
+
+    expect(sendtoaddress).toMatchObject({
+      error: null,
     });
   });
 });

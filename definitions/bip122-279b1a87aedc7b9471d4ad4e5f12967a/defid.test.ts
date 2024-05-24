@@ -20,7 +20,7 @@ describe('defid', () => {
     defid = testcontainers.getContainer('defid');
   });
 
-  it('should rpc getblockchaininfo', async () => {
+  it('should rpc(getblockchaininfo)', async () => {
     const response = await defid.rpc({
       method: 'getblockchaininfo',
     });
@@ -36,7 +36,7 @@ describe('defid', () => {
     });
   });
 
-  it('should rpc getblockcount', async () => {
+  it('should rpc(getblockcount)', async () => {
     const response = await defid.rpc({
       method: 'getblockcount',
     });
@@ -48,7 +48,7 @@ describe('defid', () => {
     });
   });
 
-  it('should rpc getblock', async () => {
+  it('should rpc(getblock)', async () => {
     const response = await defid.rpc({
       method: 'getblock',
       params: ['279b1a87aedc7b9471d4ad4e5f12967ab6259926cd097ade188dfcf22ebfe72a', 2],
