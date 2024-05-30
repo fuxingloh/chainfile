@@ -1,17 +1,22 @@
-> This is an **experimental** project to explore testing
-> and deploying blockchain nodes at scale with an emphasis on local development and testing with batteries
-> included for shipping to the cloud.
+<p align="center">
+  <a href="https://github.com/fuxingloh/karfia">
+    <h3 align="center">Karfia</h3>
+    <p align="center">Define, Test, Deploy, Scale<br>Blockchain</p>
+  </a>
+</p>
 
 Karfia is an open-source framework to define, test, deploy,
 and scale blockchain nodes on container-orchestration platforms.
 
 It packages complex blockchain nodes into a single definition that can be easily deployed
-and managed on Container-capable platforms such as Kubernetes,
-Docker Compose, and Testcontainers.
+and managed on Container-capable platforms such as Kubernetes, Docker Compose, and Testcontainers.
+
+1. **Define** once using a simple, non-turing-complete JSON schema that is easy to compose and maintain.
+2. **Test** locally using Testcontainers to ensure your blockchain application works as expected.
+3. **Deploy** anywhere using Docker Compose, Kubernetes, or any other container-orchestration platform.
+4. **Scale** effortlessly with planet-scale Kubernetes constructs.
 
 ## Motivation
-
-> Karfia (Καρφί, pronounced kar-fee) in Greek refers to a nail;
 
 Not so long ago, we had a single binary called Bitcoin Core that we could easily run with a single command.
 Having access to this single binary equated to having access to the node, wallet, and miner.
@@ -34,3 +39,101 @@ rely on third-party providers to provide them with connectivity to the network.
 Karfia aims to solve this by restoring the simplicity of participating in the network,
 regardless of purpose, scale, complexity, and tenancy,
 to accelerate the adoption of blockchain technology.
+
+## Features
+
+### Define Once
+
+```json
+{
+  "id": "eip155:1/geth:1.13.5/lighthouse:4.5.0",
+  "caip2": "eip155:1",
+  "name": "Ethereum Mainnet (Geth + Lighthouse)"
+}
+```
+
+### Test Locally
+
+```js
+import definition from '@karfia/eip-155-31337/hardhat.json';
+
+let karfia: KarfiaTestcontainers;
+
+beforeAll(async () => {
+  karfia = await KarfiaTestcontainers.start(definition);
+});
+
+afterAll(async () => {
+  await karfia.stop();
+});
+
+it('should rpc(eth_blockNumber)', async () => {
+  const hardhat = karfia.getContainer('hardhat');
+
+  const response = await hardhat.rpc({
+    method: 'eth_blockNumber',
+  });
+
+  expect(response.status).toStrictEqual(200);
+
+  expect(await response.json()).toMatchObject({
+    result: '0x0',
+  });
+});
+```
+
+### Deploy Anywhere
+
+```bash
+karfia-docker-compose synth eip155:1/geth:1.13.5/lighthouse:4.5.0
+cd eip155-1_geth-1.13.5_lighthouse-4.5.0
+docker compose up
+```
+
+### Scale Effortlessly
+
+```ts
+import definition from '@karfia/bip122-0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind.json';
+import { getDefinitionLabels, KarfiaDeployment, KarfiaSecret, KarfiaService } from 'karfia-cdk8s';
+
+class BitcoinK8sChart extends Chart {
+  constructor(scope: Construct) {
+    super(scope, 'bitcoin');
+    const labels = getDefinitionLabels(definition);
+
+    const secret = new KarfiaSecret(this, 'bitcoin', {
+      definition: definition,
+      metadata: {
+        name: 'bitcoin-runtime',
+        labels: labels,
+      },
+    });
+
+    new KarfiaDeployment(this, 'deployment', {
+      secret: secret,
+      definition: definition,
+      labels: labels,
+      spec: { replicas: 1 },
+    });
+
+    new KarfiaService(this, 'service', {
+      spec: {
+        type: 'LoadBalancer',
+        selector: labels,
+      },
+      exposes: [{ port: 8332, container: 'bitcoind', endpoint: 'rpc' }],
+    });
+  }
+}
+```
+
+## License
+
+This project is divided into two main parts, each with its own licensing:
+
+- **`./packages`:** The source code for packages is licensed under the MIT License. For more details, see the [MIT License](./packages/LICENSE) file.
+- **`./definitions`:** The definitions and related components are licensed under the Mozilla Public License 2.0 (MPL-2.0). For more information, refer to the [MPL-2.0 License](./definitions/LICENSE) file.
+
+This dual-licensing approach best accommodate the usage of both the packages and the definitions,
+ensuring flexibility for package users while protecting the integrity of the definitions.
+Please ensure you review the license files for detailed terms and conditions.
