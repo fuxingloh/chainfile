@@ -44,8 +44,7 @@ export class KarfiaTestcontainers {
 
     this.composeStarted = await new DockerComposeEnvironment(this.cwd, this.composeFile)
       .withEnvironment(this.environment)
-      // We use the readiness probe of the karfia-agent container to determine if the deployment is ready
-      // to accept requests.
+      // The readiness probe of karfia-agent is to determine if the deployment is ready to accept requests.
       .withWaitStrategy(`karfia-agent-${this.deploymentId}`, Wait.forHttp('/probes/readiness', 1194))
       .up();
   }
