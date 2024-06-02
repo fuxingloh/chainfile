@@ -1,11 +1,11 @@
 <p align="center">
-  <a href="https://github.com/fuxingloh/karfia">
-    <h3 align="center">Karfia</h3>
+  <a href="https://github.com/vetumorg/chainfile">
+    <h3 align="center">Chainfile</h3>
     <p align="center">Define, Test, Deploy, Scale<br>Blockchain</p>
   </a>
 </p>
 
-Karfia is an open-source framework to define, test, deploy,
+Chainfile is an open-source framework to define, test, deploy,
 and scale blockchain nodes on container-orchestration platforms.
 
 It packages complex blockchain nodes into a single definition that can be easily deployed
@@ -36,7 +36,7 @@ Running a node and participating in the network is no longer easy.
 Most developers today, even those familiar with the blockchain,
 rely on third-party providers to provide them with connectivity to the network.
 
-Karfia aims to solve this by restoring the simplicity of participating in the network,
+Chainfile aims to solve this by restoring the simplicity of participating in the network,
 regardless of purpose, scale, complexity, and tenancy,
 to accelerate the adoption of blockchain technology.
 
@@ -55,20 +55,20 @@ to accelerate the adoption of blockchain technology.
 ### Test Locally
 
 ```js
-import definition from '@karfia/eip-155-31337/hardhat.json';
+import definition from '@chainfile/eip-155-31337/hardhat.json';
 
-let karfia: KarfiaTestcontainers;
+let testcontainers: ChainfileTestcontainers;
 
 beforeAll(async () => {
-  karfia = await KarfiaTestcontainers.start(definition);
+  testcontainers = await ChainfileTestcontainers.start(definition);
 });
 
 afterAll(async () => {
-  await karfia.stop();
+  await testcontainers.stop();
 });
 
 it('should rpc(eth_blockNumber)', async () => {
-  const hardhat = karfia.getContainer('hardhat');
+  const hardhat = testcontainers.getContainer('hardhat');
 
   const response = await hardhat.rpc({
     method: 'eth_blockNumber',
@@ -85,7 +85,7 @@ it('should rpc(eth_blockNumber)', async () => {
 ### Deploy Anywhere
 
 ```bash
-karfia-docker-compose synth eip155:1/geth:1.13.5/lighthouse:4.5.0
+chainfile-docker synth eip155:1/geth:1.13.5/lighthouse:4.5.0
 cd eip155-1_geth-1.13.5_lighthouse-4.5.0
 docker compose up
 ```
@@ -93,15 +93,15 @@ docker compose up
 ### Scale Effortlessly
 
 ```ts
-import definition from '@karfia/bip122-0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind.json';
-import { getDefinitionLabels, KarfiaDeployment, KarfiaSecret, KarfiaService } from 'karfia-cdk8s';
+import definition from '@chainfile/bip122-0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind.json';
+import { getDefinitionLabels, ChainfileDeployment, ChainfileSecret, ChainfileService } from 'chainfile-cdk8s';
 
 class BitcoinK8sChart extends Chart {
   constructor(scope: Construct) {
     super(scope, 'bitcoin');
     const labels = getDefinitionLabels(definition);
 
-    const secret = new KarfiaSecret(this, 'bitcoin', {
+    const secret = new ChainfileSecret(this, 'bitcoin', {
       definition: definition,
       metadata: {
         name: 'bitcoin-runtime',
@@ -109,14 +109,14 @@ class BitcoinK8sChart extends Chart {
       },
     });
 
-    new KarfiaDeployment(this, 'deployment', {
+    new ChainfileDeployment(this, 'deployment', {
       secret: secret,
       definition: definition,
       labels: labels,
       spec: { replicas: 1 },
     });
 
-    new KarfiaService(this, 'service', {
+    new ChainfileService(this, 'service', {
       spec: {
         type: 'LoadBalancer',
         selector: labels,

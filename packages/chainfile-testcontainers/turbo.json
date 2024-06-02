@@ -1,0 +1,15 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "pipeline": {
+    "test": {
+      "inputs": ["tsconfig.json", "./**/*.ts", "./**/*.test.ts"],
+      "dependsOn": ["chainfile-agent#build:docker", "^build"]
+    },
+    "build": {
+      "inputs": ["tsconfig.json", "tsconfig.build.json", "./**/*.ts"],
+      "outputs": ["./**/*.js", "./**/*.d.ts", "./**/*.d.ts.map"],
+      "dependsOn": ["chainfile-agent#build:docker", "^build"]
+    }
+  }
+}

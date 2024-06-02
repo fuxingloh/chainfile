@@ -1,12 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
-import { KarfiaContainer, KarfiaTestcontainers } from 'karfia-testcontainers';
+import { ChainfileContainer, ChainfileTestcontainers } from 'chainfile-testcontainers';
 
 import definition from './ganache.json';
 
-let testcontainers: KarfiaTestcontainers;
+let testcontainers: ChainfileTestcontainers;
 
 beforeAll(async () => {
-  testcontainers = await KarfiaTestcontainers.start(definition);
+  testcontainers = await ChainfileTestcontainers.start(definition);
 });
 
 afterAll(async () => {
@@ -14,7 +14,7 @@ afterAll(async () => {
 });
 
 describe('ganache', () => {
-  let ganache: KarfiaContainer;
+  let ganache: ChainfileContainer;
 
   beforeAll(() => {
     ganache = testcontainers.getContainer('ganache');

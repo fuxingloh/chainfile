@@ -20,5 +20,5 @@ packages/*/**/*.d.ts
 packages/*/**/*.d.ts.map
 packages/*/**/*.js
 
-# Karfia
-.karfia
+# Chainfile
+.chainfile

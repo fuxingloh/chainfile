@@ -1,16 +1,16 @@
 {
-  "$schema": "./node_modules/karfia-definition/index.json",
+  "$schema": "./node_modules/chainfile/index.json",
   "id": "bip122:0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind:25.1",
   "caip2": "bip122:0f9188f13cb7b2c71f2a335e3a4fc328",
   "name": "Bitcoin Regtest",
   "environment": {
     "RPC_USER": {
       "type": "Value",
-      "value": "karfia"
+      "value": "chainfile"
     },
     "RPC_PASSWORD": {
       "type": "Value",
-      "value": "karfia"
+      "value": "chainfile"
     }
   },
   "containers": {
