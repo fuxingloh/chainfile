@@ -7,8 +7,8 @@ import {
   ContainerEndpointHttpAuthorization,
   ContainerEndpointHttpJsonRpc,
   ContainerEndpointHttpRest,
-  EnvironmentReference,
-} from 'chainfile';
+  EnvReference,
+} from 'chainfile/schema';
 import { AbstractStartedContainer, StartedTestContainer } from 'testcontainers';
 
 export class ChainfileContainer extends AbstractStartedContainer {
@@ -196,7 +196,7 @@ export class ChainfileContainer extends AbstractStartedContainer {
     });
   }
 
-  private resolveValue(value: string | EnvironmentReference): string {
+  private resolveValue(value: string | EnvReference): string {
     if (typeof value === 'string') {
       return value;
     }

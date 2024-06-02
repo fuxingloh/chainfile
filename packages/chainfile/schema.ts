@@ -1,19 +1,22 @@
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 
-import schema, { ChainfileDefinition } from './';
+import schema from './schema.json';
+import { Chainfile } from './type';
 
 const ajv = new Ajv();
 addFormats(ajv);
 
-const validateDefinition = ajv.compile(schema);
+export type * from './type';
+
+const validateFunction = ajv.compile(schema);
 
 /**
- * Validate a Chainfile Definition against the json schema.
+ * Validate a Chainfile against the json schema.
  */
-export function validate(definition: any): asserts definition is ChainfileDefinition {
-  const valid = validateDefinition(definition);
+export function validate(chainfile: any): asserts chainfile is Chainfile {
+  const valid = validateFunction(chainfile);
   if (!valid) {
-    throw new Error(`Invalid Chainfile Definition: ${ajv.errorsText(validateDefinition.errors)}`);
+    throw new Error(`Invalid Chainfile: ${ajv.errorsText(validateFunction.errors)}`);
   }
 }

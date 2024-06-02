@@ -1,0 +1,15 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "pipeline": {
+    "generate": {
+      "inputs": ["schema.json"],
+      "outputs": ["schema/type.ts"]
+    },
+    "build": {
+      "inputs": ["tsconfig.json", "tsconfig.build.json", "./**/*.ts"],
+      "outputs": ["./**/*.js", "./**/*.d.ts", "./**/*.d.ts.map"],
+      "dependsOn": ["generate", "^build"]
+    }
+  }
+}

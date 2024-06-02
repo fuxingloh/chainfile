@@ -1,10 +1,10 @@
 import { expect, it } from '@jest/globals';
 
-import { Environment } from '.';
-import { synthEnv } from './environment';
+import { synthEnv } from './env';
+import { Env } from './type';
 
 it('should expand environment', async () => {
-  const environment: Environment = {
+  const env: Env = {
     USER: {
       type: 'RandomBytes',
       length: 8,
@@ -25,7 +25,7 @@ it('should expand environment', async () => {
     },
   };
 
-  expect(synthEnv(environment)).toStrictEqual({
+  expect(synthEnv(env)).toStrictEqual({
     USER: expect.stringMatching(/[0-9a-f]{16}/),
     PASS: expect.stringMatching(/[0-9a-f]{32}/),
     URL: expect.stringMatching(/http:\/\/[0-9a-f]{16}:[0-9a-f]{32}@localhost:3000000/),

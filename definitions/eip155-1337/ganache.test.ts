@@ -1,12 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { ChainfileContainer, ChainfileTestcontainers } from 'chainfile-testcontainers';
 
-import definition from './ganache.json';
+import ganache from './ganache.json';
 
 let testcontainers: ChainfileTestcontainers;
 
 beforeAll(async () => {
-  testcontainers = await ChainfileTestcontainers.start(definition);
+  testcontainers = await ChainfileTestcontainers.start(ganache);
 });
 
 afterAll(async () => {

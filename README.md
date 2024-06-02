@@ -8,7 +8,7 @@
 Chainfile is an open-source framework to define, test, deploy,
 and scale blockchain nodes on container-orchestration platforms.
 
-It packages complex blockchain nodes into a single definition that can be easily deployed
+It packages complex blockchain nodes into a single file that can be easily deployed
 and managed on Container-capable platforms such as Kubernetes, Docker Compose, and Testcontainers.
 
 1. **Define** once using a simple, non-turing-complete JSON schema that is easy to compose and maintain.
@@ -55,12 +55,12 @@ to accelerate the adoption of blockchain technology.
 ### Test Locally
 
 ```js
-import definition from '@chainfile/eip-155-31337/hardhat.json';
+import hardhat from '@chainfile/eip-155-31337/hardhat.json';
 
 let testcontainers: ChainfileTestcontainers;
 
 beforeAll(async () => {
-  testcontainers = await ChainfileTestcontainers.start(definition);
+  testcontainers = await ChainfileTestcontainers.start(hardhat);
 });
 
 afterAll(async () => {
@@ -93,16 +93,16 @@ docker compose up
 ### Scale Effortlessly
 
 ```ts
-import definition from '@chainfile/bip122-0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind.json';
+import bitcoind from '@chainfile/bip122-0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind.json';
 import { getDefinitionLabels, ChainfileDeployment, ChainfileSecret, ChainfileService } from 'chainfile-cdk8s';
 
 class BitcoinK8sChart extends Chart {
   constructor(scope: Construct) {
     super(scope, 'bitcoin');
-    const labels = getDefinitionLabels(definition);
+    const labels = getDefinitionLabels(bitcoind);
 
     const secret = new ChainfileSecret(this, 'bitcoin', {
-      definition: definition,
+      chainfile: bitcoind,
       metadata: {
         name: 'bitcoin-runtime',
         labels: labels,
@@ -111,7 +111,7 @@ class BitcoinK8sChart extends Chart {
 
     new ChainfileDeployment(this, 'deployment', {
       secret: secret,
-      definition: definition,
+      chainfile: bitcoind,
       labels: labels,
       spec: { replicas: 1 },
     });
@@ -134,6 +134,6 @@ This project is divided into two main parts, each with its own licensing:
 - **`./packages`:** The source code for packages is licensed under the MIT License. For more details, see the [MIT License](./packages/LICENSE) file.
 - **`./definitions`:** The definitions and related components are licensed under the Mozilla Public License 2.0 (MPL-2.0). For more information, refer to the [MPL-2.0 License](./definitions/LICENSE) file.
 
-This dual-licensing approach best accommodate the usage of both the packages and the definitions,
+This dual-licensing approach best accommodates the usage of both the packages and the definitions,
 ensuring flexibility for package users while protecting the integrity of the definitions.
 Please ensure you review the license files for detailed terms and conditions.

@@ -1,7 +1,7 @@
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { ChainfileDefinition } from 'chainfile';
+import { Chainfile } from 'chainfile/schema';
 import { Synthesizer } from 'chainfile-docker/synthesizer';
 import { DockerComposeEnvironment, StartedDockerComposeEnvironment as ComposeStarted, Wait } from 'testcontainers';
 
@@ -11,7 +11,7 @@ import { ChainfileContainer } from './chainfile-container';
 export class ChainfileTestcontainers {
   protected cwd: string = join(process.cwd(), '.chainfile');
 
-  protected definition: ChainfileDefinition;
+  protected chainfile: Chainfile;
   protected synthesizer: Synthesizer;
   protected environment: Record<string, string>;
   protected deploymentId: string;
@@ -19,9 +19,9 @@ export class ChainfileTestcontainers {
   protected composeFile: string;
   protected composeStarted!: ComposeStarted;
 
-  private constructor(definition: ChainfileDefinition | any) {
-    this.definition = definition;
-    this.synthesizer = new Synthesizer(definition);
+  private constructor(chainfile: Chainfile | any) {
+    this.chainfile = chainfile;
+    this.synthesizer = new Synthesizer(chainfile);
     this.deploymentId = this.synthesizer.deploymentId;
     this.environment = this.synthesizer
       .synthEnv()
@@ -49,8 +49,8 @@ export class ChainfileTestcontainers {
       .up();
   }
 
-  static async start(definition: ChainfileDefinition | any): Promise<ChainfileTestcontainers> {
-    const testcontainers = new ChainfileTestcontainers(definition);
+  static async start(chainfile: Chainfile | any): Promise<ChainfileTestcontainers> {
+    const testcontainers = new ChainfileTestcontainers(chainfile);
     await testcontainers.start();
     return testcontainers;
   }
@@ -69,7 +69,7 @@ export class ChainfileTestcontainers {
   }
 
   getContainer(name: string): ChainfileContainer {
-    const containerDef = this.definition.containers[name];
+    const containerDef = this.chainfile.containers[name];
     if (containerDef === undefined) {
       throw new Error(`Container ${name} not found`);
     }

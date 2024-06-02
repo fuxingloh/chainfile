@@ -4,13 +4,13 @@ import { randomInt } from 'node:crypto';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import {
-  ChainfileDefinition,
+  Chainfile,
   ContainerEndpoint,
   ContainerEndpointHttpAuthorization,
   ContainerEndpointHttpJsonRpc,
   ContainerEndpointHttpRest,
-  EnvironmentReference,
-} from 'chainfile';
+  EnvReference,
+} from 'chainfile/schema';
 import { z } from 'zod';
 
 import { publicProcedure, router } from '../trpc';
@@ -26,22 +26,22 @@ export const probesRouter = router({
   ProbeStartup: probeProcedure
     .meta({ openapi: { method: 'GET', path: '/probes/startup', tags: ['probes'] } })
     .query(async ({ ctx }) => {
-      return query(ctx.definition, ProbeType.startup);
+      return query(ctx.chainfile, ProbeType.startup);
     }),
   ProbeLiveness: probeProcedure
     .meta({ openapi: { method: 'GET', path: '/probes/liveness', tags: ['probes'] } })
     .query(async ({ ctx }) => {
-      return query(ctx.definition, ProbeType.liveness);
+      return query(ctx.chainfile, ProbeType.liveness);
     }),
   ProbeReadiness: probeProcedure
     .meta({ openapi: { method: 'GET', path: '/probes/readiness', tags: ['probes'] } })
     .query(async ({ ctx }) => {
-      return query(ctx.definition, ProbeType.readiness);
+      return query(ctx.chainfile, ProbeType.readiness);
     }),
 });
 
-async function query(definition: ChainfileDefinition, probeType: ProbeType) {
-  const probeFunctions = Object.entries(definition.containers).flatMap(
+async function query(chainfile: Chainfile, probeType: ProbeType) {
+  const probeFunctions = Object.entries(chainfile.containers).flatMap(
     ([name, container]): [string, ProbeFunction][] => {
       return Object.values(container.endpoints)
         .map((endpoint): [string, ProbeFunction] | undefined => {
@@ -236,7 +236,7 @@ function getHttpAuthorizationHeaders(auth: ContainerEndpointHttpAuthorization): 
  *
  * If the value is not a reference, it is returned as is.
  */
-function resolveValue(value: string | EnvironmentReference): string {
+function resolveValue(value: string | EnvReference): string {
   if (typeof value === 'string') {
     return value;
   }

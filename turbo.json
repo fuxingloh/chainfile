@@ -5,7 +5,7 @@
       "cache": false
     },
     "build": {
-      "inputs": ["tsconfig.json", "tsconfig.build.json", "./**/*.ts", "./**/*.json"],
+      "inputs": ["tsconfig.json", "tsconfig.build.json", "./**/*.ts"],
       "outputs": ["./**/*.js", "./**/*.d.ts", "./**/*.d.ts.map"],
       "dependsOn": ["^build"]
     },
