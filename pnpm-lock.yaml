@@ -59,12 +59,12 @@ importers:
       '@workspace/tsconfig':
         specifier: workspace:*
         version: link:../../workspace/tsconfig
-      karfia-definition:
+      chainfile:
         specifier: workspace:*
-        version: link:../../packages/karfia-definition
-      karfia-testcontainers:
+        version: link:../../packages/chainfile
+      chainfile-testcontainers:
         specifier: workspace:*
-        version: link:../../packages/karfia-testcontainers
+        version: link:../../packages/chainfile-testcontainers
 
   definitions/bip122-0f9188f13cb7b2c71f2a335e3a4fc328:
     devDependencies:
@@ -74,42 +74,12 @@ importers:
       '@workspace/tsconfig':
         specifier: workspace:*
         version: link:../../workspace/tsconfig
-      karfia-definition:
+      chainfile:
         specifier: workspace:*
-        version: link:../../packages/karfia-definition
-      karfia-testcontainers:
+        version: link:../../packages/chainfile
+      chainfile-testcontainers:
         specifier: workspace:*
-        version: link:../../packages/karfia-testcontainers
-
-  definitions/bip122-279b1a87aedc7b9471d4ad4e5f12967a:
-    devDependencies:
-      '@workspace/jest-preset':
-        specifier: workspace:*
-        version: link:../../workspace/jest-preset
-      '@workspace/tsconfig':
-        specifier: workspace:*
-        version: link:../../workspace/tsconfig
-      karfia-definition:
-        specifier: workspace:*
-        version: link:../../packages/karfia-definition
-      karfia-testcontainers:
-        specifier: workspace:*
-        version: link:../../packages/karfia-testcontainers
-
-  definitions/bip122-d744db74fb70ed42767ae028a129365f:
-    devDependencies:
-      '@workspace/jest-preset':
-        specifier: workspace:*
-        version: link:../../workspace/jest-preset
-      '@workspace/tsconfig':
-        specifier: workspace:*
-        version: link:../../workspace/tsconfig
-      karfia-definition:
-        specifier: workspace:*
-        version: link:../../packages/karfia-definition
-      karfia-testcontainers:
-        specifier: workspace:*
-        version: link:../../packages/karfia-testcontainers
+        version: link:../../packages/chainfile-testcontainers
 
   definitions/eip155-1337:
     devDependencies:
@@ -119,12 +89,12 @@ importers:
       '@workspace/tsconfig':
         specifier: workspace:*
         version: link:../../workspace/tsconfig
-      karfia-definition:
+      chainfile:
         specifier: workspace:*
-        version: link:../../packages/karfia-definition
-      karfia-testcontainers:
+        version: link:../../packages/chainfile
+      chainfile-testcontainers:
         specifier: workspace:*
-        version: link:../../packages/karfia-testcontainers
+        version: link:../../packages/chainfile-testcontainers
 
   definitions/eip155-31337:
     devDependencies:
@@ -134,12 +104,12 @@ importers:
       '@workspace/tsconfig':
         specifier: workspace:*
         version: link:../../workspace/tsconfig
-      karfia-definition:
+      chainfile:
         specifier: workspace:*
-        version: link:../../packages/karfia-definition
-      karfia-testcontainers:
+        version: link:../../packages/chainfile
+      chainfile-testcontainers:
         specifier: workspace:*
-        version: link:../../packages/karfia-testcontainers
+        version: link:../../packages/chainfile-testcontainers
 
   definitions/solana-00000000000000000000000000000000:
     devDependencies:
@@ -149,42 +119,14 @@ importers:
       '@workspace/tsconfig':
         specifier: workspace:*
         version: link:../../workspace/tsconfig
-      karfia-definition:
+      chainfile:
         specifier: workspace:*
-        version: link:../../packages/karfia-definition
-      karfia-testcontainers:
+        version: link:../../packages/chainfile
+      chainfile-testcontainers:
         specifier: workspace:*
-        version: link:../../packages/karfia-testcontainers
+        version: link:../../packages/chainfile-testcontainers
 
-  packages/karfia-agent:
-    dependencies:
-      '@trpc/server':
-        specifier: ^10.45.2
-        version: 10.45.2
-      ajv:
-        specifier: ^8.14.0
-        version: 8.14.0
-      ajv-formats:
-        specifier: ^3.0.1
-        version: 3.0.1(ajv@8.14.0)
-      karfia-definition:
-        specifier: workspace:^
-        version: link:../karfia-definition
-      trpc-openapi:
-        specifier: ^1.2.0
-        version: 1.2.0(@trpc/server@10.45.2)(zod@3.23.8)
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
-    devDependencies:
-      '@workspace/jest-preset':
-        specifier: workspace:*
-        version: link:../../workspace/jest-preset
-      '@workspace/tsconfig':
-        specifier: workspace:*
-        version: link:../../workspace/tsconfig
-
-  packages/karfia-definition:
+  packages/chainfile:
     dependencies:
       ajv:
         specifier: ^8.14.0
@@ -203,17 +145,45 @@ importers:
         specifier: ^14.0.4
         version: 14.0.4
 
-  packages/karfia-docker-compose:
+  packages/chainfile-agent:
     dependencies:
+      '@trpc/server':
+        specifier: ^10.45.2
+        version: 10.45.2
+      ajv:
+        specifier: ^8.14.0
+        version: 8.14.0
+      ajv-formats:
+        specifier: ^3.0.1
+        version: 3.0.1(ajv@8.14.0)
+      chainfile:
+        specifier: workspace:^
+        version: link:../chainfile
+      trpc-openapi:
+        specifier: ^1.2.0
+        version: 1.2.0(@trpc/server@10.45.2)(zod@3.23.8)
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@workspace/jest-preset':
+        specifier: workspace:*
+        version: link:../../workspace/jest-preset
+      '@workspace/tsconfig':
+        specifier: workspace:*
+        version: link:../../workspace/tsconfig
+
+  packages/chainfile-docker:
+    dependencies:
+      chainfile:
+        specifier: workspace:^
+        version: link:../chainfile
       clipanion:
         specifier: 3.2.1
         version: 3.2.1(typanion@3.14.0)
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0
-      karfia-definition:
-        specifier: workspace:^
-        version: link:../karfia-definition
     devDependencies:
       '@types/js-yaml':
         specifier: ^4.0.9
@@ -225,14 +195,14 @@ importers:
         specifier: workspace:*
         version: link:../../workspace/tsconfig
 
-  packages/karfia-testcontainers:
+  packages/chainfile-testcontainers:
     dependencies:
-      karfia-definition:
+      chainfile:
         specifier: workspace:^
-        version: link:../karfia-definition
-      karfia-docker-compose:
+        version: link:../chainfile
+      chainfile-docker:
         specifier: workspace:^
-        version: link:../karfia-docker-compose
+        version: link:../chainfile-docker
       testcontainers:
         specifier: ^10.9.0
         version: 10.9.0
@@ -3975,7 +3945,7 @@ packages:
       mkdirp: 3.0.1
       mz: 2.7.0
       node-fetch: 3.3.2
-      prettier: 3.2.5
+      prettier: 3.3.0
     dev: true
 
   /json-schema-traverse@0.4.1:
@@ -4680,12 +4650,6 @@ packages:
     dependencies:
       prettier: 3.3.0
     dev: false
-
-  /prettier@3.2.5:
-    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
-    engines: {node: '>=14'}
-    hasBin: true
-    dev: true
 
   /prettier@3.3.0:
     resolution: {integrity: sha512-J9odKxERhCQ10OC2yb93583f6UnYutOeiV5i0zEDS7UGTdUt0u+y8erxl3lBKvwo/JHyyoEdXjwp4dke9oyZ/g==}

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/karfia.iml" filepath="$PROJECT_DIR$/.idea/karfia.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/chainfile.iml" filepath="$PROJECT_DIR$/.idea/chainfile.iml" />
     </modules>
   </component>
 </project>

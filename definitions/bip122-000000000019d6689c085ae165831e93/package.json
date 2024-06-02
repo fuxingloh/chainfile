@@ -1,9 +1,9 @@
 {
-  "name": "@karfia/bip122-000000000019d6689c085ae165831e93",
+  "name": "@chainfile/bip122-000000000019d6689c085ae165831e93",
   "version": "0.0.0",
   "private": false,
   "repository": {
-    "url": "git+https://github.com/fuxingloh/karfia"
+    "url": "git+https://github.com/vetumorg/chainfile"
   },
   "license": "MPL-2.0",
   "scripts": {
@@ -25,7 +25,7 @@
   "devDependencies": {
     "@workspace/jest-preset": "workspace:*",
     "@workspace/tsconfig": "workspace:*",
-    "karfia-definition": "workspace:*",
-    "karfia-testcontainers": "workspace:*"
+    "chainfile": "workspace:*",
+    "chainfile-testcontainers": "workspace:*"
   }
 }

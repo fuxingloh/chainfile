@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/karfia-definition/index.json",
+  "$schema": "./node_modules/chainfile/index.json",
   "id": "eip155:31337/hardhat:2.19.4",
   "caip2": "eip155:31337",
   "name": "Hardhat",

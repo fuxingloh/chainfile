@@ -1,12 +1,22 @@
 {
-  "name": "@chainfile/solana-00000000000000000000000000000000",
+  "name": "chainfile-docker",
   "version": "0.0.0",
   "private": false,
   "repository": {
     "url": "git+https://github.com/vetumorg/chainfile"
   },
-  "license": "MPL-2.0",
+  "license": "MIT",
+  "bin": {
+    "chainfile-docker": "./bin.js"
+  },
+  "files": [
+    "**/*.d.ts",
+    "**/*.d.ts.map",
+    "**/*.js"
+  ],
   "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "clean": "tsc --build --clean",
     "lint": "eslint .",
     "test": "jest"
   },
@@ -22,10 +32,14 @@
   "jest": {
     "preset": "@workspace/jest-preset"
   },
+  "dependencies": {
+    "chainfile": "workspace:^",
+    "clipanion": "3.2.1",
+    "js-yaml": "^4.1.0"
+  },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@workspace/jest-preset": "workspace:*",
-    "@workspace/tsconfig": "workspace:*",
-    "chainfile": "workspace:*",
-    "chainfile-testcontainers": "workspace:*"
+    "@workspace/tsconfig": "workspace:*"
   }
 }
