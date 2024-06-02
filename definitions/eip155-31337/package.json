@@ -1,7 +1,7 @@
 {
   "name": "@chainfile/eip155-31337",
   "version": "0.0.0",
-  "private": false,
+  "private": true,
   "repository": {
     "url": "git+https://github.com/vetumorg/chainfile"
   },

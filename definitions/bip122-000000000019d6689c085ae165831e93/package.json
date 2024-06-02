@@ -1,7 +1,7 @@
 {
   "name": "@chainfile/bip122-000000000019d6689c085ae165831e93",
   "version": "0.0.0",
-  "private": false,
+  "private": true,
   "repository": {
     "url": "git+https://github.com/vetumorg/chainfile"
   },
