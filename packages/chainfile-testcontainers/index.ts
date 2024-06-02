@@ -68,7 +68,7 @@ export class ChainfileTestcontainers {
     return this.environment;
   }
 
-  getContainer(name: string): ChainfileContainer {
+  get(name: string): ChainfileContainer {
     const containerDef = this.chainfile.containers[name];
     if (containerDef === undefined) {
       throw new Error(`Container ${name} not found`);
@@ -80,7 +80,7 @@ export class ChainfileTestcontainers {
     );
   }
 
-  getChainfileAgent(): ChainfileAgent {
+  getAgent(): ChainfileAgent {
     return new ChainfileAgent(this.composeStarted.getContainer(`chainfile-agent-${this.deploymentId}`));
   }
 }

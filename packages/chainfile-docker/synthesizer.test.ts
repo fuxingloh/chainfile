@@ -9,7 +9,6 @@ it('should fail to synthesize with invalid chainfile', async () => {
 
 it('should synthesize with valid chainfile', async () => {
   const chainfile: Chainfile = {
-    id: 'eip155:1337/ganache:7.9.1',
     caip2: 'eip155:1337',
     name: 'Ganache',
     env: {
@@ -102,7 +101,6 @@ it('should synthesize with valid chainfile', async () => {
 
 it('should have different deploymentId when using different Synthesizer', async () => {
   const env: Chainfile = {
-    id: 'eip155:1337/ganache:7.9.1',
     caip2: 'eip155:1337',
     name: 'Ganache',
     containers: {

@@ -1,0 +1,5 @@
+{
+  "docker": "Docker",
+  "testcontainers": "Testcontainers",
+  "kubernetes": "Kubernetes"
+}

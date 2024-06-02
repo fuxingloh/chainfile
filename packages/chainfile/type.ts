@@ -116,10 +116,6 @@ export type StringArray = string[];
 export interface Chainfile {
   $schema?: string;
   /**
-   * CAIP-2 Extended ID that uniquely identifies this chainfile.
-   */
-  id: string;
-  /**
    * CAIP-2 Chain ID of the blockchain network this chainfile is for.
    */
   caip2: string;
