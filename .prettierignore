@@ -8,3 +8,4 @@ node_modules
 dist
 pnpm-lock.yaml
 generated/
+packages/chainfile/type.ts

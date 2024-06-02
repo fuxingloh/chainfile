@@ -1,9 +1,9 @@
 {
-  "$schema": "./node_modules/chainfile/index.json",
+  "$schema": "./node_modules/chainfile/schema.json",
   "id": "bip122:0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind:25.1",
   "caip2": "bip122:0f9188f13cb7b2c71f2a335e3a4fc328",
   "name": "Bitcoin Regtest",
-  "environment": {
+  "env": {
     "RPC_USER": {
       "type": "Value",
       "value": "chainfile"

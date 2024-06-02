@@ -1,21 +1,20 @@
 import console from 'node:console';
 import process from 'node:process';
 
-import { ChainfileDefinition } from 'chainfile';
-import { validate } from 'chainfile/schema';
+import { Chainfile, validate } from 'chainfile/schema';
 
-function getChainfileDefinition(): ChainfileDefinition {
-  const CHAINFILE_DEFINITION_JSON = process.env.CHAINFILE_DEFINITION_JSON;
-  if (CHAINFILE_DEFINITION_JSON === undefined) {
-    throw new Error('CHAINFILE_DEFINITION_JSON is not defined, cannot start chainfile-agent.');
+function getChainfile(): Chainfile {
+  const CHAINFILE_JSON = process.env.CHAINFILE_JSON;
+  if (CHAINFILE_JSON === undefined) {
+    throw new Error('CHAINFILE_JSON is not defined, cannot start chainfile-agent.');
   }
 
-  const definition = JSON.parse(CHAINFILE_DEFINITION_JSON);
-  console.log(`Chainfile Definition`);
-  console.log(JSON.stringify(definition, null, 2));
+  const chainfile = JSON.parse(CHAINFILE_JSON);
+  console.log(`Chainfile:`);
+  console.log(JSON.stringify(chainfile, null, 2));
 
-  validate(definition);
-  return definition;
+  validate(chainfile);
+  return chainfile;
 }
 
 function getChainfileDeploymentId(): string {
@@ -28,12 +27,12 @@ function getChainfileDeploymentId(): string {
   return deploymentId;
 }
 
-const definition = getChainfileDefinition();
+const chainfile = getChainfile();
 const deploymentId = getChainfileDeploymentId();
 
 export const createContext = async () => {
   return {
-    definition: definition,
+    chainfile: chainfile,
     deploymentId: deploymentId,
   };
 };

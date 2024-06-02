@@ -1,9 +1,9 @@
 {
-  "$schema": "./node_modules/chainfile/index.json",
+  "$schema": "./node_modules/chainfile/schema.json",
   "id": "bip122:000000000019d6689c085ae165831e93/bitcoind:25.1",
   "caip2": "bip122:000000000019d6689c085ae165831e93",
   "name": "Bitcoin Mainnet",
-  "environment": {
+  "env": {
     "RPC_USER": {
       "type": "RandomBytes",
       "length": 16,

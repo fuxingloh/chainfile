@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { ChainfileDefinition } from 'chainfile';
+import { Chainfile } from 'chainfile/schema';
 import { Command, Option, runExit } from 'clipanion';
 
 import { Synthesizer } from './synthesizer';
@@ -11,30 +11,30 @@ export class SynthCommand extends Command {
 
   uri = Option.String({
     required: true,
-    name: 'Chainfile Definition URI',
+    name: 'Chainfile URI',
   });
 
   dir = Option.String<string, 1>('--dir', {
-    description: 'Directory to synthesize definition to, defaults to the ID of the definition.',
+    description: 'Directory to synthesize chainfile to, defaults to the ID of the chainfile.',
   });
 
   async execute(): Promise<void> {
-    const definition = await this.loadDefinition();
-    const synthesizer = new Synthesizer(definition);
+    const chainfile = await this.loadChainfile();
+    const synthesizer = new Synthesizer(chainfile);
 
-    const dir = this.dir ?? definition.id.replaceAll('/', '_').replaceAll(':', '-');
+    const dir = this.dir ?? chainfile.id.replaceAll('/', '_').replaceAll(':', '-');
 
     if (existsSync(dir)) {
       this.context.stdout.write(`Directory: ${dir} already exists, aborting.`);
       return;
     }
 
-    this.context.stdout.write(`Synthesizing definition: ${definition.id} to directory: ${dir}`);
+    this.context.stdout.write(`Synthesizing chainfile: ${chainfile.id} to directory: ${dir}`);
     writeFileSync(join(dir, 'compose.yml'), synthesizer.synthCompose());
     writeFileSync(join(dir, '.env'), synthesizer.synthEnv());
   }
 
-  private loadDefinition(): Promise<ChainfileDefinition> {
+  private loadChainfile(): Promise<Chainfile> {
     if (existsSync(this.uri)) {
       return JSON.parse(readFileSync(this.uri, 'utf-8'));
     }

@@ -1,18 +1,18 @@
 import { expect, it } from '@jest/globals';
-import { ChainfileDefinition } from 'chainfile';
+import { Chainfile } from 'chainfile/schema';
 
 import { Synthesizer } from './synthesizer';
 
-it('should fail to synthesize with invalid definition', async () => {
+it('should fail to synthesize with invalid chainfile', async () => {
   expect(() => new Synthesizer({})).toThrowError();
 });
 
-it('should synthesize with valid definition', async () => {
-  const definition: ChainfileDefinition = {
+it('should synthesize with valid chainfile', async () => {
+  const chainfile: Chainfile = {
     id: 'eip155:1337/ganache:7.9.1',
     caip2: 'eip155:1337',
     name: 'Ganache',
-    environment: {
+    env: {
       RPC_USER: {
         type: 'RandomBytes',
         length: 16,
@@ -90,7 +90,7 @@ it('should synthesize with valid definition', async () => {
     },
   };
 
-  const synthesizer = new Synthesizer(definition);
+  const synthesizer = new Synthesizer(chainfile);
   expect(synthesizer.synthCompose()).toMatchSnapshot();
   expect(synthesizer.synthEnv().split('\n')).toStrictEqual([
     expect.stringMatching(/^RPC_USER=[0-9a-f]{32}$/),
@@ -101,7 +101,7 @@ it('should synthesize with valid definition', async () => {
 });
 
 it('should have different deploymentId when using different Synthesizer', async () => {
-  const definition: ChainfileDefinition = {
+  const env: Chainfile = {
     id: 'eip155:1337/ganache:7.9.1',
     caip2: 'eip155:1337',
     name: 'Ganache',
@@ -118,7 +118,7 @@ it('should have different deploymentId when using different Synthesizer', async 
     },
   };
 
-  const synthesizer1 = new Synthesizer(definition);
-  const synthesizer2 = new Synthesizer(definition);
+  const synthesizer1 = new Synthesizer(env);
+  const synthesizer2 = new Synthesizer(env);
   expect(synthesizer1.deploymentId).not.toEqual(synthesizer2.deploymentId);
 });

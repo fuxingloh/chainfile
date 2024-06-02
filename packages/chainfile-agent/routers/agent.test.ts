@@ -1,15 +1,15 @@
 import { randomBytes } from 'node:crypto';
 
 import { expect, it } from '@jest/globals';
-import { ChainfileDefinition } from 'chainfile';
+import { Chainfile } from 'chainfile/schema';
 
 import { createCaller } from './_app';
 
-const definition: ChainfileDefinition = {
+const chainfile: Chainfile = {
   id: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind:25.1',
   caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
   name: 'Bitcoin Regtest',
-  environment: {
+  env: {
     RPC_USER: {
       type: 'Value',
       value: 'agent',
@@ -67,7 +67,7 @@ const definition: ChainfileDefinition = {
 const deploymentId = randomBytes(8).toString('hex');
 
 const caller = createCaller({
-  definition: definition,
+  chainfile: chainfile,
   deploymentId: deploymentId,
 });
 
@@ -75,13 +75,13 @@ it('should call Agent.GetDeployment', async () => {
   const result = await caller.Agent.GetDeployment();
   expect(result).toStrictEqual({
     caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
-    definitionId: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind:25.1',
+    chainfileId: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind:25.1',
     deploymentId: deploymentId,
     name: 'Bitcoin Regtest',
   });
 });
 
-it('should call Agent.GetDefinition', async () => {
-  const result = await caller.Agent.GetDefinition();
-  expect(result).toEqual(JSON.parse(JSON.stringify(definition)));
+it('should call Agent.GetChainfile', async () => {
+  const result = await caller.Agent.GetChainfile();
+  expect(result).toEqual(JSON.parse(JSON.stringify(chainfile)));
 });

@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/chainfile/index.json",
+  "$schema": "./node_modules/chainfile/schema.json",
   "id": "solana:00000000000000000000000000000000/solana-test-validator:1.17.26",
   "caip2": "solana:00000000000000000000000000000000",
   "name": "Solana Test Validator",

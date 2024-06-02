@@ -3,8 +3,8 @@ import { z } from 'zod';
 import { publicProcedure, router } from '../trpc';
 
 export const agentRouter = router({
-  GetDefinition: publicProcedure
-    .meta({ openapi: { method: 'GET', path: '/definition', tags: ['agent'] } })
+  GetChainfile: publicProcedure
+    .meta({ openapi: { method: 'GET', path: '/chainfile', tags: ['agent'] } })
     .input(z.void())
     .output(
       z.object({
@@ -12,12 +12,12 @@ export const agentRouter = router({
         id: z.string(),
         caip2: z.string(),
         name: z.string(),
-        environment: z.any().optional(),
+        env: z.any().optional(),
         containers: z.any(),
       }),
     )
     .query(async ({ ctx }) => {
-      return ctx.definition;
+      return ctx.chainfile;
     }),
   GetDeployment: publicProcedure
     .meta({ openapi: { method: 'GET', path: '/deployment', tags: ['agent'] } })
@@ -25,7 +25,7 @@ export const agentRouter = router({
     .output(
       z.object({
         deploymentId: z.string(),
-        definitionId: z.string(),
+        chainfileId: z.string(),
         caip2: z.string(),
         name: z.string(),
       }),
@@ -33,9 +33,9 @@ export const agentRouter = router({
     .query(async ({ ctx }) => {
       return {
         deploymentId: ctx.deploymentId,
-        definitionId: ctx.definition.id,
-        caip2: ctx.definition.caip2,
-        name: ctx.definition.name,
+        chainfileId: ctx.chainfile.id,
+        caip2: ctx.chainfile.caip2,
+        name: ctx.chainfile.name,
       };
     }),
 });

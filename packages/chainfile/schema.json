@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://chainfile.org/schema.json",
-  "title": "Chainfile Definition",
-  "description": "Chainfile definition defines the instructions on how to package complex blockchain nodes into a Container that can be easily deployed and managed on Container-capable platforms such as Kubernetes, Compose, and ECS.",
+  "title": "Chainfile",
+  "description": "Chainfile defines the instructions on how to package complex blockchain nodes into a Container that can be easily deployed and managed on Container-capable platforms such as Kubernetes, Compose, and ECS.",
   "type": "object",
   "properties": {
     "$schema": {
@@ -11,21 +11,21 @@
     "id": {
       "type": "string",
       "pattern": "^[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}/.+$",
-      "description": "CAIP-2 Extended ID that uniquely identifies this chainfile definition."
+      "description": "CAIP-2 Extended ID that uniquely identifies this chainfile."
     },
     "caip2": {
       "type": "string",
       "pattern": "^[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}$",
-      "description": "CAIP-2 Chain ID of the blockchain network this chainfile definition is for."
+      "description": "CAIP-2 Chain ID of the blockchain network this chainfile is for."
     },
     "name": {
       "type": "string",
-      "description": "Describes this definition.",
+      "description": "Describes this chainfile.",
       "minLength": 1,
       "maxLength": 128
     },
-    "environment": {
-      "$ref": "#/definitions/Environment"
+    "env": {
+      "$ref": "#/definitions/Env"
     },
     "containers": {
       "type": "object",
@@ -42,17 +42,17 @@
   "required": ["id", "caip2", "name", "containers"],
   "additionalProperties": false,
   "definitions": {
-    "Environment": {
+    "Env": {
       "type": "object",
       "maxProperties": 30,
       "patternProperties": {
         "^[a-zA-Z_]+[a-zA-Z0-9_]*$": {
-          "$ref": "#/definitions/EnvironmentFactory"
+          "$ref": "#/definitions/EnvFactory"
         }
       },
       "additionalProperties": false
     },
-    "EnvironmentFactory": {
+    "EnvFactory": {
       "oneOf": [
         {
           "type": "object",
@@ -88,7 +88,7 @@
         }
       ]
     },
-    "EnvironmentReference": {
+    "EnvReference": {
       "type": "object",
       "properties": {
         "key": {
@@ -145,7 +145,7 @@
           "maxProperties": 30,
           "patternProperties": {
             "^[a-zA-Z_]+[a-zA-Z0-9_]*$": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvironmentReference" }]
+              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvReference" }]
             }
           },
           "additionalProperties": false
@@ -360,10 +360,10 @@
               "const": "HttpBasic"
             },
             "username": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvironmentReference" }]
+              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvReference" }]
             },
             "password": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvironmentReference" }]
+              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvReference" }]
             }
           },
           "required": ["type", "username", "password"],
@@ -376,7 +376,7 @@
               "const": "HttpBearer"
             },
             "token": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvironmentReference" }]
+              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvReference" }]
             }
           },
           "required": ["type", "token"],

@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 
-import { Environment } from './index';
+import { Env } from './schema';
 
 // Dotenv Expansion Implementation
 //
@@ -72,9 +72,9 @@ const dotenv = {
   },
 };
 
-export function synthEnv(environment: Environment): Record<string, string> {
+export function synthEnv(env: Env): Record<string, string> {
   return dotenv.expand(
-    Object.entries(environment).reduce(
+    Object.entries(env).reduce(
       (env, [key, factory]) => {
         if (factory.type === 'RandomBytes') {
           env[key] = randomBytes(factory.length).toString(factory.encoding);

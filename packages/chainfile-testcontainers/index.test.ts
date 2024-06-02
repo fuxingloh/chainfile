@@ -1,12 +1,13 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { Chainfile } from 'chainfile/type';
 
 import { ChainfileAgent, ChainfileContainer, ChainfileTestcontainers } from './index';
 
-const definition = {
+const chainfile: Chainfile = {
   id: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind:25.1',
   caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
   name: 'Bitcoin Regtest',
-  environment: {
+  env: {
     RPC_USER: {
       type: 'Value',
       value: 'chainfile',
@@ -64,7 +65,7 @@ const definition = {
 let testcontainers: ChainfileTestcontainers;
 
 beforeAll(async () => {
-  testcontainers = await ChainfileTestcontainers.start(definition);
+  testcontainers = await ChainfileTestcontainers.start(chainfile);
 });
 
 afterAll(async () => {
@@ -111,16 +112,16 @@ describe('chainfile-agent', () => {
     const result = await agent.getDeployment();
     expect(result).toMatchObject({
       deploymentId: testcontainers.getDeploymentId(),
-      definitionId: definition.id,
-      caip2: definition.caip2,
-      name: definition.name,
+      chainfileId: chainfile.id,
+      caip2: chainfile.caip2,
+      name: chainfile.name,
     });
   });
 
-  it('should call GET /definition', async () => {
-    const result = await agent.getDefinition();
+  it('should call GET /chainfile', async () => {
+    const result = await agent.getChainfile();
     const expected = {
-      ...definition,
+      ...chainfile,
       $schema: undefined,
     };
     delete expected.$schema;

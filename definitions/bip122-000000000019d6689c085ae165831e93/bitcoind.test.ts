@@ -2,12 +2,12 @@ import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { ChainfileContainer, ChainfileTestcontainers } from 'chainfile-testcontainers';
 import waitForExpect from 'wait-for-expect';
 
-import definition from './bitcoind.json';
+import bitcoind from './bitcoind.json';
 
 let testcontainers: ChainfileTestcontainers;
 
 beforeAll(async () => {
-  testcontainers = await ChainfileTestcontainers.start(definition);
+  testcontainers = await ChainfileTestcontainers.start(bitcoind);
 });
 
 afterAll(async () => {

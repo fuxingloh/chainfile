@@ -2,26 +2,21 @@
   "name": "chainfile",
   "version": "0.0.0",
   "private": false,
-  "description": "Chainfile definition defines the instructions on how to package complex blockchain nodes into a Container that can be easily deployed and managed on Container-capable platforms such as Kubernetes, Compose, and ECS.",
+  "description": "Chainfile defines the instructions on how to package complex blockchain nodes into a Container that can be easily deployed and managed on Container-capable platforms such as Kubernetes, Compose, and ECS.",
   "repository": {
     "url": "git+https://github.com/vetumorg/chainfile"
   },
   "license": "MPL-2.0",
-  "main": "index.json",
-  "types": "index.d.ts",
   "files": [
-    "index.json",
-    "index.d.ts",
-    "schema.js",
-    "schema.d.ts",
-    "schema.d.ts.map",
-    "environment.js",
-    "environment.d.ts",
-    "environment.d.ts.map"
+    "schema.json",
+    "**/*.d.ts",
+    "**/*.d.ts.map",
+    "**/*.js"
   ],
   "scripts": {
-    "build": "json2ts index.json > index.d.ts && tsc --project tsconfig.build.json",
+    "build": "tsc --project tsconfig.build.json",
     "clean": "rm -f index.d.ts && tsc --build --clean",
+    "generate": "json2ts schema.json > type.ts",
     "lint": "eslint .",
     "test": "jest"
   },
