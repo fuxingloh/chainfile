@@ -1,0 +1,71 @@
+import { Steps } from 'nextra/components';
+
+# The 4-Step Plan
+
+Chainfile 4-step ecosystem plan to restore the simplicity of running a blockchain node
+and return the democratization of access to the blockchain,
+regardless of scale, complexity, or tenancy,
+to accelerate the adoption of blockchain technology regardless of the protocol.
+
+An open-source ecosystem that defines, tests, deploys, and scales blockchain nodes on container orchestration platforms.
+While utilizing containers is necessary to take advantage of innovations in container orchestration,
+it is a detail that upstream consumers do not have to worry about.
+
+<Steps>
+
+### Define once
+
+Using a simple, non-turing-complete JSON schema that is easy to compose, maintain, and upgrade.
+
+```json filename="@chainfile/bitcoin/mainnet.json"
+{
+  "$schema": "https://chainfile.org/schema.json",
+  "caip2": "bip122:000000000019d6689c085ae165831e93",
+  "name": "Bitcoin Mainnet",
+  "containers": {
+    // ...
+  }
+}
+```
+
+### Test locally
+
+Using containers to ensure your blockchain application integrates well with the rest of your stack.
+
+```ts filename="app.test.ts"
+import definition from '@chainfile/hardhat/localhost.json';
+
+const testcontainers = await ChainfileTestcontainers.start(definition);
+```
+
+### Deploy anywhere
+
+Using Docker Compose, Kubernetes, or any other container-orchestration platform.
+
+```shell
+chainfile-docker synth @chainfile/bitcoin/bitcoind.json
+
+docker compose up
+```
+
+### Scale effortlessly
+
+With planet-scale cloud constructs that are future-proof to run on decentralized computing when ready.
+
+```ts filename="cdk8s/chart.ts" {8-11}
+import { ChainfileChart } from 'chainfile-cdk8s';
+import mainnet from '@chainfile/geth-lighthouse/mainnet.json';
+
+class App extends Stack {
+  constructor(scope: App, id: string, props?: StackProps) {
+    super(scope, id, props);
+
+    new ChainfileChart(this, 'geth-lighthouse', {
+      definition: mainnet,
+      spec: { replicas: 1 },
+    });
+  }
+}
+```
+
+</Steps>

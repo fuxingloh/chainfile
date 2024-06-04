@@ -9,7 +9,6 @@ export const agentRouter = router({
     .output(
       z.object({
         $schema: z.string().optional(),
-        id: z.string(),
         caip2: z.string(),
         name: z.string(),
         env: z.any().optional(),
@@ -25,7 +24,6 @@ export const agentRouter = router({
     .output(
       z.object({
         deploymentId: z.string(),
-        chainfileId: z.string(),
         caip2: z.string(),
         name: z.string(),
       }),
@@ -33,7 +31,6 @@ export const agentRouter = router({
     .query(async ({ ctx }) => {
       return {
         deploymentId: ctx.deploymentId,
-        chainfileId: ctx.chainfile.id,
         caip2: ctx.chainfile.caip2,
         name: ctx.chainfile.name,
       };

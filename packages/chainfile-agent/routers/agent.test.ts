@@ -6,7 +6,6 @@ import { Chainfile } from 'chainfile/schema';
 import { createCaller } from './_app';
 
 const chainfile: Chainfile = {
-  id: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind:25.1',
   caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
   name: 'Bitcoin Regtest',
   env: {
@@ -75,7 +74,6 @@ it('should call Agent.GetDeployment', async () => {
   const result = await caller.Agent.GetDeployment();
   expect(result).toStrictEqual({
     caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
-    chainfileId: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind:25.1',
     deploymentId: deploymentId,
     name: 'Bitcoin Regtest',
   });

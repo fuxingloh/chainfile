@@ -33,9 +33,5 @@
     "chainfile": "workspace:^",
     "trpc-openapi": "^1.2.0",
     "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@workspace/jest-preset": "workspace:*",
-    "@workspace/tsconfig": "workspace:*"
   }
 }

@@ -46,7 +46,6 @@ to accelerate the adoption of blockchain technology.
 
 ```json
 {
-  "id": "eip155:1/geth:1.13.5/lighthouse:4.5.0",
   "caip2": "eip155:1",
   "name": "Ethereum Mainnet (Geth + Lighthouse)"
 }
@@ -68,7 +67,7 @@ afterAll(async () => {
 });
 
 it('should rpc(eth_blockNumber)', async () => {
-  const hardhat = testcontainers.getContainer('hardhat');
+  const hardhat = testcontainers.get('hardhat');
 
   const response = await hardhat.rpc({
     method: 'eth_blockNumber',

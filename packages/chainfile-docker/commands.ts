@@ -22,14 +22,14 @@ export class SynthCommand extends Command {
     const chainfile = await this.loadChainfile();
     const synthesizer = new Synthesizer(chainfile);
 
-    const dir = this.dir ?? chainfile.id.replaceAll('/', '_').replaceAll(':', '-');
+    const dir = this.dir ?? chainfile.name.replaceAll('/', '_').replaceAll(':', '-');
 
     if (existsSync(dir)) {
       this.context.stdout.write(`Directory: ${dir} already exists, aborting.`);
       return;
     }
 
-    this.context.stdout.write(`Synthesizing chainfile: ${chainfile.id} to directory: ${dir}`);
+    this.context.stdout.write(`Synthesizing chainfile to directory: ${dir}`);
     writeFileSync(join(dir, 'compose.yml'), synthesizer.synthCompose());
     writeFileSync(join(dir, '.env'), synthesizer.synthEnv());
   }

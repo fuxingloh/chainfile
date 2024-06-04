@@ -33,9 +33,5 @@
     "chainfile": "workspace:^",
     "chainfile-docker": "workspace:^",
     "testcontainers": "^10.9.0"
-  },
-  "devDependencies": {
-    "@workspace/jest-preset": "workspace:*",
-    "@workspace/tsconfig": "workspace:*"
   }
 }

@@ -4,7 +4,6 @@ import { Chainfile } from 'chainfile/schema';
 import { ChainfileAgent, ChainfileContainer, ChainfileTestcontainers } from './index';
 
 const chainfile: Chainfile = {
-  id: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328/bitcoind:25.1',
   caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
   name: 'Bitcoin Regtest',
   env: {
@@ -76,7 +75,7 @@ describe('container', () => {
   let container: ChainfileContainer;
 
   beforeAll(() => {
-    container = testcontainers.getContainer('bitcoind');
+    container = testcontainers.get('bitcoind');
   });
 
   it('should get rpc port', async () => {
@@ -105,14 +104,13 @@ describe('chainfile-agent', () => {
   let agent: ChainfileAgent;
 
   beforeAll(() => {
-    agent = testcontainers.getChainfileAgent();
+    agent = testcontainers.getAgent();
   });
 
   it('should call GET /deployment', async () => {
     const result = await agent.getDeployment();
     expect(result).toMatchObject({
       deploymentId: testcontainers.getDeploymentId(),
-      chainfileId: chainfile.id,
       caip2: chainfile.caip2,
       name: chainfile.name,
     });
