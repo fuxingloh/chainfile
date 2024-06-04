@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { ChainfileContainer, ChainfileTestcontainers } from 'chainfile-testcontainers';
 
-import solana from './solana-test-validator.json';
+import solana from './test-validator.json';
 
 let testcontainers: ChainfileTestcontainers;
 
