@@ -165,7 +165,7 @@
           "additionalProperties": false
         }
       },
-      "required": ["image", "source", "endpoints", "resources"],
+      "required": ["image", "source", "resources"],
       "additionalProperties": false
     },
     "Endpoint": {

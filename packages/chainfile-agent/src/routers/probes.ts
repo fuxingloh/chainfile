@@ -43,7 +43,7 @@ export const probesRouter = router({
 async function query(chainfile: Chainfile, probeType: ProbeType) {
   const probeFunctions = Object.entries(chainfile.containers).flatMap(
     ([name, container]): [string, ProbeFunction][] => {
-      return Object.values(container.endpoints)
+      return Object.values(container.endpoints ?? {})
         .map((endpoint): [string, ProbeFunction] | undefined => {
           const func = createProbeFunction(name, endpoint, probeType);
           if (func === undefined) {

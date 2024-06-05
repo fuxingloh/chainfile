@@ -106,7 +106,7 @@ export class Compose {
     //  has more resources available.
 
     function createPorts(container: Container): string[] {
-      return Object.values(container.endpoints).map((endpoint) => {
+      return Object.values(container.endpoints ?? {}).map((endpoint) => {
         // TODO: Support Binding P2P Port Statically
         return `0:${endpoint.port}`;
       });
