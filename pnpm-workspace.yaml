@@ -1,5 +1,5 @@
 packages:
-  - 'chainfile/*'
+  - 'definitions/*'
   - 'packages/*'
   - 'website'
   - 'workspace/*'

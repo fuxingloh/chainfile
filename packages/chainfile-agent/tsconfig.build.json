@@ -1,4 +1,10 @@
 {
-  "extends": "./tsconfig.json",
-  "exclude": ["**/*.test.ts", "**/*.js"]
+  "extends": "@workspace/tsconfig",
+  "compilerOptions": {
+    "lib": ["ES2021", "DOM"],
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "include": ["./src"],
+  "exclude": ["**/*.test.ts"]
 }

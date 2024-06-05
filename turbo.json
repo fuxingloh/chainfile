@@ -1,12 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "globalDependencies": ["tsconfig.json"],
+  "tasks": {
     "clean": {
       "cache": false
     },
     "build": {
-      "inputs": ["tsconfig.json", "tsconfig.build.json", "./**/*.ts"],
-      "outputs": ["./**/*.js", "./**/*.d.ts", "./**/*.d.ts.map"],
+      "inputs": ["src/**"],
+      "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
     "build:docker": {
@@ -16,7 +17,7 @@
       "cache": false
     },
     "test": {
-      "inputs": ["tsconfig.json", "./**/*.ts", "./**/*.test.ts"],
+      "inputs": ["./src/**"],
       "dependsOn": ["^build"]
     },
     "lint": {
