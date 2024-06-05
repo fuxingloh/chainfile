@@ -3,13 +3,13 @@
   "extends": ["//"],
   "pipeline": {
     "test": {
-      "inputs": ["tsconfig.json", "./**/*.ts", "./**/*.test.ts"],
-      "dependsOn": ["chainfile-agent#build:docker", "^build"]
+      "inputs": ["./src/**"],
+      "dependsOn": ["@chainfile/agent#build:docker", "^build"]
     },
     "build": {
-      "inputs": ["tsconfig.json", "tsconfig.build.json", "./**/*.ts"],
-      "outputs": ["./**/*.js", "./**/*.d.ts", "./**/*.d.ts.map"],
-      "dependsOn": ["chainfile-agent#build:docker", "^build"]
+      "inputs": ["./src/**"],
+      "outputs": ["./dist"],
+      "dependsOn": ["@chainfile/agent#build:docker", "^build"]
     }
   }
 }

@@ -84,7 +84,7 @@ it('should rpc(eth_blockNumber)', async () => {
 ### Deploy Anywhere
 
 ```bash
-chainfile-docker synth eip155:1/geth:1.13.5/lighthouse:4.5.0
+chainfile docker synth eip155:1/geth:1.13.5/lighthouse:4.5.0
 cd eip155-1_geth-1.13.5_lighthouse-4.5.0
 docker compose up
 ```

@@ -1,0 +1,28 @@
+{
+  "name": "@chainfile/schema",
+  "version": "0.0.0",
+  "private": false,
+  "description": "A schema-oriented ecosystem packed with compute primitives such as cpu, memory, env, volume, snapshot, endpoint, and probes that can be composed to launch any blockchain node on any container-orchestration platform.",
+  "repository": {
+    "url": "git+https://github.com/vetumorg/chainfile"
+  },
+  "license": "MIT",
+  "main": "schema.json",
+  "types": "dist/schema.d.ts",
+  "files": [
+    "dist/*",
+    "schema.json"
+  ],
+  "scripts": {
+    "build": "json2ts -i schema.json -o dist/schema.d.ts",
+    "clean": "rm -rf dist"
+  },
+  "lint-staged": {
+    "*": [
+      "prettier --write --ignore-unknown"
+    ]
+  },
+  "devDependencies": {
+    "json-schema-to-typescript": "^14.0.4"
+  }
+}

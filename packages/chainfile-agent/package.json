@@ -1,11 +1,11 @@
 {
-  "name": "chainfile-agent",
+  "name": "@chainfile/agent",
   "version": "0.0.0",
   "private": false,
   "repository": {
     "url": "git+https://github.com/vetumorg/chainfile"
   },
-  "license": "MPL-2.0",
+  "license": "MIT",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "build:docker": "docker buildx build --progress=plain -t ghcr.io/vetumorg/chainfile-agent:$(node -p \"require('./package.json').version\") -f Dockerfile ../../",
@@ -27,10 +27,10 @@
     "preset": "@workspace/jest-preset"
   },
   "dependencies": {
+    "@chainfile/schema": "workspace:^",
     "@trpc/server": "^10.45.2",
-    "ajv": "^8.14.0",
+    "ajv": "^8.16.0",
     "ajv-formats": "^3.0.1",
-    "chainfile": "workspace:^",
     "trpc-openapi": "^1.2.0",
     "zod": "^3.23.8"
   }

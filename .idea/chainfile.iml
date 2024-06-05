@@ -8,9 +8,6 @@
       <excludePattern pattern=".chainfile" />
       <excludePattern pattern=".turbo" />
       <excludePattern pattern="dist" />
-      <excludePattern pattern="*.js" />
-      <excludePattern pattern="*.d.ts" />
-      <excludePattern pattern="*.d.ts.map" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

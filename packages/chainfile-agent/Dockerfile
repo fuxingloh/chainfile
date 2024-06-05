@@ -23,7 +23,7 @@ RUN pnpm add -g turbo@${TURBO_VERSION}
 
 COPY . .
 
-RUN pnpm turbo prune --scope=chainfile-agent --docker
+RUN pnpm turbo prune --scope=@chainfile/agent --docker
 
 # Build project with isolated workspace
 FROM base AS builder
@@ -33,7 +33,7 @@ COPY .gitignore pnpm-workspace.yaml ./
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 
-# Mount cache to copy from content-addressable store; ignore cross-device link errors due to different mount points.
+# Mount cache to copy from content-addressable store
 RUN --mount=type=cache,target=/root/.local/share/pnpm/global/store/v3\
   pnpm install --frozen-lockfile
 
@@ -42,8 +42,7 @@ COPY --from=pruner /app/out/full/ .
 # To relink dependencies with ./bin links
 RUN pnpm install --frozen-lockfile --offline
 
-RUN --mount=type=cache,id=turborepo-cache,target=node_modules/.cache/turbo\
-  pnpm turbo run build --filter=chainfile-agent
+RUN pnpm turbo run build --filter=@chainfile/agent
 
 # Run agent
 FROM node:20-alpine AS runner
@@ -51,8 +50,8 @@ RUN addgroup --system --gid 1001 chainfile && \
     adduser --system --uid 1001 chainfile
 USER chainfile
 
-EXPOSE 1503
+EXPOSE 1569
 WORKDIR /app/packages/chainfile-agent
 
 COPY --from=builder --chown=chainfile:chainfile /app /app
-CMD node "server.js"
+CMD node "dist/server.js"

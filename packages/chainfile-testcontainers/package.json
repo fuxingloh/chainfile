@@ -1,15 +1,15 @@
 {
-  "name": "chainfile-testcontainers",
+  "name": "@chainfile/testcontainers",
   "version": "0.0.0",
   "private": false,
   "repository": {
     "url": "git+https://github.com/vetumorg/chainfile"
   },
   "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "**/*.d.ts",
-    "**/*.d.ts.map",
-    "**/*.js"
+    "dist/*"
   ],
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
@@ -30,8 +30,8 @@
     "preset": "@workspace/jest-preset"
   },
   "dependencies": {
-    "chainfile": "workspace:^",
-    "chainfile-docker": "workspace:^",
+    "@chainfile/docker": "workspace:^",
+    "@chainfile/schema": "workspace:^",
     "testcontainers": "^10.9.0"
   }
 }
