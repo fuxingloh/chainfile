@@ -1,10 +1,10 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "extends": ["//"],
-  "pipeline": {
+  "tasks": {
     "build": {
       "inputs": ["schema.json"],
-      "outputs": ["./dist"]
+      "outputs": ["dist/**"]
     }
   }
 }

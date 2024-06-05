@@ -1,14 +1,14 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "extends": ["//"],
-  "pipeline": {
+  "tasks": {
     "test": {
-      "inputs": ["./src/**"],
+      "inputs": ["src/**"],
       "dependsOn": ["@chainfile/agent#build:docker", "^build"]
     },
     "build": {
-      "inputs": ["./src/**"],
-      "outputs": ["./dist"],
+      "inputs": ["src/**"],
+      "outputs": ["dist/**"],
       "dependsOn": ["@chainfile/agent#build:docker", "^build"]
     }
   }

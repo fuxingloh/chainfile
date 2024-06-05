@@ -27,7 +27,7 @@ export class ChainfileContainer extends AbstractStartedContainer {
    * @param name of the endpoint to get
    */
   getHostPort(name: string): number {
-    const endpoint = this.container.endpoints[name];
+    const endpoint = this.container.endpoints?.[name];
     if (endpoint === undefined) {
       throw new Error(`Port ${name} not found`);
     }
