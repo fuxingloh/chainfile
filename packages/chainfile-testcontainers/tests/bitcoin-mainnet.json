@@ -1,15 +1,8 @@
-# Chainfile.json
-
-import { Callout } from 'nextra/components';
-
-<Callout type="warning">This page is a stub. Help us by contributing to the documentation!</Callout>
-
-```json filename="mainnet.json" copy
 {
   "$schema": "https://chainfile.org/schema.json",
   "caip2": "bip122:000000000019d6689c085ae165831e93",
   "name": "Bitcoin Mainnet",
-  "env": {
+  "values": {
     "RPC_USER": {
       "type": "RandomBytes",
       "length": 16,
@@ -23,7 +16,8 @@ import { Callout } from 'nextra/components';
   },
   "containers": {
     "bitcoind": {
-      "image": "docker.io/kylemanna/bitcoind@sha256:1492fa0306cb7eb5de8d50ba60367cff8d29b00b516e45e93e05f8b54fa2970e",
+      "image": "docker.io/kylemanna/bitcoind",
+      "tag": "latest",
       "source": "https://github.com/kylemanna/docker-bitcoind",
       "endpoints": {
         "p2p": {
@@ -87,4 +81,3 @@ import { Callout } from 'nextra/components';
     }
   }
 }
-```

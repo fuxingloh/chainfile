@@ -1,0 +1,33 @@
+{
+  "$schema": "https://chainfile.org/schema.json",
+  "caip2": "eip155:31337",
+  "name": "Hardhat",
+  "containers": {
+    "hardhat": {
+      "image": "ghcr.io/fuxingloh/hardhat-container",
+      "tag": "2.22.1",
+      "source": "https://github.com/fuxingloh/hardhat-container",
+      "resources": {
+        "cpu": 0.25,
+        "memory": 256
+      },
+      "endpoints": {
+        "rpc": {
+          "port": 8545,
+          "protocol": "HTTP JSON-RPC 2.0",
+          "probes": {
+            "readiness": {
+              "params": [],
+              "method": "eth_blockNumber",
+              "match": {
+                "result": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://chainfile.org/schema.json",
+  "caip2": "eip155:1337",
+  "name": "Ganache",
+  "containers": {
+    "ganache": {
+      "image": "docker.io/trufflesuite/ganache",
+      "tag": "v7.9.2",
+      "source": "https://github.com/trufflesuite/ganache",
+      "resources": {
+        "cpu": 0.25,
+        "memory": 256
+      },
+      "endpoints": {
+        "rpc": {
+          "port": 8545,
+          "protocol": "HTTP JSON-RPC 2.0",
+          "probes": {
+            "readiness": {
+              "params": [],
+              "method": "eth_blockNumber",
+              "match": {
+                "result": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

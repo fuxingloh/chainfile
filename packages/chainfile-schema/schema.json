@@ -6,7 +6,6 @@
       "type": "object",
       "properties": {
         "$schema": {
-          "type": "string",
           "const": "https://chainfile.org/schema.json"
         },
         "caip2": {
@@ -20,8 +19,8 @@
           "minLength": 1,
           "maxLength": 128
         },
-        "env": {
-          "$ref": "#/definitions/Env"
+        "values": {
+          "$ref": "#/definitions/Values"
         },
         "containers": {
           "type": "object",
@@ -38,18 +37,41 @@
       "required": ["$schema", "caip2", "name", "containers"],
       "additionalProperties": false
     },
-    "Env": {
+    "Values": {
       "type": "object",
       "maxProperties": 30,
       "patternProperties": {
         "^[a-zA-Z_]+[a-zA-Z0-9_]*$": {
-          "$ref": "#/definitions/EnvFactory"
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/ValueFactory"
+            }
+          ]
         }
       },
       "additionalProperties": false
     },
-    "EnvFactory": {
+    "ValueFactory": {
       "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "Inject"
+            },
+            "name": {
+              "type": "string"
+            },
+            "default": {
+              "type": "string"
+            }
+          },
+          "required": ["type", "name"],
+          "additionalProperties": false
+        },
         {
           "type": "object",
           "properties": {
@@ -68,30 +90,17 @@
           },
           "required": ["type", "length", "encoding"],
           "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "type": {
-              "const": "Value"
-            },
-            "value": {
-              "type": "string"
-            }
-          },
-          "required": ["type", "value"],
-          "additionalProperties": false
         }
       ]
     },
-    "EnvReference": {
+    "ValueReference": {
       "type": "object",
       "properties": {
-        "key": {
+        "$value": {
           "type": "string"
         }
       },
-      "required": ["key"],
+      "required": ["$value"],
       "additionalProperties": false
     },
     "Container": {
@@ -99,6 +108,10 @@
       "properties": {
         "image": {
           "type": "string"
+        },
+        "tag": {
+          "description": "Tag of the container image.",
+          "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/ValueReference" }]
         },
         "source": {
           "type": "string",
@@ -141,7 +154,7 @@
           "maxProperties": 30,
           "patternProperties": {
             "^[a-zA-Z_]+[a-zA-Z0-9_]*$": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvReference" }]
+              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/ValueReference" }]
             }
           },
           "additionalProperties": false
@@ -165,7 +178,7 @@
           "additionalProperties": false
         }
       },
-      "required": ["image", "source", "resources"],
+      "required": ["image", "tag", "source", "resources"],
       "additionalProperties": false
     },
     "Endpoint": {
@@ -356,10 +369,10 @@
               "const": "HttpBasic"
             },
             "username": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvReference" }]
+              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/ValueReference" }]
             },
             "password": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvReference" }]
+              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/ValueReference" }]
             }
           },
           "required": ["type", "username", "password"],
@@ -372,7 +385,7 @@
               "const": "HttpBearer"
             },
             "token": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvReference" }]
+              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/ValueReference" }]
             }
           },
           "required": ["type", "token"],

@@ -1,36 +1,60 @@
 import { randomBytes } from 'node:crypto';
 
-import schema, { Chainfile, Container } from '@chainfile/schema';
+import schema, { Chainfile, Container, ValueFactory, ValueReference } from '@chainfile/schema';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import yaml from 'js-yaml';
+import mapValues from 'lodash/mapValues';
 
 import { version } from '../package.json';
-import { synthDotEnvFile } from './dotenv';
-
-const ajv = new Ajv();
-addFormats(ajv);
-
-const validateFunction = ajv.compile(schema);
 
 /**
  * Synthesize a Chainfile into `docker.*.yml` & `.env` files.
  */
 export class Compose {
+  /**
+   * @param chainfile
+   * @param values
+   * @param suffix for the container names to prevent conflicts.
+   */
   constructor(
     private readonly chainfile: Chainfile,
-    /**
-     * Suffix for the container names to prevent conflicts.
-     */
+    private readonly values: Record<string, string>,
     public readonly suffix: string = randomBytes(8).toString('hex'),
   ) {
+    const ajv = new Ajv();
+    addFormats(ajv);
+    const validateFunction = ajv.compile(schema);
+
     if (!validateFunction(chainfile)) {
       throw new Error(ajv.errorsText(validateFunction.errors));
     }
   }
 
-  public synthEnv(): string {
-    return synthDotEnvFile(this.chainfile.env ?? {});
+  public synthDotEnv(): string {
+    const env = mapValues(this.chainfile.values ?? {}, (factory: string | ValueFactory) => {
+      if (typeof factory === 'string') {
+        return factory;
+      }
+      const type = factory.type;
+      if (type === 'RandomBytes') {
+        return randomBytes(factory.length).toString(factory.encoding);
+      }
+      if (type === 'Inject') {
+        if (this.values[factory.name] !== undefined) {
+          return this.values[factory.name];
+        }
+        if (factory.default !== undefined) {
+          return factory.default;
+        }
+        throw new Error(`Missing Value: ${factory.name}`);
+      }
+      throw new Error(`Unsupported Environment Factory: ${type}`);
+    });
+
+    return Object.entries(env)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('\n');
   }
 
   public synthCompose(): string {
@@ -45,7 +69,7 @@ export class Compose {
           name: this.chainfile.name.toLowerCase().replaceAll(/[^a-z0-9_-]/g, '_'),
           services: {
             ...this.createAgent(),
-            ...this.createContainers(),
+            ...this.createServices(),
           },
           networks: {
             chainfile: {},
@@ -62,16 +86,6 @@ export class Compose {
   }
 
   private createAgent(): Record<'agent', object> {
-    const chainfileJson = JSON.stringify(this.chainfile).replaceAll('$', '$$$');
-
-    const EnvMapping = Object.keys(this.chainfile.env ?? {}).reduce(
-      (env, key) => {
-        env[`CHAINFILE_ENVIRONMENT_${key}`] = `$\{${key}}`;
-        return env;
-      },
-      {} as Record<string, string>,
-    );
-
     return {
       agent: {
         container_name: `agent-${this.suffix}`,
@@ -79,8 +93,8 @@ export class Compose {
         ports: ['0:1569'],
         environment: {
           // Docker compose automatically evaluate environment literals here
-          CHAINFILE_JSON: chainfileJson,
-          ...EnvMapping,
+          CHAINFILE_JSON: JSON.stringify(this.chainfile).replaceAll('$', '$$$'),
+          CHAINFILE_VALUES: JSON.stringify(this.values).replaceAll('$', '$$$'),
         },
         volumes: [
           {
@@ -96,8 +110,8 @@ export class Compose {
     };
   }
 
-  private createContainers(): Record<string, object> {
-    // TODO: resources (cpu, memory) is not supported yet for docker-compose
+  private createServices(): Record<string, object> {
+    // TODO: resources (cpu, memory) is not supported for this runtime:
     //  https://docs.docker.com/compose/compose-file/compose-file-v3/#resources
     //  I'm not sure if we should since docker-compose typically runs on a single machine
     //  and utilizes the host's resources.
@@ -144,30 +158,27 @@ export class Compose {
       return volumes;
     }
 
-    return Object.entries(this.chainfile.containers).reduce(
-      (services, [name, container]) => {
-        services[name] = {
-          container_name: `${name}-${this.suffix}`,
-          image: container.image,
-          command: container.command,
-          environment: Object.entries(container.environment ?? {}).reduce(
-            (env, [key, value]) => {
-              return {
-                ...env,
-                [key]: typeof value === 'string' ? value : `$\{${value.key}}`,
-              };
-            },
-            {} as Record<string, string>,
-          ),
-          ports: createPorts(container),
-          volumes: createVolumes(container),
-          networks: {
-            chainfile: {},
-          },
-        };
-        return services;
-      },
-      {} as Record<string, object>,
-    );
+    return mapValues(this.chainfile.containers, (container, name) => {
+      return {
+        container_name: `${name}-${this.suffix}`,
+        image: container.image + ':' + this.resolveValue(container.tag),
+        command: container.command,
+        environment: mapValues(container.environment ?? {}, (value: string | ValueReference) => {
+          return this.resolveValue(value);
+        }),
+        ports: createPorts(container),
+        volumes: createVolumes(container),
+        networks: {
+          chainfile: {},
+        },
+      };
+    });
+  }
+
+  private resolveValue(value: string | ValueReference): string {
+    if (typeof value === 'string') {
+      return value;
+    }
+    return `$\{${value.$value}}`;
   }
 }

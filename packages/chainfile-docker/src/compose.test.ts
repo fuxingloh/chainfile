@@ -8,7 +8,7 @@ it.each([
     $schema: 'https://chainfile.org/schema.json',
     caip2: 'eip155:1337',
     name: 'Ganache',
-    env: {
+    values: {
       RPC_USER: {
         type: 'RandomBytes',
         length: 16,
@@ -19,21 +19,26 @@ it.each([
         length: 16,
         encoding: 'hex',
       },
-      URL: {
-        type: 'Value',
-        value: 'http://${RPC_USER}:${RPC_PASSWORD}@ganache:8554',
+      URL: 'http://${RPC_USER}:${RPC_PASSWORD}@ganache:8554',
+      GANACHE_VERSION: {
+        type: 'Inject',
+        name: 'GANACHE_VERSION',
+        default: 'v7.9.2',
       },
     },
     containers: {
       ganache: {
-        image: 'docker.io/trufflesuite/ganache@sha256:c62c58290c28e24b427f74c6f597ff696257bd2d8e8d517ce4cf46b29b304a3f',
+        image: 'docker.io/trufflesuite/ganache',
+        tag: {
+          $value: 'GANACHE_VERSION',
+        },
         source: 'https://github.com/trufflesuite/ganache',
         environment: {
           RPCUSER: {
-            key: 'RPC_USER',
+            $value: 'RPC_USER',
           },
           RPCPASSWORD: {
-            key: 'RPC_PASSWORD',
+            $value: 'RPC_PASSWORD',
           },
         },
         // Orchestration
@@ -52,10 +57,10 @@ it.each([
             authorization: {
               type: 'HttpBasic',
               username: {
-                key: 'RPC_USER',
+                $value: 'RPC_USER',
               },
               password: {
-                key: 'RPC_PASSWORD',
+                $value: 'RPC_PASSWORD',
               },
             },
             probes: {
@@ -89,19 +94,14 @@ it.each([
     $schema: 'https://chainfile.org/schema.json',
     caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
     name: 'Bitcoin Regtest',
-    env: {
-      RPC_USER: {
-        type: 'Value',
-        value: 'user',
-      },
-      RPC_PASSWORD: {
-        type: 'Value',
-        value: 'password',
-      },
+    values: {
+      RPC_USER: 'user',
+      RPC_PASSWORD: 'password',
     },
     containers: {
       bitcoind: {
-        image: 'docker.io/kylemanna/bitcoind@sha256:1492fa0306cb7eb5de8d50ba60367cff8d29b00b516e45e93e05f8b54fa2970e',
+        image: 'docker.io/kylemanna/bitcoind',
+        tag: 'latest',
         source: 'https://github.com/kylemanna/docker-bitcoind',
         command: ['btc_oneshot', '-fallbackfee=0.00000200', '-rpcbind=:8332', '-rpcallowip=0.0.0.0/0'],
         endpoints: {
@@ -114,10 +114,10 @@ it.each([
             authorization: {
               type: 'HttpBasic',
               username: {
-                key: 'RPC_USER',
+                $value: 'RPC_USER',
               },
               password: {
-                key: 'RPC_PASSWORD',
+                $value: 'RPC_PASSWORD',
               },
             },
             probes: {
@@ -147,10 +147,10 @@ it.each([
           REGTEST: '1',
           DISABLEWALLET: '0',
           RPCUSER: {
-            key: 'RPC_USER',
+            $value: 'RPC_USER',
           },
           RPCPASSWORD: {
-            key: 'RPC_PASSWORD',
+            $value: 'RPC_PASSWORD',
           },
         },
         volumes: {
@@ -166,7 +166,7 @@ it.each([
     $schema: 'https://chainfile.org/schema.json',
     caip2: 'bip122:000000000019d6689c085ae165831e93',
     name: 'Bitcoin Mainnet',
-    env: {
+    values: {
       RPC_USER: {
         type: 'RandomBytes',
         length: 16,
@@ -180,7 +180,8 @@ it.each([
     },
     containers: {
       bitcoind: {
-        image: 'docker.io/kylemanna/bitcoind@sha256:1492fa0306cb7eb5de8d50ba60367cff8d29b00b516e45e93e05f8b54fa2970e',
+        image: 'docker.io/kylemanna/bitcoind',
+        tag: 'latest',
         source: 'https://github.com/kylemanna/docker-bitcoind',
         endpoints: {
           p2p: {
@@ -192,10 +193,10 @@ it.each([
             authorization: {
               type: 'HttpBasic',
               username: {
-                key: 'RPC_USER',
+                $value: 'RPC_USER',
               },
               password: {
-                key: 'RPC_PASSWORD',
+                $value: 'RPC_PASSWORD',
               },
             },
             probes: {
@@ -224,10 +225,10 @@ it.each([
         environment: {
           DISABLEWALLET: '1',
           RPCUSER: {
-            key: 'RPC_USER',
+            $value: 'RPC_USER',
           },
           RPCPASSWORD: {
-            key: 'RPC_PASSWORD',
+            $value: 'RPC_PASSWORD',
           },
         },
         volumes: {
@@ -245,7 +246,7 @@ it.each([
     },
   },
 ])('should synth compose $name', async (chainfile: any) => {
-  const compose = new Compose(chainfile, 'suffix');
+  const compose = new Compose(chainfile, {}, 'suffix');
   expect(compose.synthCompose()).toMatchSnapshot();
 });
 
@@ -254,7 +255,8 @@ it('should synth env', async () => {
     $schema: 'https://chainfile.org/schema.json',
     caip2: 'eip155:1337',
     name: 'Ganache',
-    env: {
+    values: {
+      URL: 'http://${RPC_USER}:${RPC_PASSWORD}@ganache:8554',
       RPC_USER: {
         type: 'RandomBytes',
         length: 16,
@@ -265,21 +267,18 @@ it('should synth env', async () => {
         length: 16,
         encoding: 'hex',
       },
-      URL: {
-        type: 'Value',
-        value: 'http://${RPC_USER}:${RPC_PASSWORD}@ganache:8554',
-      },
     },
     containers: {
       ganache: {
-        image: 'docker.io/trufflesuite/ganache@sha256:c62c58290c28e24b427f74c6f597ff696257bd2d8e8d517ce4cf46b29b304a3f',
+        image: 'docker.io/trufflesuite/ganache',
+        tag: 'v7.9.2',
         source: 'https://github.com/trufflesuite/ganache',
         environment: {
           RPCUSER: {
-            key: 'RPC_USER',
+            $value: 'RPC_USER',
           },
           RPCPASSWORD: {
-            key: 'RPC_PASSWORD',
+            $value: 'RPC_PASSWORD',
           },
         },
         resources: {
@@ -289,16 +288,16 @@ it('should synth env', async () => {
       },
     },
   };
-  const compose = new Compose(chainfile, 'suffix');
-  expect(compose.synthEnv().split('\n')).toStrictEqual([
+  const compose = new Compose(chainfile, {}, 'suffix');
+  expect(compose.synthDotEnv().split('\n')).toStrictEqual([
+    'URL=http://${RPC_USER}:${RPC_PASSWORD}@ganache:8554',
     expect.stringMatching(/^RPC_USER=[0-9a-f]{32}$/),
     expect.stringMatching(/^RPC_PASSWORD=[0-9a-f]{32}$/),
-    expect.stringMatching(/^URL=http:\/\/[0-9a-f]{32}:[0-9a-f]{32}@ganache:8554$/),
   ]);
 });
 
 it('should fail to synth with invalid chainfile', async () => {
-  expect(() => new Compose({} as any)).toThrowError();
+  expect(() => new Compose({} as any, {})).toThrowError();
 });
 
 it('should have different suffix when using different Compose', async () => {
@@ -308,7 +307,8 @@ it('should have different suffix when using different Compose', async () => {
     name: 'Ganache',
     containers: {
       ganache: {
-        image: 'docker.io/trufflesuite/ganache@sha256:c62c58290c28e24b427f74c6f597ff696257bd2d8e8d517ce4cf46b29b304a3f',
+        image: 'docker.io/trufflesuite/ganache',
+        tag: 'v7.9.2',
         source: 'https://github.com/trufflesuite/ganache',
         resources: {
           cpu: 0.25,
@@ -319,7 +319,7 @@ it('should have different suffix when using different Compose', async () => {
     },
   };
 
-  const compose1 = new Compose(file);
-  const compose2 = new Compose(file);
+  const compose1 = new Compose(file, {});
+  const compose2 = new Compose(file, {});
   expect(compose1.suffix).not.toEqual(compose2.suffix);
 });

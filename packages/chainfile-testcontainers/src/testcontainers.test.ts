@@ -1,25 +1,22 @@
 import { Chainfile } from '@chainfile/schema';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
-import { AgentContainer, ChainfileContainer, ChainfileTestcontainers } from './index';
+import { AgentContainer } from './agent';
+import { ChainfileContainer } from './container';
+import { ChainfileTestcontainers } from './testcontainers';
 
 const chainfile: Chainfile = {
   $schema: 'https://chainfile.org/schema.json',
   caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
   name: 'Bitcoin Regtest',
-  env: {
-    RPC_USER: {
-      type: 'Value',
-      value: 'chainfile',
-    },
-    RPC_PASSWORD: {
-      type: 'Value',
-      value: 'chainfile',
-    },
+  values: {
+    RPC_USER: 'user',
+    RPC_PASSWORD: 'password',
   },
   containers: {
     bitcoind: {
-      image: 'docker.io/kylemanna/bitcoind@sha256:1492fa0306cb7eb5de8d50ba60367cff8d29b00b516e45e93e05f8b54fa2970e',
+      image: 'docker.io/kylemanna/bitcoind',
+      tag: 'latest',
       source: 'https://github.com/kylemanna/docker-bitcoind',
       endpoints: {
         rpc: {
@@ -72,7 +69,7 @@ afterAll(async () => {
   await testcontainers.stop();
 });
 
-describe('bitcoind', () => {
+describe('container', () => {
   let container: ChainfileContainer;
 
   beforeAll(() => {
@@ -84,7 +81,7 @@ describe('bitcoind', () => {
     expect(port).toStrictEqual(expect.any(Number));
   });
 
-  it('should rpc getblockchaininfo', async () => {
+  it('should rpc(getblockchaininfo)', async () => {
     const response = await container.rpc({
       method: 'getblockchaininfo',
     });
