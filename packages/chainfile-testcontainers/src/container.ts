@@ -7,7 +7,7 @@ import {
   EndpointHttpAuthorization,
   EndpointHttpJsonRpc,
   EndpointHttpRest,
-  EnvReference,
+  ValueReference,
 } from '@chainfile/schema';
 import { AbstractStartedContainer, StartedTestContainer } from 'testcontainers';
 
@@ -15,7 +15,7 @@ export class ChainfileContainer extends AbstractStartedContainer {
   constructor(
     started: StartedTestContainer,
     protected container: Container,
-    protected environment: Record<string, string>,
+    protected values: Record<string, string>,
   ) {
     super(started);
   }
@@ -196,10 +196,10 @@ export class ChainfileContainer extends AbstractStartedContainer {
     });
   }
 
-  private resolveValue(value: string | EnvReference): string {
+  private resolveValue(value: string | ValueReference): string {
     if (typeof value === 'string') {
       return value;
     }
-    return this.environment[value.key] ?? '';
+    return this.values[value.$value] ?? '';
   }
 }

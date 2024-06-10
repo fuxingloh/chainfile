@@ -1,33 +1,20 @@
-# Chainfile.json
-
-import { Callout } from 'nextra/components';
-
-<Callout type="warning">This page is a stub. Help us by contributing to the documentation!</Callout>
-
-```json filename="mainnet.json" copy
 {
-  "$schema": "https://chainfile.org/schema.json",
-  "caip2": "bip122:000000000019d6689c085ae165831e93",
-  "name": "Bitcoin Mainnet",
-  "env": {
-    "RPC_USER": {
-      "type": "RandomBytes",
-      "length": 16,
-      "encoding": "hex"
-    },
-    "RPC_PASSWORD": {
-      "type": "RandomBytes",
-      "length": 16,
-      "encoding": "hex"
-    }
+  "$schema": "../node_modules/@chainfile/schema/schema.json",
+  "caip2": "bip122:0f9188f13cb7b2c71f2a335e3a4fc328",
+  "name": "Bitcoin Regtest",
+  "values": {
+    "rpc_user": "user",
+    "rpc_password": "password"
   },
   "containers": {
     "bitcoind": {
-      "image": "docker.io/kylemanna/bitcoind@sha256:1492fa0306cb7eb5de8d50ba60367cff8d29b00b516e45e93e05f8b54fa2970e",
+      "image": "docker.io/kylemanna/bitcoind",
+      "tag": "latest",
       "source": "https://github.com/kylemanna/docker-bitcoind",
+      "command": ["btc_oneshot", "-fallbackfee=0.00000200", "-rpcbind=:8332", "-rpcallowip=0.0.0.0/0"],
       "endpoints": {
         "p2p": {
-          "port": 8333
+          "port": 18445
         },
         "rpc": {
           "port": 8332,
@@ -35,10 +22,10 @@ import { Callout } from 'nextra/components';
           "authorization": {
             "type": "HttpBasic",
             "username": {
-              "$value": "RPC_USER"
+              "$value": "rpc_user"
             },
             "password": {
-              "$value": "RPC_PASSWORD"
+              "$value": "rpc_password"
             }
           },
           "probes": {
@@ -61,30 +48,25 @@ import { Callout } from 'nextra/components';
         }
       },
       "resources": {
-        "cpu": 1,
-        "memory": 2048
+        "cpu": 0.25,
+        "memory": 256
       },
       "environment": {
-        "DISABLEWALLET": "1",
+        "REGTEST": "1",
+        "DISABLEWALLET": "0",
         "RPCUSER": {
-          "$value": "RPC_USER"
+          "$value": "rpc_user"
         },
         "RPCPASSWORD": {
-          "$value": "RPC_PASSWORD"
+          "$value": "rpc_password"
         }
       },
       "volumes": {
         "persistent": {
           "paths": ["/bitcoin/.bitcoin"],
-          "size": {
-            "initial": "600G",
-            "from": "2024-01-01",
-            "growth": "20G",
-            "rate": "monthly"
-          }
+          "size": "250M"
         }
       }
     }
   }
 }
-```

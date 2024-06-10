@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { publicProcedure, router } from '../trpc';
 
 export const agentRouter = router({
-  GetChainfile: publicProcedure
+  getChainfile: publicProcedure
     .meta({ openapi: { method: 'GET', path: '/chainfile', tags: ['agent'] } })
     .input(z.void())
     .output(
@@ -11,7 +11,7 @@ export const agentRouter = router({
         $schema: z.string(),
         caip2: z.string(),
         name: z.string(),
-        env: z.any().optional(),
+        values: z.any().optional(),
         containers: z.any(),
       }),
     )

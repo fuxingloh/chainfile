@@ -1,25 +1,21 @@
 import { Chainfile } from '@chainfile/schema';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
-import { AgentContainer, ChainfileContainer, ChainfileTestcontainers } from './index';
+import { AgentContainer } from './agent';
+import { ChainfileTestcontainers } from './testcontainers';
 
 const chainfile: Chainfile = {
   $schema: 'https://chainfile.org/schema.json',
   caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
   name: 'Bitcoin Regtest',
-  env: {
-    RPC_USER: {
-      type: 'Value',
-      value: 'chainfile',
-    },
-    RPC_PASSWORD: {
-      type: 'Value',
-      value: 'chainfile',
-    },
+  values: {
+    rpc_user: 'user',
+    rpc_password: 'password',
   },
   containers: {
     bitcoind: {
-      image: 'docker.io/kylemanna/bitcoind@sha256:1492fa0306cb7eb5de8d50ba60367cff8d29b00b516e45e93e05f8b54fa2970e',
+      image: 'docker.io/kylemanna/bitcoind',
+      tag: 'latest',
       source: 'https://github.com/kylemanna/docker-bitcoind',
       endpoints: {
         rpc: {
@@ -27,8 +23,12 @@ const chainfile: Chainfile = {
           protocol: 'HTTP JSON-RPC 2.0',
           authorization: {
             type: 'HttpBasic',
-            username: 'RPC_USER',
-            password: 'RPC_PASSWORD',
+            username: {
+              $value: 'rpc_user',
+            },
+            password: {
+              $value: 'rpc_password',
+            },
           },
           probes: {
             readiness: {
@@ -55,37 +55,35 @@ const chainfile: Chainfile = {
       },
       environment: {
         REGTEST: '1',
-        RPCUSER: 'RPC_USER',
-        RPCPASSWORD: 'RPC_PASSWORD',
+        RPCUSER: {
+          $value: 'rpc_user',
+        },
+        RPCPASSWORD: {
+          $value: 'rpc_password',
+        },
       },
     },
   },
 };
 
-let testcontainers: ChainfileTestcontainers;
+const testcontainers = new ChainfileTestcontainers(chainfile);
 
 beforeAll(async () => {
-  testcontainers = await ChainfileTestcontainers.start(chainfile);
+  await testcontainers.start();
 });
 
 afterAll(async () => {
   await testcontainers.stop();
 });
 
-describe('bitcoind', () => {
-  let container: ChainfileContainer;
-
-  beforeAll(() => {
-    container = testcontainers.get('bitcoind');
-  });
-
+describe('container', () => {
   it('should get rpc port', async () => {
-    const port = container.getHostPort('rpc');
+    const port = testcontainers.get('bitcoind').getHostPort('rpc');
     expect(port).toStrictEqual(expect.any(Number));
   });
 
-  it('should rpc getblockchaininfo', async () => {
-    const response = await container.rpc({
+  it('should rpc(getblockchaininfo)', async () => {
+    const response = await testcontainers.get('bitcoind').rpc({
       method: 'getblockchaininfo',
     });
 

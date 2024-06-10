@@ -1,0 +1,38 @@
+{
+  "$schema": "../node_modules/@chainfile/schema/schema.json",
+  "caip2": "solana:00000000000000000000000000000000",
+  "name": "Solana Test Validator",
+  "values": {
+    "version": "1.17.26"
+  },
+  "containers": {
+    "solana-test-validator": {
+      "image": "ghcr.io/fuxingloh/solana-container",
+      "tag": {
+        "$value": "version"
+      },
+      "source": "https://github.com/fuxingloh/solana-container",
+      "resources": {
+        "cpu": 0.25,
+        "memory": 256
+      },
+      "endpoints": {
+        "rpc": {
+          "port": 8899,
+          "protocol": "HTTP JSON-RPC 2.0",
+          "probes": {
+            "readiness": {
+              "params": [],
+              "method": "getBlockHeight",
+              "match": {
+                "result": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

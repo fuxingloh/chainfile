@@ -26,11 +26,21 @@ function getChainfile(): Chainfile {
   throw new Error(`Invalid Chainfile: ${ajv.errorsText(validateFunction.errors)}`);
 }
 
+function getValues() {
+  const CHAINFILE_VALUES = process.env.CHAINFILE_VALUES;
+  if (CHAINFILE_VALUES === undefined) {
+    throw new Error('CHAINFILE_VALUES is not defined, cannot start @chainfile/agent.');
+  }
+  return JSON.parse(CHAINFILE_VALUES);
+}
+
 const chainfile = getChainfile();
+const values = getValues();
 
 export const createContext = async () => {
   return {
     chainfile: chainfile,
+    values: values,
   };
 };
 

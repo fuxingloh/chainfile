@@ -7,19 +7,14 @@ const chainfile: Chainfile = {
   $schema: 'https://chainfile.org/schema.json',
   caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
   name: 'Bitcoin Regtest',
-  env: {
-    RPC_USER: {
-      type: 'Value',
-      value: 'agent',
-    },
-    RPC_PASSWORD: {
-      type: 'Value',
-      value: 'agent',
-    },
+  values: {
+    rpc_user: 'agent',
+    rpc_password: 'agent',
   },
   containers: {
     bitcoind: {
-      image: 'docker.io/kylemanna/bitcoind@sha256:1492fa0306cb7eb5de8d50ba60367cff8d29b00b516e45e93e05f8b54fa2970e',
+      image: 'docker.io/kylemanna/bitcoind',
+      tag: 'latest',
       source: 'https://github.com/kylemanna/docker-bitcoind',
       endpoints: {
         rpc: {
@@ -64,9 +59,10 @@ const chainfile: Chainfile = {
 
 const caller = createCaller({
   chainfile: chainfile,
+  values: {},
 });
 
-it('should call GetChainfile', async () => {
-  const result = await caller.Agent.GetChainfile();
+it('should getChainfile', async () => {
+  const result = await caller.getChainfile();
   expect(result).toEqual(JSON.parse(JSON.stringify(chainfile)));
 });

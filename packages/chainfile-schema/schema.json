@@ -1,13 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "allOf": [{ "$ref": "#/definitions/Chainfile" }],
+  "allOf": [
+    {
+      "$ref": "#/definitions/Chainfile"
+    }
+  ],
   "definitions": {
     "Chainfile": {
       "type": "object",
       "properties": {
         "$schema": {
-          "type": "string",
-          "const": "https://chainfile.org/schema.json"
+          "type": "string"
         },
         "caip2": {
           "type": "string",
@@ -20,8 +23,8 @@
           "minLength": 1,
           "maxLength": 128
         },
-        "env": {
-          "$ref": "#/definitions/Env"
+        "values": {
+          "$ref": "#/definitions/Values"
         },
         "containers": {
           "type": "object",
@@ -38,23 +41,37 @@
       "required": ["$schema", "caip2", "name", "containers"],
       "additionalProperties": false
     },
-    "Env": {
+    "Values": {
       "type": "object",
       "maxProperties": 30,
       "patternProperties": {
-        "^[a-zA-Z_]+[a-zA-Z0-9_]*$": {
-          "$ref": "#/definitions/EnvFactory"
+        "^[a-z]+(_[a-z0-9]+)*$": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/ValueOptions"
+            }
+          ]
         }
       },
       "additionalProperties": false
     },
-    "EnvFactory": {
-      "oneOf": [
-        {
+    "ValueOptions": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "default": {
+          "type": "string"
+        },
+        "random": {
           "type": "object",
           "properties": {
             "type": {
-              "const": "RandomBytes"
+              "enum": ["bytes"]
             },
             "length": {
               "type": "number",
@@ -66,32 +83,27 @@
               "enum": ["hex", "base64", "base64url"]
             }
           },
-          "required": ["type", "length", "encoding"],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "type": {
-              "const": "Value"
-            },
-            "value": {
-              "type": "string"
-            }
-          },
-          "required": ["type", "value"],
+          "required": ["length", "encoding"],
           "additionalProperties": false
         }
-      ]
+      },
+      "allOf": [
+        {
+          "not": {
+            "required": ["default", "random"]
+          }
+        }
+      ],
+      "additionalProperties": false
     },
-    "EnvReference": {
+    "ValueReference": {
       "type": "object",
       "properties": {
-        "key": {
+        "$value": {
           "type": "string"
         }
       },
-      "required": ["key"],
+      "required": ["$value"],
       "additionalProperties": false
     },
     "Container": {
@@ -99,6 +111,17 @@
       "properties": {
         "image": {
           "type": "string"
+        },
+        "tag": {
+          "description": "Tag of the container image.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/ValueReference"
+            }
+          ]
         },
         "source": {
           "type": "string",
@@ -141,7 +164,14 @@
           "maxProperties": 30,
           "patternProperties": {
             "^[a-zA-Z_]+[a-zA-Z0-9_]*$": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvReference" }]
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "#/definitions/ValueReference"
+                }
+              ]
             }
           },
           "additionalProperties": false
@@ -165,7 +195,7 @@
           "additionalProperties": false
         }
       },
-      "required": ["image", "source", "resources"],
+      "required": ["image", "tag", "source", "resources"],
       "additionalProperties": false
     },
     "Endpoint": {
@@ -356,10 +386,24 @@
               "const": "HttpBasic"
             },
             "username": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvReference" }]
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "#/definitions/ValueReference"
+                }
+              ]
             },
             "password": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvReference" }]
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "#/definitions/ValueReference"
+                }
+              ]
             }
           },
           "required": ["type", "username", "password"],
@@ -372,7 +416,14 @@
               "const": "HttpBearer"
             },
             "token": {
-              "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/EnvReference" }]
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "#/definitions/ValueReference"
+                }
+              ]
             }
           },
           "required": ["type", "token"],
