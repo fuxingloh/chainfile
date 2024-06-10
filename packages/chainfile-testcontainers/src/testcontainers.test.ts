@@ -2,7 +2,6 @@ import { Chainfile } from '@chainfile/schema';
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
 import { AgentContainer } from './agent';
-import { ChainfileContainer } from './container';
 import { ChainfileTestcontainers } from './testcontainers';
 
 const chainfile: Chainfile = {
@@ -10,8 +9,8 @@ const chainfile: Chainfile = {
   caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
   name: 'Bitcoin Regtest',
   values: {
-    RPC_USER: 'user',
-    RPC_PASSWORD: 'password',
+    rpc_user: 'user',
+    rpc_password: 'password',
   },
   containers: {
     bitcoind: {
@@ -24,8 +23,12 @@ const chainfile: Chainfile = {
           protocol: 'HTTP JSON-RPC 2.0',
           authorization: {
             type: 'HttpBasic',
-            username: 'RPC_USER',
-            password: 'RPC_PASSWORD',
+            username: {
+              $value: 'rpc_user',
+            },
+            password: {
+              $value: 'rpc_password',
+            },
           },
           probes: {
             readiness: {
@@ -52,17 +55,21 @@ const chainfile: Chainfile = {
       },
       environment: {
         REGTEST: '1',
-        RPCUSER: 'RPC_USER',
-        RPCPASSWORD: 'RPC_PASSWORD',
+        RPCUSER: {
+          $value: 'rpc_user',
+        },
+        RPCPASSWORD: {
+          $value: 'rpc_password',
+        },
       },
     },
   },
 };
 
-let testcontainers: ChainfileTestcontainers;
+const testcontainers = new ChainfileTestcontainers(chainfile);
 
 beforeAll(async () => {
-  testcontainers = await ChainfileTestcontainers.start(chainfile);
+  await testcontainers.start();
 });
 
 afterAll(async () => {
@@ -70,19 +77,13 @@ afterAll(async () => {
 });
 
 describe('container', () => {
-  let container: ChainfileContainer;
-
-  beforeAll(() => {
-    container = testcontainers.get('bitcoind');
-  });
-
   it('should get rpc port', async () => {
-    const port = container.getHostPort('rpc');
+    const port = testcontainers.get('bitcoind').getHostPort('rpc');
     expect(port).toStrictEqual(expect.any(Number));
   });
 
   it('should rpc(getblockchaininfo)', async () => {
-    const response = await container.rpc({
+    const response = await testcontainers.get('bitcoind').rpc({
       method: 'getblockchaininfo',
     });
 

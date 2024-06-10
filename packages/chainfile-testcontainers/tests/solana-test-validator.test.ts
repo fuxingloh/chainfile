@@ -3,10 +3,10 @@ import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { ChainfileContainer, ChainfileTestcontainers } from '../src';
 import solana from './solana-test-validator.json';
 
-let testcontainers: ChainfileTestcontainers;
+const testcontainers = new ChainfileTestcontainers(solana);
 
 beforeAll(async () => {
-  testcontainers = await ChainfileTestcontainers.start(solana);
+  await testcontainers.start();
 });
 
 afterAll(async () => {

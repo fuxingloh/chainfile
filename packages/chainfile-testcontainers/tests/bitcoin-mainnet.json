@@ -3,15 +3,19 @@
   "caip2": "bip122:000000000019d6689c085ae165831e93",
   "name": "Bitcoin Mainnet",
   "values": {
-    "rpc-user": {
-      "type": "RandomBytes",
-      "length": 16,
-      "encoding": "hex"
+    "rpc_user": {
+      "random": {
+        "type": "bytes",
+        "length": 16,
+        "encoding": "hex"
+      }
     },
-    "rpc-password": {
-      "type": "RandomBytes",
-      "length": 16,
-      "encoding": "hex"
+    "rpc_password": {
+      "random": {
+        "type": "bytes",
+        "length": 16,
+        "encoding": "hex"
+      }
     }
   },
   "containers": {
@@ -29,10 +33,10 @@
           "authorization": {
             "type": "HttpBasic",
             "username": {
-              "$value": "rpc-user"
+              "$value": "rpc_user"
             },
             "password": {
-              "$value": "rpc-password"
+              "$value": "rpc_password"
             }
           },
           "probes": {
@@ -61,10 +65,10 @@
       "environment": {
         "DISABLEWALLET": "1",
         "RPCUSER": {
-          "$value": "rpc-user"
+          "$value": "rpc_user"
         },
         "RPCPASSWORD": {
-          "$value": "rpc-password"
+          "$value": "rpc_password"
         }
       },
       "volumes": {

@@ -12,7 +12,8 @@ export class AgentContainer extends AbstractStartedContainer {
 
   public async getChainfile(): Promise<Chainfile> {
     const response = await fetch(`${this.endpoint}/chainfile`);
-    return (await response.json()) as Chainfile;
+    const json = await response.json();
+    return json as Chainfile;
   }
 
   public async probe(type: 'startup' | 'liveness' | 'readiness'): Promise<Response> {

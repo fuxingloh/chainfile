@@ -4,10 +4,10 @@ import waitForExpect from 'wait-for-expect';
 import { ChainfileContainer, ChainfileTestcontainers } from '../src';
 import mainnet from './bitcoin-mainnet.json';
 
-let testcontainers: ChainfileTestcontainers;
+const testcontainers = new ChainfileTestcontainers(mainnet);
 
 beforeAll(async () => {
-  testcontainers = await ChainfileTestcontainers.start(mainnet);
+  await testcontainers.start();
 });
 
 afterAll(async () => {

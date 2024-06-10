@@ -8,8 +8,8 @@ const chainfile: Chainfile = {
   caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
   name: 'Bitcoin Regtest',
   values: {
-    RPC_USER: 'agent',
-    RPC_PASSWORD: 'agent',
+    rpc_user: 'agent',
+    rpc_password: 'agent',
   },
   containers: {
     bitcoind: {

@@ -3,10 +3,10 @@ import { afterAll, beforeAll, expect, it } from '@jest/globals';
 import { ChainfileTestcontainers } from '../src';
 import localhost from './hardhat.json';
 
-let testcontainers: ChainfileTestcontainers;
+const testcontainers = new ChainfileTestcontainers(localhost);
 
 beforeAll(async () => {
-  testcontainers = await ChainfileTestcontainers.start(localhost);
+  await testcontainers.start();
 });
 
 afterAll(async () => {

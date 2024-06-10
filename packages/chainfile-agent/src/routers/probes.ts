@@ -11,9 +11,12 @@ import {
 } from '@chainfile/schema';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
+import debug0 from 'debug';
 import { z } from 'zod';
 
 import { publicProcedure, router } from '../trpc';
+
+const debug = debug0('chainfile:agent');
 
 const probeProcedure = publicProcedure
   .input(z.void())
@@ -55,10 +58,12 @@ enum ProbeType {
   readiness = 'readiness',
 }
 
-type ProbeFunction = () => Promise<{
+interface ProbeResponse {
   ok: boolean;
   raw?: any;
-}>;
+}
+
+type ProbeFunction = () => Promise<ProbeResponse>;
 
 class Probes {
   constructor(
@@ -99,16 +104,13 @@ class Probes {
 
     return {
       ok: ok,
-      containers: containers.reduce(
-        (acc, { name, ok, raw }) => {
-          acc[name] = {
-            ok: ok,
-            raw: raw,
-          };
-          return acc;
-        },
-        {} as Record<string, { ok: boolean; raw?: any }>,
-      ),
+      containers: containers.reduce<Record<string, ProbeResponse>>((acc, { name, ok, raw }) => {
+        acc[name] = {
+          ok: ok,
+          raw: raw,
+        };
+        return acc;
+      }, {}),
     };
   }
 
@@ -162,7 +164,7 @@ class Probes {
       return status === probe.match.status;
     };
 
-    return async (): Promise<{ ok: boolean; raw?: any }> => {
+    return async (): Promise<ProbeResponse> => {
       return fetch(url, {
         method: probe.method,
         headers: headers,
@@ -178,7 +180,10 @@ class Probes {
             },
           };
         })
-        .catch(() => ({ ok: false }));
+        .catch((error) => {
+          debug('Error probing %s: %o', url, error);
+          return { ok: false };
+        });
     };
   }
 
@@ -202,7 +207,7 @@ class Probes {
 
     const validate = this.ajv.compile(probe.match.result);
 
-    return async (): Promise<{ ok: boolean; raw?: any }> => {
+    return async (): Promise<ProbeResponse> => {
       return fetch(url, {
         method: 'POST',
         headers: headers,
@@ -223,20 +228,23 @@ class Probes {
             },
           };
         })
-        .catch(() => ({ ok: false }));
+        .catch((error) => {
+          debug('Error probing %s: %o', url, error);
+          return { ok: false };
+        });
     };
   }
 
   private getHttpAuthorizationHeaders(auth: EndpointHttpAuthorization): Record<string, string> {
     const type = auth.type;
     if (type === 'HttpBasic') {
-      const username = this.resolveValue(auth.username);
-      const password = this.resolveValue(auth.password);
+      const username = this.resolve(auth.username);
+      const password = this.resolve(auth.password);
       return {
         Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`,
       };
     } else if (type === 'HttpBearer') {
-      const token = this.resolveValue(auth.token);
+      const token = this.resolve(auth.token);
       return {
         Authorization: `Bearer ${token}`,
       };
@@ -245,7 +253,7 @@ class Probes {
     }
   }
 
-  private resolveValue(value: string | ValueReference): string {
+  private resolve(value: string | ValueReference): string {
     if (typeof value === 'string') {
       return value;
     }

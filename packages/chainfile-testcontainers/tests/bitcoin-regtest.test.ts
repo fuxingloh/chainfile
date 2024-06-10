@@ -3,10 +3,10 @@ import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import { ChainfileContainer, ChainfileTestcontainers } from '../src';
 import regtest from './bitcoin-regtest.json';
 
-let testcontainers: ChainfileTestcontainers;
+const testcontainers = new ChainfileTestcontainers(regtest);
 
 beforeAll(async () => {
-  testcontainers = await ChainfileTestcontainers.start(regtest);
+  await testcontainers.start();
 });
 
 afterAll(async () => {

@@ -3,8 +3,8 @@
   "caip2": "bip122:0f9188f13cb7b2c71f2a335e3a4fc328",
   "name": "Bitcoin Regtest",
   "values": {
-    "rpc-user": "user",
-    "rpc-password": "password"
+    "rpc_user": "user",
+    "rpc_password": "password"
   },
   "containers": {
     "bitcoind": {
@@ -22,10 +22,10 @@
           "authorization": {
             "type": "HttpBasic",
             "username": {
-              "$value": "rpc-user"
+              "$value": "rpc_user"
             },
             "password": {
-              "$value": "rpc-password"
+              "$value": "rpc_password"
             }
           },
           "probes": {
@@ -55,10 +55,10 @@
         "REGTEST": "1",
         "DISABLEWALLET": "0",
         "RPCUSER": {
-          "$value": "rpc-user"
+          "$value": "rpc_user"
         },
         "RPCPASSWORD": {
-          "$value": "rpc-password"
+          "$value": "rpc_password"
         }
       },
       "volumes": {

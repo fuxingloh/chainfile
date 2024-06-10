@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 
-import schema, { Chainfile, Container, ValueFactory, ValueReference } from '@chainfile/schema';
+import schema, { Chainfile, Container, ValueOptions, ValueReference } from '@chainfile/schema';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import yaml from 'js-yaml';
@@ -12,47 +12,32 @@ import { version } from '../package.json';
  * Synthesize a Chainfile into `docker.*.yml` & `.env` files.
  */
 export class Compose {
+  public readonly chainfile: Chainfile;
+  public readonly values: Record<string, string>;
+  public readonly suffix: string;
+
   /**
-   * @param chainfile
-   * @param values
+   * @param chainfile definition to synthesize.
+   * @param overrideValues to override the chainfile values.
    * @param suffix for the container names to prevent conflicts.
    */
   constructor(
-    private readonly chainfile: Chainfile,
-    private readonly values: Record<string, string>,
-    public readonly suffix: string = randomBytes(8).toString('hex'),
+    chainfile: Chainfile,
+    overrideValues: Record<string, string>,
+    suffix: string = randomBytes(4).toString('hex'),
   ) {
-    const ajv = new Ajv();
-    addFormats(ajv);
-    const validateFunction = ajv.compile(schema);
-
-    if (!validateFunction(chainfile)) {
-      throw new Error(ajv.errorsText(validateFunction.errors));
-    }
+    validate(chainfile);
+    this.chainfile = chainfile;
+    this.values = initValues(chainfile, overrideValues);
+    this.suffix = suffix;
   }
 
   public synthDotEnv(): string {
-    const env = mapValues(this.chainfile.values ?? {}, (factory: string | ValueFactory) => {
-      if (typeof factory === 'string') {
-        return factory;
-      }
-      const type = factory.type;
-      if (type === 'RandomBytes') {
-        return randomBytes(factory.length).toString(factory.encoding);
-      }
-      if (type === 'Inject') {
-        if (this.values[factory.name] !== undefined) {
-          return this.values[factory.name];
-        }
-        if (factory.default !== undefined) {
-          return factory.default;
-        }
-        throw new Error(`Missing Value: ${factory.name}`);
-      }
-      throw new Error(`Unsupported Environment Factory: ${type}`);
-    });
-
-    return Object.entries(env)
+    return Object.entries({
+      // TODO(?): this.values should filter out values that are not used in the compose file
+      ...this.values,
+      CHAINFILE_VALUES: JSON.stringify(this.values),
+    })
       .map(([key, value]) => `${key}=${value}`)
       .join('\n');
   }
@@ -94,7 +79,8 @@ export class Compose {
         environment: {
           // Docker compose automatically evaluate environment literals here
           CHAINFILE_JSON: JSON.stringify(this.chainfile).replaceAll('$', '$$$'),
-          CHAINFILE_VALUES: JSON.stringify(this.values).replaceAll('$', '$$$'),
+          CHAINFILE_VALUES: '${CHAINFILE_VALUES}',
+          DEBUG: process.env.DEBUG ?? 'false',
         },
         volumes: [
           {
@@ -181,4 +167,52 @@ export class Compose {
     }
     return `$\{${value.$value}}`;
   }
+}
+
+function validate(chainfile: Chainfile) {
+  const ajv = new Ajv();
+  addFormats(ajv);
+  const validateFunction = ajv.compile(schema);
+
+  if (!validateFunction(chainfile)) {
+    throw new Error(ajv.errorsText(validateFunction.errors));
+  }
+}
+
+function initValues(chainfile: Chainfile, overrideValues: Record<string, string>) {
+  const values = mapValues(chainfile.values ?? {}, (options: string | ValueOptions, name) => {
+    if (overrideValues[name] !== undefined) {
+      return overrideValues[name];
+    }
+
+    if (typeof options === 'string') {
+      return options;
+    }
+
+    if (options.default !== undefined) {
+      return options.default;
+    }
+
+    if (options.random !== undefined && options.random.type === 'bytes') {
+      return randomBytes(options.random.length).toString(options.random.encoding);
+    }
+
+    if (options.required === true) {
+      throw new Error(`Missing Value: ${name}`);
+    }
+
+    throw new Error(`Unsupported Value: ${JSON.stringify(options)}`);
+  });
+
+  let updated: boolean;
+  do {
+    updated = false;
+    for (const [name, value] of Object.entries(values)) {
+      values[name] = value.replace(/\$\{([a-z]+(_[a-z0-9]+)*)}/g, (_, key) => {
+        updated = true;
+        return values[key];
+      });
+    }
+  } while (updated);
+  return values;
 }

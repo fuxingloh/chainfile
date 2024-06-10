@@ -12,44 +12,30 @@ export class ChainfileTestcontainers {
   protected cwd: string = join(process.cwd(), '.chainfile');
   protected filename: string;
   protected compose: Compose;
-
-  protected environment: Record<string, string>;
   protected composeStarted!: ComposeStarted;
 
-  private constructor(
-    protected readonly chainfile: Chainfile,
-    protected readonly values: Record<string, string>,
+  public constructor(
+    protected readonly chainfile: Chainfile | any,
+    protected readonly values: Record<string, string> = {},
   ) {
     this.compose = new Compose(chainfile, values);
     this.filename = `compose.${this.compose.suffix}.yml`;
-    this.environment = this.compose
-      .synthDotEnv()
-      .split('\n')
-      .reduce(
-        (acc, line) => {
-          const [key, value] = line.split('=');
-          acc[key] = value;
-          return acc;
-        },
-        {} as Record<string, string>,
-      );
   }
 
-  static async start(
-    reference: Chainfile | any,
-    values: Record<string, string> = {},
-  ): Promise<ChainfileTestcontainers> {
-    const testcontainers = new ChainfileTestcontainers(reference, values);
-    await testcontainers.start();
-    return testcontainers;
-  }
-
-  private async start(): Promise<void> {
+  public async start(): Promise<void> {
     mkdirSync(this.cwd, { recursive: true });
     writeFileSync(join(this.cwd, this.filename), this.compose.synthCompose());
 
+    const environment = this.compose
+      .synthDotEnv()
+      .split('\n')
+      .reduce<Record<string, string>>((acc, line) => {
+        const [key, value] = line.split('=');
+        acc[key] = value;
+        return acc;
+      }, {});
     this.composeStarted = await new DockerComposeEnvironment(this.cwd, this.filename)
-      .withEnvironment(this.environment)
+      .withEnvironment(environment)
       // The readiness probe of @chainfile/agent is to determine if the deployment is ready to accept requests.
       .withWaitStrategy(`agent-${this.compose.suffix}`, Wait.forHttp('/probes/readiness', 1569))
       .up();
@@ -68,12 +54,8 @@ export class ChainfileTestcontainers {
     return new ChainfileContainer(
       this.composeStarted.getContainer(`${name}-${this.compose.suffix}`),
       containerDef,
-      this.environment,
+      this.compose.values,
     );
-  }
-
-  getEnv(): Record<string, string> {
-    return this.environment;
   }
 
   getAgent(): AgentContainer {

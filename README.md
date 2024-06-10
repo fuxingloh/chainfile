@@ -56,10 +56,10 @@ to accelerate the adoption of blockchain technology.
 ```js
 import hardhat from '@chainfile/eip-155-31337/hardhat.json';
 
-let testcontainers: ChainfileTestcontainers;
+const testcontainers = new ChainfileTestcontainers(hardhat);
 
 beforeAll(async () => {
-  testcontainers = await ChainfileTestcontainers.start(hardhat);
+  await testcontainers.start();
 });
 
 afterAll(async () => {
@@ -67,14 +67,11 @@ afterAll(async () => {
 });
 
 it('should rpc(eth_blockNumber)', async () => {
-  const hardhat = testcontainers.get('hardhat');
-
-  const response = await hardhat.rpc({
+  const response = await testcontainers.get('hardhat').rpc({
     method: 'eth_blockNumber',
   });
 
   expect(response.status).toStrictEqual(200);
-
   expect(await response.json()).toMatchObject({
     result: '0x0',
   });

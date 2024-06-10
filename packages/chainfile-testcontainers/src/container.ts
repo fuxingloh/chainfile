@@ -15,7 +15,7 @@ export class ChainfileContainer extends AbstractStartedContainer {
   constructor(
     started: StartedTestContainer,
     protected container: Container,
-    protected environment: Record<string, string>,
+    protected values: Record<string, string>,
   ) {
     super(started);
   }
@@ -200,6 +200,6 @@ export class ChainfileContainer extends AbstractStartedContainer {
     if (typeof value === 'string') {
       return value;
     }
-    return this.environment[value.$value] ?? '';
+    return this.values[value.$value] ?? '';
   }
 }
