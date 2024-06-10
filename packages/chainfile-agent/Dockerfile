@@ -17,9 +17,7 @@ RUN pnpm config set store-dir /root/.local/share/pnpm/global/store/v3 \
 # Isolate workspace by pruning non-related services.
 FROM base AS pruner
 
-# renovate: datasource=npm depName=turbo
-ENV TURBO_VERSION=2.0.3
-RUN pnpm add -g turbo@${TURBO_VERSION}
+RUN pnpm add -g turbo@2
 
 COPY . .
 
