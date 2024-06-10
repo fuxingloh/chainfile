@@ -6,7 +6,7 @@
       "type": "object",
       "properties": {
         "$schema": {
-          "const": "https://chainfile.org/schema.json"
+          "type": "string"
         },
         "caip2": {
           "type": "string",
@@ -41,7 +41,7 @@
       "type": "object",
       "maxProperties": 30,
       "patternProperties": {
-        "^[a-zA-Z_]+[a-zA-Z0-9_]*$": {
+        "^[a-z]+(-[a-z]+)*$": {
           "oneOf": [
             {
               "type": "string"
@@ -59,17 +59,11 @@
         {
           "type": "object",
           "properties": {
-            "type": {
-              "const": "Inject"
-            },
-            "name": {
-              "type": "string"
-            },
-            "default": {
-              "type": "string"
+            "required": {
+              "type": "boolean"
             }
           },
-          "required": ["type", "name"],
+          "required": ["required"],
           "additionalProperties": false
         },
         {

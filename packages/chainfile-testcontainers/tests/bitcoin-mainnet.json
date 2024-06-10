@@ -1,14 +1,14 @@
 {
-  "$schema": "https://chainfile.org/schema.json",
+  "$schema": "../node_modules/@chainfile/schema/schema.json",
   "caip2": "bip122:000000000019d6689c085ae165831e93",
   "name": "Bitcoin Mainnet",
   "values": {
-    "RPC_USER": {
+    "rpc-user": {
       "type": "RandomBytes",
       "length": 16,
       "encoding": "hex"
     },
-    "RPC_PASSWORD": {
+    "rpc-password": {
       "type": "RandomBytes",
       "length": 16,
       "encoding": "hex"
@@ -29,10 +29,10 @@
           "authorization": {
             "type": "HttpBasic",
             "username": {
-              "$value": "RPC_USER"
+              "$value": "rpc-user"
             },
             "password": {
-              "$value": "RPC_PASSWORD"
+              "$value": "rpc-password"
             }
           },
           "probes": {
@@ -61,10 +61,10 @@
       "environment": {
         "DISABLEWALLET": "1",
         "RPCUSER": {
-          "$value": "RPC_USER"
+          "$value": "rpc-user"
         },
         "RPCPASSWORD": {
-          "$value": "RPC_PASSWORD"
+          "$value": "rpc-password"
         }
       },
       "volumes": {

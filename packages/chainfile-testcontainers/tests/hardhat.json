@@ -1,11 +1,16 @@
 {
-  "$schema": "https://chainfile.org/schema.json",
+  "$schema": "../node_modules/@chainfile/schema/schema.json",
   "caip2": "eip155:31337",
   "name": "Hardhat",
+  "values": {
+    "version": "2.22.1"
+  },
   "containers": {
     "hardhat": {
       "image": "ghcr.io/fuxingloh/hardhat-container",
-      "tag": "2.22.1",
+      "tag": {
+        "$value": "version"
+      },
       "source": "https://github.com/fuxingloh/hardhat-container",
       "resources": {
         "cpu": 0.25,

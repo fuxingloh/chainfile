@@ -1,11 +1,16 @@
 {
-  "$schema": "https://chainfile.org/schema.json",
+  "$schema": "../node_modules/@chainfile/schema/schema.json",
   "caip2": "eip155:1337",
   "name": "Ganache",
+  "values": {
+    "version": "v7.9.2"
+  },
   "containers": {
     "ganache": {
       "image": "docker.io/trufflesuite/ganache",
-      "tag": "v7.9.2",
+      "tag": {
+        "$value": "version"
+      },
       "source": "https://github.com/trufflesuite/ganache",
       "resources": {
         "cpu": 0.25,

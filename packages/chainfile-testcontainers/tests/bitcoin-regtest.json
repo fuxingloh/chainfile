@@ -1,10 +1,10 @@
 {
-  "$schema": "https://chainfile.org/schema.json",
+  "$schema": "../node_modules/@chainfile/schema/schema.json",
   "caip2": "bip122:0f9188f13cb7b2c71f2a335e3a4fc328",
   "name": "Bitcoin Regtest",
   "values": {
-    "RPC_USER": "user",
-    "RPC_PASSWORD": "password"
+    "rpc-user": "user",
+    "rpc-password": "password"
   },
   "containers": {
     "bitcoind": {
@@ -22,10 +22,10 @@
           "authorization": {
             "type": "HttpBasic",
             "username": {
-              "$value": "RPC_USER"
+              "$value": "rpc-user"
             },
             "password": {
-              "$value": "RPC_PASSWORD"
+              "$value": "rpc-password"
             }
           },
           "probes": {
@@ -55,10 +55,10 @@
         "REGTEST": "1",
         "DISABLEWALLET": "0",
         "RPCUSER": {
-          "$value": "RPC_USER"
+          "$value": "rpc-user"
         },
         "RPCPASSWORD": {
-          "$value": "RPC_PASSWORD"
+          "$value": "rpc-password"
         }
       },
       "volumes": {
