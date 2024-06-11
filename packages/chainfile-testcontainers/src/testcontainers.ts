@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -8,22 +9,27 @@ import { DockerComposeEnvironment, StartedDockerComposeEnvironment as ComposeSta
 import { AgentContainer } from './agent';
 import { ChainfileContainer } from './container';
 
+type Location = Chainfile | string | any;
+
 export class ChainfileTestcontainers {
-  protected cwd: string = join(process.cwd(), '.chainfile');
-  protected filename: string;
-  protected compose: Compose;
+  protected readonly cwd: string = join(process.cwd(), '.chainfile', 'testcontainers');
+  protected readonly suffix = randomBytes(4).toString('hex');
+  protected readonly filename = `compose.${this.suffix}.yml`;
+
+  protected chainfile!: Chainfile;
+  protected compose!: Compose;
   protected composeStarted!: ComposeStarted;
 
   public constructor(
-    protected readonly chainfile: Chainfile | any,
-    values: Record<string, string> = {},
+    protected readonly location: Location,
+    protected readonly values: Record<string, string> = {},
   ) {
-    this.compose = new Compose(chainfile, values);
-    this.filename = `compose.${this.compose.suffix}.yml`;
+    mkdirSync(this.cwd, { recursive: true });
   }
 
   public async start(): Promise<void> {
-    mkdirSync(this.cwd, { recursive: true });
+    this.chainfile = typeof this.location === 'string' ? await fetchChainfile(this.location) : this.location;
+    this.compose = new Compose(this.chainfile, this.values, this.suffix);
     writeFileSync(join(this.cwd, this.filename), this.compose.synthCompose());
 
     const environment = this.compose
@@ -47,6 +53,9 @@ export class ChainfileTestcontainers {
   }
 
   get(name: string): ChainfileContainer {
+    if (this.composeStarted === undefined) {
+      throw new Error('ChainfileTestcontainers not started');
+    }
     const containerDef = this.chainfile.containers[name];
     if (containerDef === undefined) {
       throw new Error(`Container ${name} not found`);
@@ -59,6 +68,14 @@ export class ChainfileTestcontainers {
   }
 
   getAgent(): AgentContainer {
+    if (this.composeStarted === undefined) {
+      throw new Error('ChainfileTestcontainers not started');
+    }
     return new AgentContainer(this.composeStarted.getContainer(`agent-${this.compose.suffix}`));
   }
+}
+
+async function fetchChainfile(location: string): Promise<Chainfile> {
+  // Get latest package from npm using pacote
+  throw new Error(`Not implemented: ${location}`);
 }
