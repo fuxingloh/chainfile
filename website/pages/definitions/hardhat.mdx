@@ -1,1 +1,52 @@
 # Hardhat
+
+Hardhat is a development environment to compile, deploy, test, and debug your Ethereum software.
+You can use Hardhat directly within your Node.js.
+This definition provides a containerized version of Hardhat for local toolchain isolation,
+which is particularly useful for language-agnostic development and testing parallelization.
+
+[NomicFoundation/hardhat](https://github.com/NomicFoundation/hardhat) doesn't provide a Docker image for Hardhat.
+The source of this Docker image is available at [vetumorg/chainfile-hardhat](https://github.com/vetumorg/chainfile-hardhat/tree/main/packages/hardhat-docker) on GitHub.
+
+You should not use this definition for any production purposes.
+
+## hardhat.json
+
+```txt filename="Location" copy
+chainfile-hardhat/hardhat.json
+```
+
+### Values
+
+- `version`: the version of Hardhat to use see [vetumorg/chainfile-hardhat/pkgs](https://github.com/vetumorg/chainfile-hardhat/pkgs/container/hardhat)
+
+## Using `hardhat-testcontainers` with `viem`
+
+If you're using Node.js and want to take advantage of `viem` for type-safe JSON-RPC.
+We provide a NPM only package for `hardhat-testcontainers`:
+
+```shell filename="Installation" copy
+npm i -D hardhat-testcontainers viem
+```
+
+```typescript filename="hardhat.test.ts" {9} copy
+import { afterAll, beforeAll, expect, it } from '@jest/globals';
+import { HardClient, HardhatContainer, StartedHardhatContainer } from 'hardhat-testcontainers';
+
+let container: StartedHardhatContainer;
+let client: HardClient;
+
+beforeAll(async () => {
+  container = await new HardhatContainer().start();
+  client = container.client;
+});
+
+afterAll(async () => {
+  await container.stop();
+});
+
+it('should rpc(eth_blockNumber) via viem using container.client', async () => {
+  const blockNumber = await client.getBlockNumber();
+  expect(blockNumber).toStrictEqual(BigInt(0));
+});
+```

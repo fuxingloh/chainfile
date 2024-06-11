@@ -1,5 +1,6 @@
 {
   "docker": "Docker",
-  "testcontainers": "Testcontainers",
-  "kubernetes": "Kubernetes"
+  "testcontainers-node": "Testcontainers (Node)",
+  "testcontainers-java": "Testcontainers (Java)",
+  "kubernetes-cdk8s": "Kubernetes (CDK8s)"
 }

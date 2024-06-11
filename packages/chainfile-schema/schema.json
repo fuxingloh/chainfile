@@ -100,7 +100,9 @@
       "type": "object",
       "properties": {
         "$value": {
-          "type": "string"
+          "type": "string",
+          "description": "Name of the value to reference in the values section.",
+          "pattern": "^[a-z]+(_[a-z0-9]+)*$"
         }
       },
       "required": ["$value"],
