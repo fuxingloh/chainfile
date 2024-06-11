@@ -16,7 +16,7 @@ export class ChainfileTestcontainers {
 
   public constructor(
     protected readonly chainfile: Chainfile | any,
-    protected readonly values: Record<string, string> = {},
+    values: Record<string, string> = {},
   ) {
     this.compose = new Compose(chainfile, values);
     this.filename = `compose.${this.compose.suffix}.yml`;
