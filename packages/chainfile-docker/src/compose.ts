@@ -1,10 +1,9 @@
 import { randomBytes } from 'node:crypto';
 
-import schema, { Chainfile, Container, ValueOptions, ValueReference } from '@chainfile/schema';
+import schema, { Chainfile, Container, ValueReference } from '@chainfile/schema';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import yaml from 'js-yaml';
-import mapValues from 'lodash/mapValues';
 
 import { version } from '../package.json';
 
@@ -18,18 +17,14 @@ export class Compose {
 
   /**
    * @param chainfile definition to synthesize.
-   * @param overrideValues to override the chainfile values.
+   * @param values to override in the chainfile
    * @param suffix for the container names to prevent conflicts.
    */
-  constructor(
-    chainfile: Chainfile,
-    overrideValues: Record<string, string>,
-    suffix: string = randomBytes(4).toString('hex'),
-  ) {
+  constructor(chainfile: Chainfile, values: Record<string, string>, suffix: string = randomBytes(4).toString('hex')) {
     validate(chainfile);
     this.chainfile = chainfile;
-    this.values = initValues(chainfile, overrideValues);
     this.suffix = suffix;
+    this.values = new Values(chainfile).init(values);
   }
 
   public synthDotEnv(): string {
@@ -154,21 +149,28 @@ export class Compose {
       return volumes;
     }
 
-    return mapValues(this.chainfile.containers, (container, name) => {
-      return {
-        container_name: `${name}-${this.suffix}`,
-        image: container.image + ':' + this.resolveValue(container.tag),
-        command: container.command,
-        environment: mapValues(container.environment ?? {}, (value: string | ValueReference) => {
-          return this.resolveValue(value);
-        }),
-        ports: createPorts(container),
-        volumes: createVolumes(container),
-        networks: {
-          chainfile: {},
-        },
-      };
-    });
+    return Object.fromEntries(
+      Object.entries(this.chainfile.containers).map(([name, container]) => {
+        return [
+          name,
+          {
+            container_name: `${name}-${this.suffix}`,
+            image: container.image + ':' + this.resolveValue(container.tag),
+            command: container.command,
+            environment: Object.fromEntries(
+              Object.entries(container.environment ?? {}).map(([key, valueOrReference]) => {
+                return [key, this.resolveValue(valueOrReference)];
+              }),
+            ),
+            ports: createPorts(container),
+            volumes: createVolumes(container),
+            networks: {
+              chainfile: {},
+            },
+          },
+        ];
+      }),
+    );
   }
 
   private resolveValue(value: string | ValueReference): string {
@@ -179,7 +181,64 @@ export class Compose {
   }
 }
 
-function validate(chainfile: Chainfile) {
+class Values {
+  constructor(protected readonly chainfile: Chainfile) {}
+
+  /**
+   * @param override values in the chainfile
+   */
+  public init(override: Record<string, string>): Record<string, string> {
+    if (this.chainfile.values === undefined) {
+      return override;
+    }
+
+    const values = Object.fromEntries(
+      Object.entries(this.chainfile.values).map(([name, options]) => {
+        if (override[name] !== undefined) {
+          return [name, override[name]];
+        }
+
+        if (typeof options === 'string') {
+          return [name, options];
+        }
+
+        if (options.default !== undefined) {
+          return [name, options.default];
+        }
+
+        if (options.random !== undefined) {
+          if (options.random.type === 'bytes') {
+            return [name, randomBytes(options.random.length).toString(options.random.encoding)];
+          }
+        }
+
+        if (options.required === true) {
+          throw new Error(`Missing Value: ${name}`);
+        }
+
+        throw new Error(`Unsupported Value: ${JSON.stringify(options)}`);
+      }),
+    );
+
+    return this.interpolate(values);
+  }
+
+  protected interpolate(values: Record<string, string>): Record<string, string> {
+    let updated: boolean;
+    do {
+      updated = false;
+      for (const [name, value] of Object.entries(values)) {
+        values[name] = value.replace(/\$\{([a-z]+(_[a-z0-9]+)*)}/g, (_, key) => {
+          updated = true;
+          return values[key];
+        });
+      }
+    } while (updated);
+    return values;
+  }
+}
+
+export function validate(chainfile: any) {
   const ajv = new Ajv();
   addFormats(ajv);
   const validateFunction = ajv.compile(schema);
@@ -187,42 +246,4 @@ function validate(chainfile: Chainfile) {
   if (!validateFunction(chainfile)) {
     throw new Error(ajv.errorsText(validateFunction.errors));
   }
-}
-
-function initValues(chainfile: Chainfile, overrideValues: Record<string, string>) {
-  const values = mapValues(chainfile.values ?? {}, (options: string | ValueOptions, name) => {
-    if (overrideValues[name] !== undefined) {
-      return overrideValues[name];
-    }
-
-    if (typeof options === 'string') {
-      return options;
-    }
-
-    if (options.default !== undefined) {
-      return options.default;
-    }
-
-    if (options.random !== undefined && options.random.type === 'bytes') {
-      return randomBytes(options.random.length).toString(options.random.encoding);
-    }
-
-    if (options.required === true) {
-      throw new Error(`Missing Value: ${name}`);
-    }
-
-    throw new Error(`Unsupported Value: ${JSON.stringify(options)}`);
-  });
-
-  let updated: boolean;
-  do {
-    updated = false;
-    for (const [name, value] of Object.entries(values)) {
-      values[name] = value.replace(/\$\{([a-z]+(_[a-z0-9]+)*)}/g, (_, key) => {
-        updated = true;
-        return values[key];
-      });
-    }
-  } while (updated);
-  return values;
 }

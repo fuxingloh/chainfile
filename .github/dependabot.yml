@@ -4,21 +4,16 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
-  - package-ecosystem: npm
-    directory: '/'
-    schedule:
-      interval: 'weekly'
-    groups:
-      eslint:
-        patterns:
-          - 'eslint'
-          - '@eslint/*'
 
   - package-ecosystem: npm
     directory: '/'
     schedule:
       interval: 'daily'
     groups:
+      eslint:
+        patterns:
+          - 'eslint'
+          - '@eslint/*'
       chainfile-definitions:
         patterns:
           - 'chainfile-*'

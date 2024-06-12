@@ -32,6 +32,8 @@
     "@types/react": "^18.3.3",
     "@workspace/eslint-config-next": "workspace:*",
     "autoprefixer": "^10.4.19",
+    "chainfile-bitcoin": "^0.1.0",
+    "chainfile-defichain": "^0.1.0",
     "chainfile-ganache": "^0.1.0",
     "chainfile-hardhat": "^0.4.3",
     "chainfile-solana": "^0.2.1",
