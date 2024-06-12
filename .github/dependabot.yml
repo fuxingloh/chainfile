@@ -13,3 +13,12 @@ updates:
         patterns:
           - 'eslint'
           - '@eslint/*'
+
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    groups:
+      chainfile-definitions:
+        patterns:
+          - 'chainfile-*'
