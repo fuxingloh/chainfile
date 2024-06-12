@@ -1,14 +1,18 @@
+import { Callout } from 'nextra/components';
+import ChainfileDefinition from '../../components/ChainfileDefinition.mdx';
+import ganache from 'chainfile-ganache/ganache.json';
+
 # Ganache
 
-import { Callout } from 'nextra/components';
+Definition(s) is maintained by the Chainfile maintainers.
 
 <Callout type="warning">
-  The Truffle Suite has deprecated Ganache in favor of [Hardhat](hardhat). This Chainfile definition is created for
-  legacy compatibility only.
+
+The Truffle Suite has deprecated Ganache in favor of [Hardhat](hardhat).
+This Chainfile definition is created for legacy compatibility only.
+
 </Callout>
 
 ## ganache.json
 
-```txt filename="Location" copy
-chainfile-ganache/ganache.json
-```
+<ChainfileDefinition schema={ganache} />

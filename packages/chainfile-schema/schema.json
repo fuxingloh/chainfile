@@ -12,6 +12,11 @@
         "$schema": {
           "type": "string"
         },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
         "caip2": {
           "type": "string",
           "pattern": "^[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}$",
@@ -85,6 +90,11 @@
           },
           "required": ["length", "encoding"],
           "additionalProperties": false
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
         }
       },
       "allOf": [
@@ -128,7 +138,14 @@
         "source": {
           "type": "string",
           "description": "Source of the container image.",
-          "format": "uri"
+          "format": "uri",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
         },
         "endpoints": {
           "type": "object",
@@ -203,6 +220,13 @@
     "Endpoint": {
       "type": "object",
       "description": "Extension to ports, endpoints are used to expose the container to the outside world with a specific protocol for interfacing.",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        }
+      },
       "oneOf": [
         {
           "$ref": "#/definitions/EndpointPort"

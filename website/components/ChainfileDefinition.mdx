@@ -1,0 +1,69 @@
+### Values
+
+These values have reasonable defaults or are randomly generated values for secured fields
+which will determine how the Chainfile is run.
+You may override these values to customize the Chainfile for your specific needs.
+
+{Object.entries(props.schema.values).map(([key, value]) => {
+const defaultValue = typeof value === 'string' ? value : value.default;
+
+return (
+
+<>
+<h5>{key} {value.required && <code className="nx-text-xs nx-font-normal">required</code>}</h5>
+
+{value.description && <p>{value.description}</p>}
+{defaultValue && <p>Default: <code>{defaultValue}</code></p>}
+
+{value.random?.type === 'bytes' && <p>Random: <code>randomBytes({value.random.length}).toString({value.random.encoding})</code></p>}
+
+</>
+)})}
+
+### Containers
+
+{Object.entries(props.schema.containers).map(([key, container]) => {
+return (
+
+<>
+<h4>{key}</h4>
+
+{container.description && <p>{container.description}</p>}
+
+{Object.entries(container.endpoints).map(([key, endpoint]) => {
+
+return (
+
+<>
+
+<h5>
+  endpoint: <code>{key}</code>
+</h5>
+
+{endpoint.description && <p>{endpoint.description}</p>}
+
+<ul>
+  {endpoint.port && (
+    <li>
+      Port: <code>{endpoint.port}</code>
+    </li>
+  )}
+  {endpoint.protocol && (
+    <li>
+      Protocol: <code>{endpoint.protocol}</code>
+    </li>
+  )}
+  {endpoint.path && (
+    <li>
+      Path: <code>{endpoint.path}</code>
+    </li>
+  )}
+  {endpoint.probes && <li>Probes: {Object.keys(endpoint.probes).join(', ')}</li>}
+  {endpoint.authorization && <li>Authorization: required</li>}
+</ul>
+
+</>
+)})}
+
+</>
+)})}

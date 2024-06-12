@@ -3,7 +3,6 @@ import { randomInt } from 'node:crypto';
 
 import {
   Container,
-  Endpoint,
   EndpointHttpAuthorization,
   EndpointHttpJsonRpc,
   EndpointHttpRest,
@@ -34,7 +33,7 @@ export class ChainfileContainer extends AbstractStartedContainer {
     return this.getMappedPort(endpoint.port);
   }
 
-  private getEndpoint<E extends Endpoint>(name: string): E {
+  private getEndpoint<E>(name: string): E {
     const endpoint = this.container.endpoints?.[name];
     if (endpoint === undefined) {
       throw new Error(`Endpoint: '${name}' not found.`);
