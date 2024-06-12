@@ -88,7 +88,7 @@
               "enum": ["hex", "base64", "base64url"]
             }
           },
-          "required": ["length", "encoding"],
+          "required": ["type", "length", "encoding"],
           "additionalProperties": false
         },
         "description": {

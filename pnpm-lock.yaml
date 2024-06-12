@@ -42,8 +42,8 @@ importers:
         specifier: 29.7.0
         version: 29.7.0(@types/node@20.14.2)
       lint-staged:
-        specifier: ^15.2.5
-        version: 15.2.5
+        specifier: ^15.2.6
+        version: 15.2.6
       prettier:
         specifier: ^3.3.2
         version: 3.3.2
@@ -74,9 +74,6 @@ importers:
       debug:
         specifier: ^4.3.5
         version: 4.3.5
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       trpc-openapi:
         specifier: ^1.2.0
         version: 1.2.0(@trpc/server@10.45.2)(zod@3.23.8)
@@ -87,9 +84,6 @@ importers:
       '@types/debug':
         specifier: ^4.1.12
         version: 4.1.12
-      '@types/lodash':
-        specifier: ^4.17.5
-        version: 4.17.5
 
   packages/chainfile-docker:
     dependencies:
@@ -105,16 +99,10 @@ importers:
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
     devDependencies:
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
-      '@types/lodash':
-        specifier: ^4.17.5
-        version: 4.17.5
 
   packages/chainfile-schema:
     devDependencies:
@@ -167,6 +155,12 @@ importers:
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.19(postcss@8.4.38)
+      chainfile-bitcoin:
+        specifier: ^0.1.0
+        version: 0.1.0
+      chainfile-defichain:
+        specifier: ^0.1.0
+        version: 0.1.0
       chainfile-ganache:
         specifier: ^0.1.0
         version: 0.1.0
@@ -239,8 +233,8 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0(prettier@3.3.2)
       prettier-plugin-tailwindcss:
-        specifier: ^0.6.1
-        version: 0.6.1(prettier@3.3.2)
+        specifier: ^0.6.3
+        version: 0.6.3(prettier@3.3.2)
 
   workspace/tsconfig: {}
 
@@ -2384,6 +2378,14 @@ packages:
   /ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
     dev: false
+
+  /chainfile-bitcoin@0.1.0:
+    resolution: {integrity: sha512-+3DIuMXPmviUuLcjBFLyRkQr7icAfh3m5tm6Yit4qgn2NKPtyvlQOGDvQ9B7MEdhjmPkeYoQ/MnJGygWHi0pXg==}
+    dev: true
+
+  /chainfile-defichain@0.1.0:
+    resolution: {integrity: sha512-hgfk1dMAteYXPCbnbftJ5sZLYYQZ4nkgQroyX6UGxwm9tRA0BRg8o8j3BG41fwRhTzVzZdTxVmOtsHsoXzQyNw==}
+    dev: true
 
   /chainfile-ganache@0.1.0:
     resolution: {integrity: sha512-4He6yeC2ZU7KD/XuPMab6jNKHN6SCNx82SA+JpT2Ch72WK0txQMm8DSVoysdwcAU9DgUkqUExQf8C6xcDApK+Q==}
@@ -5433,8 +5435,8 @@ packages:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
     dev: true
 
-  /lint-staged@15.2.5:
-    resolution: {integrity: sha512-j+DfX7W9YUvdzEZl3Rk47FhDF6xwDBV5wwsCPw6BwWZVPYJemusQmvb9bRsW23Sqsaa+vRloAWogbK4BUuU2zA==}
+  /lint-staged@15.2.6:
+    resolution: {integrity: sha512-M/3PdijFXT/A5lnbSK3EQNLbIIrkE00JZaD39r7t4kfFOqT1Ly9LgSZSMMtvQ3p2/C8Nyj/ou0vkNHmEwqoB8g==}
     engines: {node: '>=18.12.0'}
     hasBin: true
     dependencies:
@@ -5514,6 +5516,7 @@ packages:
 
   /lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+    dev: true
 
   /log-update@6.0.0:
     resolution: {integrity: sha512-niTvB4gqvtof056rRIrTZvjNYE4rCUzO6X/X+kYjd7WFxXeJ0NwEFnRxX6ehkvv3jTwrXnNdtAak5XYZuIyPFw==}
@@ -7015,8 +7018,8 @@ packages:
       synckit: 0.9.0
     dev: false
 
-  /prettier-plugin-tailwindcss@0.6.1(prettier@3.3.2):
-    resolution: {integrity: sha512-AnbeYZu0WGj+QgKciUgdMnRxrqcxltleZPgdwfA5104BHM3siBLONN/HLW1yS2HvzSNkzpQ/JAj+LN0jcJO+0w==}
+  /prettier-plugin-tailwindcss@0.6.3(prettier@3.3.2):
+    resolution: {integrity: sha512-GeJ9bqXN4APAP0V5T2a1J/o6a50MWevEUCPWxijpdXFDQkBCoAfz4pQfv+YMXSqZ5GXLMDYio0mUOfrYL7gf4w==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'

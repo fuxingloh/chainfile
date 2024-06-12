@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
-    "clean": "tsc --build --clean",
+    "clean": "rm -rf dist",
     "lint": "eslint .",
     "test": "jest"
   },
