@@ -8,7 +8,7 @@ export const agentRouter = router({
     .input(z.void())
     .output(
       z.object({
-        $schema: z.string(),
+        $schema: z.string().optional(),
         caip2: z.string(),
         name: z.string(),
         values: z.any().optional(),
