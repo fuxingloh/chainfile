@@ -12,17 +12,21 @@ describe('synth', () => {
       url: 'http://${rpc_user}:${rpc_password}@dns:1234',
       version: {},
       rpc_user: {
-        random: {
-          type: 'bytes',
-          length: 16,
-          encoding: 'hex',
+        secret: true,
+        default: {
+          random: {
+            bytes: 16,
+            encoding: 'hex',
+          },
         },
       },
       rpc_password: {
-        random: {
-          type: 'bytes',
-          length: 16,
-          encoding: 'hex',
+        secret: true,
+        default: {
+          random: {
+            bytes: 16,
+            encoding: 'hex',
+          },
         },
       },
     },
@@ -125,7 +129,7 @@ describe('synth', () => {
       "      - '0:1569'",
       '    environment:',
       '      CHAINFILE_JSON: >-',
-      '        {"$$schema":"https://chainfile.org/schema.json","caip2":"eip155:0","name":"Example","values":{"url":"http://$${rpc_user}:$${rpc_password}@dns:1234","version":{},"rpc_user":{"random":{"type":"bytes","length":16,"encoding":"hex"}},"rpc_password":{"random":{"type":"bytes","length":16,"encoding":"hex"}}},"containers":{"dns":{"image":"docker.io/trufflesuite/ganache","tag":{"$$value":"version"},"source":"https://github.com/trufflesuite/ganache","endpoints":{"rpc":{"port":8545,"protocol":"HTTP',
+      '        {"$$schema":"https://chainfile.org/schema.json","caip2":"eip155:0","name":"Example","values":{"url":"http://$${rpc_user}:$${rpc_password}@dns:1234","version":{},"rpc_user":{"secret":true,"default":{"random":{"bytes":16,"encoding":"hex"}}},"rpc_password":{"secret":true,"default":{"random":{"bytes":16,"encoding":"hex"}}}},"containers":{"dns":{"image":"docker.io/trufflesuite/ganache","tag":{"$$value":"version"},"source":"https://github.com/trufflesuite/ganache","endpoints":{"rpc":{"port":8545,"protocol":"HTTP',
       '        JSON-RPC',
       '        2.0","authorization":{"type":"HttpBasic","username":{"$$value":"rpc_user"},"password":{"$$value":"rpc_password"}},"probes":{"readiness":{"params":[],"method":"eth_blockNumber","match":{"result":{"type":"string"}}}}}},"environment":{"RPCUSER":{"$$value":"rpc_user"},"RPCPASSWORD":{"$$value":"rpc_password"}},"resources":{"cpu":0.25,"memory":256}},"another":{"image":"docker.io/trufflesuite/ganache","tag":"v7.9.2","source":"https://github.com/trufflesuite/ganache","command":["sh","-c","echo',
       '        $${ENV_1}',

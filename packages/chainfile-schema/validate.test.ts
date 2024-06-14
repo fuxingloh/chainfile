@@ -1,4 +1,4 @@
-import { expect, it } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 
 import { validate } from './validate';
 
@@ -77,5 +77,83 @@ it('should pass validate', async () => {
         },
       },
     },
+  });
+});
+
+describe('fail with duplicate ports', () => {
+  it('should fail validate with duplicate ports in a single container', async () => {
+    expect(() =>
+      validate({
+        caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
+        name: '1 Container',
+        containers: {
+          btc1: {
+            image: 'docker.io/kylemanna/bitcoind',
+            tag: 'latest',
+            source: 'https://github.com/kylemanna/docker-bitcoind',
+            endpoints: {
+              p2p: {
+                port: 8332,
+              },
+              rpc: {
+                port: 8332,
+                protocol: 'HTTP REST',
+              },
+            },
+            resources: {
+              cpu: 0.25,
+              memory: 256,
+            },
+          },
+        },
+      }),
+    ).toThrow('All ports in all containers must be unique.');
+  });
+
+  it('should fail validate with duplicate ports across container', async () => {
+    expect(() =>
+      validate({
+        caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
+        name: '2 Containers',
+        containers: {
+          btc1: {
+            image: 'docker.io/kylemanna/bitcoind',
+            tag: 'latest',
+            source: 'https://github.com/kylemanna/docker-bitcoind',
+            endpoints: {
+              p2p: {
+                port: 18445,
+              },
+              rpc: {
+                port: 8332,
+                protocol: 'HTTP JSON-RPC 2.0',
+              },
+            },
+            resources: {
+              cpu: 0.25,
+              memory: 256,
+            },
+          },
+          btc2: {
+            image: 'docker.io/kylemanna/bitcoind',
+            tag: 'latest',
+            source: 'https://github.com/kylemanna/docker-bitcoind',
+            endpoints: {
+              p2p: {
+                port: 18445,
+              },
+              rpc: {
+                port: 8332,
+                protocol: 'HTTP JSON-RPC 2.0',
+              },
+            },
+            resources: {
+              cpu: 0.25,
+              memory: 256,
+            },
+          },
+        },
+      }),
+    ).toThrow('All ports in all containers must be unique.');
   });
 });

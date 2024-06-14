@@ -200,16 +200,14 @@ export class Values {
           return [name, value];
         }
 
-        if (value.random !== undefined) {
-          if (value.random.type === 'bytes') {
-            return [name, randomBytes(value.random.length).toString(value.random.encoding)];
+        if (value.default !== undefined) {
+          if (typeof value.default === 'string') {
+            return [name, value.default];
           }
 
-          throw new Error(`Unsupported value ${name} random type: ${JSON.stringify(value.random)}`);
-        }
-
-        if (value.default !== undefined) {
-          return [name, value.default];
+          if (value.default.random !== undefined) {
+            return [name, randomBytes(value.default.random.bytes).toString(value.default.random.encoding)];
+          }
         }
 
         throw new Error(`Unsupported value: ${JSON.stringify(value)}`);

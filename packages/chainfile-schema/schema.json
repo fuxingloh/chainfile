@@ -1,6 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "allOf": [{ "$ref": "#/definitions/Chainfile" }],
+  "allOf": [
+    {
+      "$ref": "#/definitions/Chainfile"
+    }
+  ],
   "definitions": {
     "Chainfile": {
       "type": "object",
@@ -61,28 +65,38 @@
     "ValueOptions": {
       "type": "object",
       "properties": {
-        "default": {
-          "type": "string"
+        "secret": {
+          "type": "boolean",
+          "description": "Mark the value as a secret"
         },
-        "random": {
-          "type": "object",
-          "description": "Generate a random value, this is useful for secrets. Not supported for all container orchestration platforms.",
-          "properties": {
-            "type": {
-              "enum": ["bytes"]
+        "default": {
+          "anyOf": [
+            {
+              "type": "string"
             },
-            "length": {
-              "type": "number",
-              "minimum": 1,
-              "maximum": 256,
-              "multipleOf": 1
-            },
-            "encoding": {
-              "enum": ["hex", "base64", "base64url"]
+            {
+              "type": "object",
+              "properties": {
+                "random": {
+                  "type": "object",
+                  "description": "Generate a random value for orchestration that supports it.",
+                  "properties": {
+                    "bytes": {
+                      "type": "number",
+                      "minimum": 1,
+                      "maximum": 256,
+                      "multipleOf": 1
+                    },
+                    "encoding": {
+                      "enum": ["hex", "base64", "base64url"]
+                    }
+                  },
+                  "required": ["bytes", "encoding"],
+                  "additionalProperties": false
+                }
+              }
             }
-          },
-          "required": ["type", "length", "encoding"],
-          "additionalProperties": false
+          ]
         },
         "description": {
           "type": "string",
@@ -90,13 +104,6 @@
           "maxLength": 1024
         }
       },
-      "allOf": [
-        {
-          "not": {
-            "required": ["default", "random"]
-          }
-        }
-      ],
       "additionalProperties": false
     },
     "ValueReference": {
