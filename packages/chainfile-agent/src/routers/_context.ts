@@ -1,9 +1,7 @@
 import console from 'node:console';
 import process from 'node:process';
 
-import schema, { Chainfile } from '@chainfile/schema';
-import Ajv from 'ajv';
-import addFormats from 'ajv-formats';
+import { Chainfile, validate } from '@chainfile/schema';
 
 function getChainfile(): Chainfile {
   const CHAINFILE_JSON = process.env.CHAINFILE_JSON;
@@ -15,23 +13,17 @@ function getChainfile(): Chainfile {
   console.log(`Chainfile:`);
   console.log(JSON.stringify(chainfile, null, 2));
 
-  const ajv = new Ajv();
-  addFormats(ajv);
-
-  const validateFunction = ajv.compile(schema);
-  if (validateFunction(chainfile)) {
-    return chainfile as Chainfile;
-  }
-
-  throw new Error(`Invalid Chainfile: ${ajv.errorsText(validateFunction.errors)}`);
+  validate(chainfile);
+  return chainfile;
 }
 
-function getValues() {
-  const CHAINFILE_VALUES = process.env.CHAINFILE_VALUES;
-  if (CHAINFILE_VALUES === undefined) {
-    throw new Error('CHAINFILE_VALUES is not defined, cannot start @chainfile/agent.');
+function getValues(): Record<string, string> {
+  const values = process.env.CHAINFILE_VALUES;
+  if (values !== undefined) {
+    return JSON.parse(values);
   }
-  return JSON.parse(CHAINFILE_VALUES);
+
+  throw new Error('CHAINFILE_VALUES is not defined, cannot start @chainfile/agent.');
 }
 
 const chainfile = getChainfile();

@@ -1,8 +1,6 @@
 import { randomBytes } from 'node:crypto';
 
-import schema, { Chainfile, Container, ValueReference } from '@chainfile/schema';
-import Ajv from 'ajv';
-import addFormats from 'ajv-formats';
+import { Chainfile, Container, validate, ValueReference } from '@chainfile/schema';
 import yaml from 'js-yaml';
 
 import { version } from '../package.json';
@@ -20,11 +18,11 @@ export class Compose {
    * @param values to override in the chainfile
    * @param suffix for the container names to prevent conflicts.
    */
-  constructor(chainfile: Chainfile, values: Record<string, string>, suffix: string = randomBytes(4).toString('hex')) {
+  constructor(chainfile: object, values: Record<string, string>, suffix: string = randomBytes(4).toString('hex')) {
     validate(chainfile);
-    this.chainfile = chainfile;
+    this.chainfile = chainfile as Chainfile;
     this.suffix = suffix;
-    this.values = new Values(chainfile).init(values);
+    this.values = new Values(this.chainfile).init(values);
   }
 
   public synthDotEnv(): string {
@@ -181,42 +179,40 @@ export class Compose {
   }
 }
 
-class Values {
+export class Values {
   constructor(protected readonly chainfile: Chainfile) {}
 
   /**
    * @param override values in the chainfile
    */
-  public init(override: Record<string, string>): Record<string, string> {
+  public init(override: Record<string, string> = {}): Record<string, string> {
     if (this.chainfile.values === undefined) {
-      return override;
+      return {};
     }
 
     const values = Object.fromEntries(
-      Object.entries(this.chainfile.values).map(([name, options]) => {
+      Object.entries(this.chainfile.values).map(([name, value]) => {
         if (override[name] !== undefined) {
           return [name, override[name]];
         }
 
-        if (typeof options === 'string') {
-          return [name, options];
+        if (typeof value === 'string') {
+          return [name, value];
         }
 
-        if (options.default !== undefined) {
-          return [name, options.default];
-        }
-
-        if (options.random !== undefined) {
-          if (options.random.type === 'bytes') {
-            return [name, randomBytes(options.random.length).toString(options.random.encoding)];
+        if (value.random !== undefined) {
+          if (value.random.type === 'bytes') {
+            return [name, randomBytes(value.random.length).toString(value.random.encoding)];
           }
+
+          throw new Error(`Unsupported value ${name} random type: ${JSON.stringify(value.random)}`);
         }
 
-        if (options.required === true) {
-          throw new Error(`Missing Value: ${name}`);
+        if (value.default !== undefined) {
+          return [name, value.default];
         }
 
-        throw new Error(`Unsupported Value: ${JSON.stringify(options)}`);
+        throw new Error(`Unsupported value: ${JSON.stringify(value)}`);
       }),
     );
 
@@ -235,15 +231,5 @@ class Values {
       }
     } while (updated);
     return values;
-  }
-}
-
-export function validate(chainfile: any) {
-  const ajv = new Ajv();
-  addFormats(ajv);
-  const validateFunction = ajv.compile(schema);
-
-  if (!validateFunction(chainfile)) {
-    throw new Error(ajv.errorsText(validateFunction.errors));
   }
 }

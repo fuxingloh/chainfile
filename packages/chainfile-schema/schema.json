@@ -1,10 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "allOf": [
-    {
-      "$ref": "#/definitions/Chainfile"
-    }
-  ],
+  "allOf": [{ "$ref": "#/definitions/Chainfile" }],
   "definitions": {
     "Chainfile": {
       "type": "object",
@@ -43,8 +39,7 @@
           "additionalProperties": false
         }
       },
-      "required": ["$schema", "caip2", "name", "containers"],
-      "additionalProperties": false
+      "required": ["caip2", "name", "containers"]
     },
     "Values": {
       "type": "object",
@@ -66,14 +61,12 @@
     "ValueOptions": {
       "type": "object",
       "properties": {
-        "required": {
-          "type": "boolean"
-        },
         "default": {
           "type": "string"
         },
         "random": {
           "type": "object",
+          "description": "Generate a random value, this is useful for secrets. Not supported for all container orchestration platforms.",
           "properties": {
             "type": {
               "enum": ["bytes"]
