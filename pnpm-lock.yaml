@@ -157,17 +157,17 @@ importers:
         specifier: ^10.4.19
         version: 10.4.19(postcss@8.4.38)
       chainfile-bitcoin:
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.2
+        version: 0.1.2
       chainfile-defichain:
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.2
+        version: 0.1.2
       chainfile-ganache:
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.1
+        version: 0.1.1
       chainfile-hardhat:
-        specifier: ^0.4.3
-        version: 0.4.3
+        specifier: ^0.4.4
+        version: 0.4.4
       chainfile-solana:
         specifier: ^0.2.1
         version: 0.2.1
@@ -2394,20 +2394,20 @@ packages:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
     dev: false
 
-  /chainfile-bitcoin@0.1.0:
-    resolution: {integrity: sha512-+3DIuMXPmviUuLcjBFLyRkQr7icAfh3m5tm6Yit4qgn2NKPtyvlQOGDvQ9B7MEdhjmPkeYoQ/MnJGygWHi0pXg==}
+  /chainfile-bitcoin@0.1.2:
+    resolution: {integrity: sha512-2M474C4rAToPn/O6SkZjs7NFS0AR4JZbUL0D0ngly6lnidezPCmBFuTESqfO0dZ+ux1e01LARWM5qC/3kU7uxQ==}
     dev: true
 
-  /chainfile-defichain@0.1.0:
-    resolution: {integrity: sha512-hgfk1dMAteYXPCbnbftJ5sZLYYQZ4nkgQroyX6UGxwm9tRA0BRg8o8j3BG41fwRhTzVzZdTxVmOtsHsoXzQyNw==}
+  /chainfile-defichain@0.1.2:
+    resolution: {integrity: sha512-ufn+43JCePNCtOTg7KXbTCcKfCqWTaghBDLKXwhLYsgCP3XOij0CIjk6yBm8bnEiztJ7SC9YVIrclJWy5xzEWQ==}
     dev: true
 
-  /chainfile-ganache@0.1.0:
-    resolution: {integrity: sha512-4He6yeC2ZU7KD/XuPMab6jNKHN6SCNx82SA+JpT2Ch72WK0txQMm8DSVoysdwcAU9DgUkqUExQf8C6xcDApK+Q==}
+  /chainfile-ganache@0.1.1:
+    resolution: {integrity: sha512-ELsORhx/UWd8S0ICuBqlSx/oF/32g7A12VHd2pcHaH+ZnP6cRa9ZJgNgucb1lzShxcPgAx57Ckk9+ozlG7MaCA==}
     dev: true
 
-  /chainfile-hardhat@0.4.3:
-    resolution: {integrity: sha512-lkVyzgqIoQ2cI8tnE1+b6Z5uiYHDuIxWwlEOivbjJXZL49BqeyVLp0Nk4gift1IfbsOkKcmbGYfuRw/5it1KYg==}
+  /chainfile-hardhat@0.4.4:
+    resolution: {integrity: sha512-ryL4lTWmvYJLaWpV1ZDl3uTw0boaDuwykIvtwwGOxVkIY6H4FnzOvEoqgY87QgCjfurP55wHF138A0dEGui9TA==}
     dev: true
 
   /chainfile-solana@0.2.1:
