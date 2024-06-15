@@ -7,8 +7,8 @@ which will determine how the Chainfile is run.
 You may override these values to customize the Chainfile for your specific needs.
 
 {Object.entries(props.schema.values).map(([key, value]) => {
-const defaultValue = typeof value === 'string' ? value : value.default;
-
+const defaultValue = typeof value === 'string' ? value : typeof value.default === 'string' ? value.default : null;
+const random = typeof value.default === 'object' ? value.default.random : null;
 return (
 
 <>
@@ -17,7 +17,7 @@ return (
 {value.description && <p>{value.description}</p>}
 {defaultValue && <p>Default: <code>{defaultValue}</code></p>}
 
-{value.random?.type === 'bytes' && <p>Random: <code>randomBytes({value.random.length}).toString({value.random.encoding})</code></p>}
+{random && <p>Random: <code>randomBytes({random.bytes}).toString({random.encoding})</code></p>}
 
 </>
 )})}
