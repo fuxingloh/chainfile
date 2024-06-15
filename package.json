@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@swc/core": "^1.5.28",
+    "@swc/core": "^1.5.29",
     "@swc/jest": "^0.2.36",
     "@types/node": "^20.14.2",
     "@workspace/eslint-config": "workspace:*",
