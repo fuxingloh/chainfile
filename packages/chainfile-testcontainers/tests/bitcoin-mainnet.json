@@ -4,17 +4,23 @@
   "name": "Bitcoin Mainnet",
   "values": {
     "rpc_user": {
-      "random": {
-        "type": "bytes",
-        "length": 16,
-        "encoding": "hex"
+      "description": "Username for RPC authentication",
+      "secret": true,
+      "default": {
+        "random": {
+          "bytes": 16,
+          "encoding": "hex"
+        }
       }
     },
     "rpc_password": {
-      "random": {
-        "type": "bytes",
-        "length": 16,
-        "encoding": "hex"
+      "description": "Password for RPC authentication",
+      "secret": true,
+      "default": {
+        "random": {
+          "bytes": 16,
+          "encoding": "hex"
+        }
       }
     }
   },

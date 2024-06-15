@@ -7,20 +7,37 @@
     "url": "git+https://github.com/vetumorg/chainfile"
   },
   "license": "MIT",
-  "main": "schema.json",
-  "types": "dist/schema.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "files": [
-    "dist/*",
-    "schema.json"
+    "index.js",
+    "index.d.ts",
+    "schema.json",
+    "schema.d.ts",
+    "validate.js",
+    "validate.d.ts"
   ],
   "scripts": {
-    "build": "json2ts -i schema.json -o dist/schema.d.ts",
-    "clean": "rm -rf dist"
+    "build": "tsc --project tsconfig.build.json",
+    "clean": "rm -rf schema.d.ts validate.d.ts validate.js",
+    "generate": "json2ts -i schema.json -o schema.d.ts",
+    "test": "jest"
   },
   "lint-staged": {
     "*": [
       "prettier --write --ignore-unknown"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
     ]
+  },
+  "jest": {
+    "preset": "@workspace/jest-preset"
+  },
+  "dependencies": {
+    "ajv": "^8.16.0",
+    "ajv-formats": "^3.0.1"
   },
   "devDependencies": {
     "json-schema-to-typescript": "^14.0.4"

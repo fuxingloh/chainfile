@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@workspace/tsconfig",
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "./"
+  },
+  "include": ["./schema.json", "./schema.d.ts", "./index.ts", "./validate.ts"],
+  "exclude": ["**/*.test.ts"]
+}

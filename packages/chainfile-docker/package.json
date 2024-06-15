@@ -31,8 +31,6 @@
   },
   "dependencies": {
     "@chainfile/schema": "workspace:^",
-    "ajv": "^8.16.0",
-    "ajv-formats": "^3.0.1",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {

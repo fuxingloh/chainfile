@@ -43,8 +43,7 @@
           "additionalProperties": false
         }
       },
-      "required": ["$schema", "caip2", "name", "containers"],
-      "additionalProperties": false
+      "required": ["caip2", "name", "containers"]
     },
     "Values": {
       "type": "object",
@@ -66,30 +65,38 @@
     "ValueOptions": {
       "type": "object",
       "properties": {
-        "required": {
-          "type": "boolean"
+        "secret": {
+          "type": "boolean",
+          "description": "Mark the value as a secret"
         },
         "default": {
-          "type": "string"
-        },
-        "random": {
-          "type": "object",
-          "properties": {
-            "type": {
-              "enum": ["bytes"]
+          "anyOf": [
+            {
+              "type": "string"
             },
-            "length": {
-              "type": "number",
-              "minimum": 1,
-              "maximum": 256,
-              "multipleOf": 1
-            },
-            "encoding": {
-              "enum": ["hex", "base64", "base64url"]
+            {
+              "type": "object",
+              "properties": {
+                "random": {
+                  "type": "object",
+                  "description": "Generate a random value for orchestration that supports it.",
+                  "properties": {
+                    "bytes": {
+                      "type": "number",
+                      "minimum": 1,
+                      "maximum": 256,
+                      "multipleOf": 1
+                    },
+                    "encoding": {
+                      "enum": ["hex", "base64", "base64url"]
+                    }
+                  },
+                  "required": ["bytes", "encoding"],
+                  "additionalProperties": false
+                }
+              }
             }
-          },
-          "required": ["type", "length", "encoding"],
-          "additionalProperties": false
+          ]
         },
         "description": {
           "type": "string",
@@ -97,13 +104,6 @@
           "maxLength": 1024
         }
       },
-      "allOf": [
-        {
-          "not": {
-            "required": ["default", "random"]
-          }
-        }
-      ],
       "additionalProperties": false
     },
     "ValueReference": {

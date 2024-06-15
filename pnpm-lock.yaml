@@ -90,12 +90,6 @@ importers:
       '@chainfile/schema':
         specifier: workspace:^
         version: link:../chainfile-schema
-      ajv:
-        specifier: ^8.16.0
-        version: 8.16.0
-      ajv-formats:
-        specifier: ^3.0.1
-        version: 3.0.1(ajv@8.16.0)
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0
@@ -105,6 +99,13 @@ importers:
         version: 4.0.9
 
   packages/chainfile-schema:
+    dependencies:
+      ajv:
+        specifier: ^8.16.0
+        version: 8.16.0
+      ajv-formats:
+        specifier: ^3.0.1
+        version: 3.0.1(ajv@8.16.0)
     devDependencies:
       json-schema-to-typescript:
         specifier: ^14.0.4
