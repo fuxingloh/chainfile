@@ -168,6 +168,9 @@ importers:
       chainfile-hardhat:
         specifier: ^0.4.4
         version: 0.4.4
+      chainfile-ord:
+        specifier: ^0.1.0
+        version: 0.1.0
       chainfile-solana:
         specifier: ^0.2.1
         version: 0.2.1
@@ -2408,6 +2411,10 @@ packages:
 
   /chainfile-hardhat@0.4.4:
     resolution: {integrity: sha512-ryL4lTWmvYJLaWpV1ZDl3uTw0boaDuwykIvtwwGOxVkIY6H4FnzOvEoqgY87QgCjfurP55wHF138A0dEGui9TA==}
+    dev: true
+
+  /chainfile-ord@0.1.0:
+    resolution: {integrity: sha512-T/6zrow9eTlpRiNtLzuMcMvfRc4jtlFSziMSHTgdj+3KAcW0IbUA+yDNAmX4qVF6xlQpLH8GOu9Iv/EAeEUmwA==}
     dev: true
 
   /chainfile-solana@0.2.1:
