@@ -10,10 +10,6 @@ updates:
     schedule:
       interval: 'daily'
     groups:
-      eslint:
-        patterns:
-          - 'eslint'
-          - '@eslint/*'
       chainfile:
         patterns:
           - 'chainfile-*'
@@ -21,3 +17,14 @@ updates:
         patterns:
           - 'next'
           - '@next/*'
+      workspace:
+        update-types:
+          - 'minor'
+          - 'patch'
+        patterns:
+          - 'prettier-*'
+          - 'typescript-eslint'
+          - 'globals'
+          - '@eslint/*'
+          - 'eslint'
+          - 'eslint-*'

@@ -94,7 +94,8 @@
                   "required": ["bytes", "encoding"],
                   "additionalProperties": false
                 }
-              }
+              },
+              "additionalProperties": false
             }
           ]
         },
