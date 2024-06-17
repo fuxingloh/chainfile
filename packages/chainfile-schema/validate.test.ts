@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from '@workspace/jest/globals';
 
 import { validate } from './validate';
 

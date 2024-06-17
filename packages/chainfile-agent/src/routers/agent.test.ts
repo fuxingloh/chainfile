@@ -1,5 +1,5 @@
 import { Chainfile } from '@chainfile/schema';
-import { expect, it } from '@jest/globals';
+import { expect, it } from '@workspace/jest/globals';
 
 import { createCaller } from './_app';
 

@@ -17,14 +17,3 @@ updates:
         patterns:
           - 'next'
           - '@next/*'
-      workspace:
-        update-types:
-          - 'minor'
-          - 'patch'
-        patterns:
-          - 'prettier-*'
-          - 'typescript-eslint'
-          - 'globals'
-          - '@eslint/*'
-          - 'eslint'
-          - 'eslint-*'

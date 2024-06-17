@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, expect, it } from '@jest/globals';
+import { afterAll, beforeAll, expect, it } from '@workspace/jest/globals';
 
 import { ChainfileTestcontainers } from '../src';
 import localhost from './ganache.json';

@@ -1,5 +1,5 @@
 import { Chainfile } from '@chainfile/schema';
-import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it } from '@workspace/jest/globals';
 
 import { AgentContainer } from './agent';
 import { ChainfileTestcontainers } from './testcontainers';
