@@ -182,8 +182,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1
       chainfile-hardhat:
-        specifier: ^0.4.4
-        version: 0.4.4
+        specifier: ^0.4.5
+        version: 0.4.5
       chainfile-ord:
         specifier: ^0.1.0
         version: 0.1.0
@@ -496,6 +496,7 @@ packages:
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
+    deprecated: Use @eslint/config-array instead
 
   '@humanwhocodes/module-importer@1.0.1':
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
@@ -503,6 +504,7 @@ packages:
 
   '@humanwhocodes/object-schema@2.0.3':
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
+    deprecated: Use @eslint/object-schema instead
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -1484,8 +1486,8 @@ packages:
   chainfile-ganache@0.1.1:
     resolution: {integrity: sha512-ELsORhx/UWd8S0ICuBqlSx/oF/32g7A12VHd2pcHaH+ZnP6cRa9ZJgNgucb1lzShxcPgAx57Ckk9+ozlG7MaCA==}
 
-  chainfile-hardhat@0.4.4:
-    resolution: {integrity: sha512-ryL4lTWmvYJLaWpV1ZDl3uTw0boaDuwykIvtwwGOxVkIY6H4FnzOvEoqgY87QgCjfurP55wHF138A0dEGui9TA==}
+  chainfile-hardhat@0.4.5:
+    resolution: {integrity: sha512-rtmKx812cIfiqX1sJQV61xSTBKoVXGhfsHca7l2ADvwTWUPRoZyE+LiMkcuPiP4//lQ/qwFGI1je5g4GDobUfg==}
 
   chainfile-ord@0.1.0:
     resolution: {integrity: sha512-T/6zrow9eTlpRiNtLzuMcMvfRc4jtlFSziMSHTgdj+3KAcW0IbUA+yDNAmX4qVF6xlQpLH8GOu9Iv/EAeEUmwA==}
@@ -2696,6 +2698,7 @@ packages:
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
@@ -4213,6 +4216,7 @@ packages:
 
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   robust-predicates@3.0.2:
@@ -6515,7 +6519,7 @@ snapshots:
 
   chainfile-ganache@0.1.1: {}
 
-  chainfile-hardhat@0.4.4: {}
+  chainfile-hardhat@0.4.5: {}
 
   chainfile-ord@0.1.0: {}
 
