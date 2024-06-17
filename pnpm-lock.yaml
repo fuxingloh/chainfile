@@ -163,8 +163,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       chainfile-solana:
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^0.2.2
+        version: 0.2.2
       postcss:
         specifier: ^8.4.38
         version: 8.4.38
@@ -2431,8 +2431,8 @@ packages:
     resolution: {integrity: sha512-T/6zrow9eTlpRiNtLzuMcMvfRc4jtlFSziMSHTgdj+3KAcW0IbUA+yDNAmX4qVF6xlQpLH8GOu9Iv/EAeEUmwA==}
     dev: true
 
-  /chainfile-solana@0.2.1:
-    resolution: {integrity: sha512-tlz4rfcZLeDmYkSK1zFkAKPfZNp6rjjTQuzOoyBMFiEXfL1f1jPY28qKalzdSpAjY1TCCShHFA5ovaxYyhQ8Wg==}
+  /chainfile-solana@0.2.2:
+    resolution: {integrity: sha512-eF8JdO+4iwEpqckC5lFuLxkYtCRTVpeYl544pGzIHDfmIHhgiCQWZekG+epUstJwsNGWkSSzW8dJ23eAjNzEiw==}
     dev: true
 
   /chalk@2.3.0:
