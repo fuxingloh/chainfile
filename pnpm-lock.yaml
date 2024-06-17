@@ -39,8 +39,8 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0(prettier@3.3.2)
       prettier-plugin-tailwindcss:
-        specifier: ^0.6.4
-        version: 0.6.4(prettier@3.3.2)
+        specifier: ^0.6.5
+        version: 0.6.5(prettier@3.3.2)
       turbo:
         specifier: ^2.0.4
         version: 2.0.4
@@ -218,8 +218,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0(eslint@8.57.0)
       globals:
-        specifier: ^15.4.0
-        version: 15.4.0
+        specifier: ^15.6.0
+        version: 15.6.0
       typescript-eslint:
         specifier: ^7.13.0
         version: 7.13.0(eslint@8.57.0)(typescript@5.4.5)
@@ -2521,8 +2521,8 @@ packages:
     resolution: {integrity: sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==}
     engines: {node: '>=8'}
 
-  globals@15.4.0:
-    resolution: {integrity: sha512-unnwvMZpv0eDUyjNyh9DH/yxUaRYrEjW/qK4QcdrHg3oO11igUQrCSgODHEqxlKg8v2CD2Sd7UkqqEBoz5U7TQ==}
+  globals@15.6.0:
+    resolution: {integrity: sha512-UzcJi88Hw//CurUIRa9Jxb0vgOCcuD/MNjwmXp633cyaRKkCWACkoqHCtfZv43b1kqXGg/fpOa8bwgacCeXsVg==}
     engines: {node: '>=18'}
 
   globalthis@1.0.3:
@@ -3966,8 +3966,8 @@ packages:
       prettier:
         optional: true
 
-  prettier-plugin-tailwindcss@0.6.4:
-    resolution: {integrity: sha512-3vhbIvlKyAWPaw9bUr2cw6M1BGx2Oy9CCLJyv+nxEiBGCTcL69WcAz2IFMGqx8IXSzQCInGSo2ujAByg9poHLQ==}
+  prettier-plugin-tailwindcss@0.6.5:
+    resolution: {integrity: sha512-axfeOArc/RiGHjOIy9HytehlC0ZLeMaqY09mm8YCkMzznKiDkwFzOpBvtuhuv3xG5qB73+Mj7OCe2j/L1ryfuQ==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'
@@ -7706,7 +7706,7 @@ snapshots:
     dependencies:
       type-fest: 0.20.2
 
-  globals@15.4.0: {}
+  globals@15.6.0: {}
 
   globalthis@1.0.3:
     dependencies:
@@ -9722,7 +9722,7 @@ snapshots:
     optionalDependencies:
       prettier: 3.3.2
 
-  prettier-plugin-tailwindcss@0.6.4(prettier@3.3.2):
+  prettier-plugin-tailwindcss@0.6.5(prettier@3.3.2):
     dependencies:
       prettier: 3.3.2
 
