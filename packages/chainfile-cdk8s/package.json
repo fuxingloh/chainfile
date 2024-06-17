@@ -37,7 +37,7 @@
     "cdk8s": "^2.68.77",
     "cdk8s-plus-25": "^2.22.79",
     "constructs": "^10.3.0",
-    "get-port": "^5.1.1",
+    "get-port": "^7.1.0",
     "typescript": "4.9.5"
   },
   "peerDependencies": {
