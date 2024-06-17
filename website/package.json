@@ -37,7 +37,7 @@
     "chainfile-ganache": "^0.1.1",
     "chainfile-hardhat": "^0.4.4",
     "chainfile-ord": "^0.1.0",
-    "chainfile-solana": "^0.2.1",
+    "chainfile-solana": "^0.2.2",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4"
   }
