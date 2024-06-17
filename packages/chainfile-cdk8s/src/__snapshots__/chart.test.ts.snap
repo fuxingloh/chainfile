@@ -63,7 +63,7 @@ exports[`should synth bitcoin_mainnet.json and match snapshot 1`] = `
                   },
                 },
               ],
-              "image": "ghcr.io/vetumorg/chainfile-agent:workspace:^",
+              "image": "ghcr.io/vetumorg/chainfile-agent:0.0.0",
               "name": "agent",
               "ports": [
                 {
