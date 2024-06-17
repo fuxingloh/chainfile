@@ -2,11 +2,13 @@
   <dictionary name="fuxing">
     <words>
       <w>caip</w>
+      <w>chainfile</w>
       <w>fuxing</w>
       <w>fuxingloh</w>
       <w>jsonrpc</w>
       <w>mainnet</w>
       <w>testcontainers</w>
+      <w>vetumorg</w>
     </words>
   </dictionary>
 </component>
