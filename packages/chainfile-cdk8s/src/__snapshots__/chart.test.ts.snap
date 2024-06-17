@@ -1,0 +1,177 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should synth bitcoin_mainnet.json and match snapshot 1`] = `
+[
+  {
+    "apiVersion": "v1",
+    "kind": "Secret",
+    "metadata": {
+      "labels": {
+        "bitcoind": "true",
+        "caip2": "bip122.000000000019d6689c085ae165831e93",
+      },
+      "name": "bitcoin_mainnet.json-values-secret-c8e15ab9",
+    },
+    "stringData": {
+      "CHAINFILE_VALUES": "{"rpc_user":"user","rpc_password":"pass"}",
+      "rpc_password": "pass",
+      "rpc_user": "user",
+    },
+    "type": "Opaque",
+  },
+  {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": {
+      "labels": {
+        "bitcoind": "true",
+        "caip2": "bip122.000000000019d6689c085ae165831e93",
+      },
+      "name": "bitcoin_mainnet.json-deployment-c855ba6b",
+    },
+    "spec": {
+      "replicas": 1,
+      "selector": {
+        "matchLabels": {
+          "bitcoind": "true",
+          "caip2": "bip122.000000000019d6689c085ae165831e93",
+        },
+      },
+      "template": {
+        "metadata": {
+          "labels": {
+            "bitcoind": "true",
+            "caip2": "bip122.000000000019d6689c085ae165831e93",
+          },
+        },
+        "spec": {
+          "containers": [
+            {
+              "env": [
+                {
+                  "name": "CHAINFILE_JSON",
+                  "value": "{"caip2":"bip122:000000000019d6689c085ae165831e93","name":"Bitcoin Mainnet","values":{"rpc_user":{"description":"Username for RPC authentication","secret":true,"default":{"random":{"bytes":16,"encoding":"hex"}}},"rpc_password":{"description":"Password for RPC authentication","secret":true,"default":{"random":{"bytes":16,"encoding":"hex"}}}},"containers":{"bitcoind":{"image":"docker.io/kylemanna/bitcoind","tag":"latest","source":"https://github.com/kylemanna/docker-bitcoind","endpoints":{"p2p":{"port":8333},"rpc":{"port":8332,"protocol":"HTTP JSON-RPC 2.0","authorization":{"type":"HttpBasic","username":{"$value":"rpc_user"},"password":{"$value":"rpc_password"}},"probes":{"readiness":{"method":"getblockchaininfo","params":[],"match":{"result":{"type":"object","properties":{"blocks":{"type":"number"}},"required":["blocks"]}}}}}},"resources":{"cpu":1,"memory":2048},"environment":{"DISABLEWALLET":"1","RPCUSER":{"$value":"rpc_user"},"RPCPASSWORD":{"$value":"rpc_password"}},"volumes":{"persistent":{"paths":["/bitcoin/.bitcoin"],"size":{"initial":"600G","from":"2024-01-01","growth":"20G","rate":"monthly"}}}}}}",
+                },
+                {
+                  "name": "CHAINFILE_VALUES",
+                  "valueFrom": {
+                    "secretKeyRef": {
+                      "key": "CHAINFILE_VALUES",
+                      "name": "bitcoin_mainnet.json-values-secret-c8e15ab9",
+                      "optional": false,
+                    },
+                  },
+                },
+              ],
+              "image": "ghcr.io/vetumorg/chainfile-agent:workspace:^",
+              "name": "agent",
+              "ports": [
+                {
+                  "containerPort": 1569,
+                  "name": "agent",
+                },
+              ],
+              "volumeMounts": [
+                {
+                  "mountPath": "/var/chainfile",
+                  "name": "chainfile",
+                },
+              ],
+            },
+            {
+              "env": [
+                {
+                  "name": "DISABLEWALLET",
+                  "value": "1",
+                },
+                {
+                  "name": "RPCUSER",
+                  "valueFrom": {
+                    "secretKeyRef": {
+                      "key": "rpc_user",
+                      "name": "bitcoin_mainnet.json-values-secret-c8e15ab9",
+                      "optional": false,
+                    },
+                  },
+                },
+                {
+                  "name": "RPCPASSWORD",
+                  "valueFrom": {
+                    "secretKeyRef": {
+                      "key": "rpc_password",
+                      "name": "bitcoin_mainnet.json-values-secret-c8e15ab9",
+                      "optional": false,
+                    },
+                  },
+                },
+              ],
+              "image": "docker.io/kylemanna/bitcoind:latest",
+              "name": "bitcoind",
+              "ports": [
+                {
+                  "containerPort": 8333,
+                  "name": "6f9c3078fd45444",
+                },
+                {
+                  "containerPort": 8332,
+                  "name": "2b5bf27123bd8f8",
+                },
+              ],
+              "resources": {
+                "limits": {
+                  "cpu": 1,
+                  "memory": "2048Mi",
+                },
+              },
+              "volumeMounts": [
+                {
+                  "mountPath": "/var/chainfile",
+                  "name": "chainfile",
+                },
+              ],
+            },
+          ],
+          "hostAliases": [
+            {
+              "hostnames": [
+                "bitcoind",
+              ],
+              "ip": "127.0.0.1",
+            },
+          ],
+          "volumes": [
+            {
+              "name": "chainfile",
+            },
+          ],
+        },
+      },
+    },
+  },
+  {
+    "apiVersion": "v1",
+    "kind": "Service",
+    "metadata": {
+      "labels": {
+        "bitcoind": "true",
+        "caip2": "bip122.000000000019d6689c085ae165831e93",
+      },
+      "name": "bitcoin_mainnet.json-service-c8c0db95",
+    },
+    "spec": {
+      "ports": [
+        {
+          "name": "http",
+          "port": 80,
+          "targetPort": "2b5bf27123bd8f8",
+        },
+      ],
+      "selector": {
+        "bitcoind": "true",
+        "caip2": "bip122.000000000019d6689c085ae165831e93",
+      },
+      "type": "LoadBalancer",
+    },
+  },
+]
+`;

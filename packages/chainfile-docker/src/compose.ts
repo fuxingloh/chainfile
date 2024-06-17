@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 
-import { Chainfile, Container, validate, ValueReference } from '@chainfile/schema';
+import { Chainfile, Container, validate, ValueOptions, ValueReference } from '@chainfile/schema';
 import yaml from 'js-yaml';
 
 import { version } from '../package.json';
@@ -201,13 +201,7 @@ export class Values {
         }
 
         if (value.default !== undefined) {
-          if (typeof value.default === 'string') {
-            return [name, value.default];
-          }
-
-          if (value.default.random !== undefined) {
-            return [name, randomBytes(value.default.random.bytes).toString(value.default.random.encoding)];
-          }
+          return this.default(name, value.default);
         }
 
         throw new Error(`Unsupported value: ${JSON.stringify(value)}`);
@@ -215,6 +209,18 @@ export class Values {
     );
 
     return this.interpolate(values);
+  }
+
+  protected default(name: string, options: NonNullable<ValueOptions['default']>): [string, string] {
+    if (typeof options === 'string') {
+      return [name, options];
+    }
+
+    if (options.random !== undefined) {
+      return [name, randomBytes(options.random.bytes).toString(options.random.encoding)];
+    }
+
+    throw new Error(`Default options not supported: ${JSON.stringify(options)}`);
   }
 
   protected interpolate(values: Record<string, string>): Record<string, string> {
