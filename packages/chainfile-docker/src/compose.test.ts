@@ -1,5 +1,5 @@
 import { Chainfile } from '@chainfile/schema';
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from '@workspace/jest/globals';
 
 import { Compose } from './compose';
 

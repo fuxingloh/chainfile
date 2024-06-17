@@ -27,7 +27,7 @@
     ]
   },
   "jest": {
-    "preset": "@workspace/jest-preset"
+    "preset": "@workspace/jest"
   },
   "dependencies": {
     "@chainfile/docker": "workspace:^",

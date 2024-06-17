@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it } from '@workspace/jest/globals';
 
 import { ChainfileContainer, ChainfileTestcontainers } from '../src';
 import solana from './solana-test-validator.json';
