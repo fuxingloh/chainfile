@@ -261,3 +261,11 @@ class Probes {
     return this.values[value.$value] ?? '';
   }
 }
+
+// TODO(fuxingloh): Probes (Liveness, Readiness, Startup) currently only allow a single probe per endpoint
+//  We should allow multiple endpoints per container where some conditions can only be checked by through calling
+//  multiple endpoints.
+//  For example, a container with 3 conditions required for it to be liveness:
+//  Container: /api/condition-1  <-|
+//           : /api/condition-2  <-| Agent: /probes/liveness
+//           : /api/condition-3  <-|
