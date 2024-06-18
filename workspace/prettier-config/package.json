@@ -3,6 +3,6 @@
   "private": true,
   "devDependencies": {
     "prettier-plugin-packagejson": "^2.5.0",
-    "prettier-plugin-tailwindcss": "^0.6.4"
+    "prettier-plugin-tailwindcss": "^0.6.5"
   }
 }
