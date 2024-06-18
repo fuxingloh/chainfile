@@ -13,7 +13,7 @@
     "*": "prettier --write --ignore-unknown"
   },
   "devDependencies": {
-    "@types/node": "^20.14.2",
+    "@types/node": "^20.14.4",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/jest": "workspace:*",
     "@workspace/tsconfig": "workspace:*",
