@@ -13,6 +13,14 @@ updates:
       chainfile:
         patterns:
           - 'chainfile-*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
+      nextra:
+        patterns:
+          - 'nextra'
+          - 'nextra-theme-docs'
       next:
         patterns:
           - 'next'
