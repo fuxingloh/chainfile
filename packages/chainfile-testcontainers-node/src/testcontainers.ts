@@ -11,8 +11,8 @@ import { AgentContainer } from './agent';
 import { ChainfileContainer } from './container';
 
 export class ChainfileTestcontainers {
+  public readonly suffix = randomBytes(4).toString('hex');
   protected readonly cwd: string = join(process.cwd(), '.chainfile', 'testcontainers');
-  protected readonly suffix = randomBytes(4).toString('hex');
   protected readonly filename = `compose.${this.suffix}.yml`;
   protected readonly chainfile: Chainfile;
 
@@ -39,7 +39,7 @@ export class ChainfileTestcontainers {
     this.composeInstance = await new DockerComposeEnvironment(this.cwd, this.filename)
       .withEnvironment(environment)
       // The readiness probe of @chainfile/agent is to determine if the deployment is ready to accept requests.
-      .withWaitStrategy(`agent-${this.suffix}`, Wait.forHttp('/probes/readiness', 1569))
+      .withWaitStrategy(`agent-${this.suffix}`, Wait.forHttp('/probes/readiness', 1569).forStatusCode(200))
       .up();
   }
 

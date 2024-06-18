@@ -66,77 +66,105 @@ const chainfile: Chainfile = {
   },
 };
 
-const testcontainers = new ChainfileTestcontainers(chainfile);
+describe('testcontainers.start()', () => {
+  const testcontainers = new ChainfileTestcontainers(chainfile);
 
-beforeAll(async () => {
-  await testcontainers.start();
+  beforeAll(async () => {
+    await testcontainers.start();
+  });
+
+  afterAll(async () => {
+    await testcontainers.stop();
+  });
+
+  describe('container', () => {
+    it('should get rpc port', async () => {
+      const port = testcontainers.get('bitcoind').getHostPort('rpc');
+      expect(port).toStrictEqual(expect.any(Number));
+    });
+
+    it('should rpc(getblockchaininfo)', async () => {
+      const response = await testcontainers.get('bitcoind').rpc({
+        method: 'getblockchaininfo',
+      });
+
+      expect(response.status).toStrictEqual(200);
+
+      expect(await response.json()).toMatchObject({
+        result: {
+          bestblockhash: '0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206',
+          chain: 'regtest',
+          blocks: 0,
+        },
+      });
+    });
+  });
+
+  describe('agent', () => {
+    let agent: AgentContainer;
+
+    beforeAll(() => {
+      agent = testcontainers.getAgent();
+    });
+
+    it('should call GET /chainfile', async () => {
+      const result = await agent.getChainfile();
+      expect(result).toEqual(chainfile);
+    });
+
+    it('should call GET /probes/startup', async () => {
+      const response = await agent.probe('startup');
+      expect(response.status).toStrictEqual(200);
+      expect(await response.json()).toMatchObject({
+        ok: true,
+      });
+    });
+
+    it('should call GET /probes/liveness', async () => {
+      const response = await agent.probe('liveness');
+      expect(response.status).toStrictEqual(200);
+      expect(await response.json()).toMatchObject({
+        ok: true,
+      });
+    });
+
+    it('should call GET /probes/readiness', async () => {
+      const response = await agent.probe('readiness');
+      expect(response.status).toStrictEqual(200);
+      expect(await response.json()).toMatchObject({
+        containers: {
+          bitcoind: {
+            ok: true,
+          },
+        },
+        ok: true,
+      });
+    });
+  });
 });
 
-afterAll(async () => {
-  await testcontainers.stop();
-});
-
-describe('container', () => {
-  it('should get rpc port', async () => {
-    const port = testcontainers.get('bitcoind').getHostPort('rpc');
-    expect(port).toStrictEqual(expect.any(Number));
-  });
-
-  it('should rpc(getblockchaininfo)', async () => {
-    const response = await testcontainers.get('bitcoind').rpc({
-      method: 'getblockchaininfo',
-    });
-
-    expect(response.status).toStrictEqual(200);
-
-    expect(await response.json()).toMatchObject({
-      result: {
-        bestblockhash: '0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206',
-        chain: 'regtest',
-        blocks: 0,
-      },
-    });
-  });
-});
-
-describe('agent', () => {
-  let agent: AgentContainer;
-
-  beforeAll(() => {
-    agent = testcontainers.getAgent();
-  });
-
-  it('should call GET /chainfile', async () => {
-    const result = await agent.getChainfile();
-    expect(result).toEqual(chainfile);
-  });
-
-  it('should call GET /probes/startup', async () => {
-    const response = await agent.probe('startup');
-    expect(response.status).toStrictEqual(200);
-    expect(await response.json()).toMatchObject({
-      ok: true,
-    });
-  });
-
-  it('should call GET /probes/liveness', async () => {
-    const response = await agent.probe('liveness');
-    expect(response.status).toStrictEqual(200);
-    expect(await response.json()).toMatchObject({
-      ok: true,
-    });
-  });
-
-  it('should call GET /probes/readiness', async () => {
-    const response = await agent.probe('readiness');
-    expect(response.status).toStrictEqual(200);
-    expect(await response.json()).toMatchObject({
+describe('new ChainfileTestcontainers()', () => {
+  it('should have different suffix', async () => {
+    const file: Chainfile = {
+      $schema: 'https://chainfile.org/schema.json',
+      caip2: 'eip155:1337',
+      name: 'Ganache',
       containers: {
-        bitcoind: {
-          ok: true,
+        ganache: {
+          image: 'docker.io/trufflesuite/ganache',
+          tag: 'v7.9.2',
+          source: 'https://github.com/trufflesuite/ganache',
+          resources: {
+            cpu: 0.25,
+            memory: 256,
+          },
+          endpoints: {},
         },
       },
-      ok: true,
-    });
+    };
+
+    const test1 = new ChainfileTestcontainers(file);
+    const test2 = new ChainfileTestcontainers(file);
+    expect(test1.suffix).not.toEqual(test2.suffix);
   });
 });
