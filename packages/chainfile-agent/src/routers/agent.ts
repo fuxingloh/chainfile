@@ -11,7 +11,8 @@ export const agentRouter = router({
         $schema: z.string().optional(),
         caip2: z.string(),
         name: z.string(),
-        values: z.any().optional(),
+        params: z.any().optional(),
+        volumes: z.any().optional(),
         containers: z.any(),
       }),
     )

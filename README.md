@@ -56,7 +56,7 @@ to accelerate the adoption of blockchain technology.
 ```js
 import hardhat from '@chainfile/eip-155-31337/hardhat.json';
 
-const testcontainers = new ChainfileTestcontainers(hardhat);
+const testcontainers = new CFTestcontainers(hardhat);
 
 beforeAll(async () => {
   await testcontainers.start();

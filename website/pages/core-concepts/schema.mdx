@@ -9,21 +9,42 @@ import { Callout } from 'nextra/components';
   "$schema": "https://chainfile.org/schema.json",
   "caip2": "bip122:000000000019d6689c085ae165831e93",
   "name": "Bitcoin Mainnet",
-  "env": {
-    "RPC_USER": {
-      "type": "RandomBytes",
-      "length": 16,
-      "encoding": "hex"
+  "params": {
+    "rpc_user": {
+      "description": "Username for RPC authentication",
+      "secret": true,
+      "default": {
+        "random": {
+          "bytes": 16,
+          "encoding": "hex"
+        }
+      }
     },
-    "RPC_PASSWORD": {
-      "type": "RandomBytes",
-      "length": 16,
-      "encoding": "hex"
+    "rpc_password": {
+      "description": "Password for RPC authentication",
+      "secret": true,
+      "default": {
+        "random": {
+          "bytes": 16,
+          "encoding": "hex"
+        }
+      }
+    }
+  },
+  "volumes": {
+    "data": {
+      "type": "persistent",
+      "size": "600Gi",
+      "expansion": {
+        "startFrom": "2024-01-01",
+        "monthlyRate": "20Gi"
+      }
     }
   },
   "containers": {
     "bitcoind": {
-      "image": "docker.io/kylemanna/bitcoind@sha256:1492fa0306cb7eb5de8d50ba60367cff8d29b00b516e45e93e05f8b54fa2970e",
+      "image": "docker.io/kylemanna/bitcoind",
+      "tag": "latest",
       "source": "https://github.com/kylemanna/docker-bitcoind",
       "endpoints": {
         "p2p": {
@@ -35,10 +56,10 @@ import { Callout } from 'nextra/components';
           "authorization": {
             "type": "HttpBasic",
             "username": {
-              "$value": "RPC_USER"
+              "$param": "rpc_user"
             },
             "password": {
-              "$value": "RPC_PASSWORD"
+              "$param": "rpc_password"
             }
           },
           "probes": {
@@ -67,23 +88,18 @@ import { Callout } from 'nextra/components';
       "environment": {
         "DISABLEWALLET": "1",
         "RPCUSER": {
-          "$value": "RPC_USER"
+          "$param": "rpc_user"
         },
         "RPCPASSWORD": {
-          "$value": "RPC_PASSWORD"
+          "$param": "rpc_password"
         }
       },
-      "volumes": {
-        "persistent": {
-          "paths": ["/bitcoin/.bitcoin"],
-          "size": {
-            "initial": "600G",
-            "from": "2024-01-01",
-            "growth": "20G",
-            "rate": "monthly"
-          }
+      "mounts": [
+        {
+          "volume": "data",
+          "mountPath": "/bitcoin/.bitcoin"
         }
-      }
+      ]
     }
   }
 }

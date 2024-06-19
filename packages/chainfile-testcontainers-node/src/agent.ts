@@ -1,7 +1,7 @@
 import { Chainfile } from '@chainfile/schema';
 import { AbstractStartedContainer, StartedTestContainer } from 'testcontainers';
 
-export class AgentContainer extends AbstractStartedContainer {
+export class CFAgentContainer extends AbstractStartedContainer {
   constructor(started: StartedTestContainer) {
     super(started);
   }

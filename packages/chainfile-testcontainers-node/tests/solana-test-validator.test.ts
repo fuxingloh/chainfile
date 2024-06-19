@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it } from '@workspace/jest/globals';
 
-import { ChainfileContainer, ChainfileTestcontainers } from '../src';
+import { CFContainer, CFTestcontainers } from '../src';
 import solana from './solana-test-validator.json';
 
-const testcontainers = new ChainfileTestcontainers(solana);
+const testcontainers = new CFTestcontainers(solana);
 
 beforeAll(async () => {
   await testcontainers.start();
@@ -14,7 +14,7 @@ afterAll(async () => {
 });
 
 describe('solana-test-validator', () => {
-  let validator: ChainfileContainer;
+  let validator: CFContainer;
 
   beforeAll(() => {
     validator = testcontainers.get('solana-test-validator');

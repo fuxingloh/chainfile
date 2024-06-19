@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@chainfile/schema/schema.json",
   "caip2": "bip122:000000000019d6689c085ae165831e93",
   "name": "Bitcoin Mainnet",
-  "values": {
+  "params": {
     "rpc_user": {
       "description": "Username for RPC authentication",
       "secret": true,
@@ -24,6 +24,16 @@
       }
     }
   },
+  "volumes": {
+    "data": {
+      "type": "persistent",
+      "size": "600Gi",
+      "expansion": {
+        "startFrom": "2024-01-01",
+        "monthlyRate": "20Gi"
+      }
+    }
+  },
   "containers": {
     "bitcoind": {
       "image": "docker.io/kylemanna/bitcoind",
@@ -39,10 +49,10 @@
           "authorization": {
             "type": "HttpBasic",
             "username": {
-              "$value": "rpc_user"
+              "$param": "rpc_user"
             },
             "password": {
-              "$value": "rpc_password"
+              "$param": "rpc_password"
             }
           },
           "probes": {
@@ -71,23 +81,18 @@
       "environment": {
         "DISABLEWALLET": "1",
         "RPCUSER": {
-          "$value": "rpc_user"
+          "$param": "rpc_user"
         },
         "RPCPASSWORD": {
-          "$value": "rpc_password"
+          "$param": "rpc_password"
         }
       },
-      "volumes": {
-        "persistent": {
-          "paths": ["/bitcoin/.bitcoin"],
-          "size": {
-            "initial": "600G",
-            "from": "2024-01-01",
-            "growth": "20G",
-            "rate": "monthly"
-          }
+      "mounts": [
+        {
+          "volume": "data",
+          "mountPath": "/bitcoin/.bitcoin"
         }
-      }
+      ]
     }
   }
 }

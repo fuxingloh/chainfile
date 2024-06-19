@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 
-import { Chainfile, Container, validate, ValueOptions, ValueReference } from '@chainfile/schema';
+import { Chainfile, Container, ParamOptions, ParamReference, validate } from '@chainfile/schema';
 import yaml from 'js-yaml';
 
 import { version } from '../package.json';
@@ -10,26 +10,26 @@ import { version } from '../package.json';
  */
 export class Compose {
   public readonly chainfile: Chainfile;
-  public readonly values: Record<string, string>;
+  public readonly params: Record<string, string>;
   public readonly suffix: string;
 
   /**
    * @param chainfile definition to synthesize.
-   * @param values to override in the chainfile
+   * @param params to override in the chainfile
    * @param suffix for the container names to prevent conflicts.
    */
-  constructor(chainfile: object, values: Record<string, string>, suffix: string = randomBytes(4).toString('hex')) {
+  constructor(chainfile: object, params: Record<string, string>, suffix: string = randomBytes(4).toString('hex')) {
     validate(chainfile);
     this.chainfile = chainfile as Chainfile;
     this.suffix = suffix;
-    this.values = new Values(this.chainfile).init(values);
+    this.params = new ComposeParams(this.chainfile).init(params);
   }
 
   public synthDotEnv(): string {
     return Object.entries({
-      // TODO(?): this.values should filter out values that are not used in the compose file
-      ...this.values,
-      CHAINFILE_VALUES: JSON.stringify(this.values),
+      // TODO(?): this.params should filter out values that are not used in the compose file
+      ...this.params,
+      CHAINFILE_PARAMS: JSON.stringify(this.params),
     })
       .map(([key, value]) => `${key}=${value}`)
       .join('\n');
@@ -47,15 +47,13 @@ export class Compose {
           {
             name: this.chainfile.name.toLowerCase().replaceAll(/[^a-z0-9_-]/g, '_'),
             services: {
-              ...this.createAgent(),
-              ...this.createServices(),
+              ...this.newAgent(),
+              ...this.newServices(),
             },
             networks: {
               chainfile: {},
             },
-            volumes: {
-              chainfile: {},
-            },
+            volumes: this.newVolumes(),
           },
           {
             lineWidth: 120,
@@ -65,7 +63,7 @@ export class Compose {
         .join('\n')
         // Replace all $ with $$$ to escape them in the compose file
         .replaceAll('$', '$$$')
-        .replaceAll('$$$${CHAINFILE_VALUES}$$$$', '${CHAINFILE_VALUES}')
+        .replaceAll('$$$${CHAINFILE_PARAMS}$$$$', '${CHAINFILE_PARAMS}')
         // Unescape $$$${value}$$$$ to ${value}
         .replaceAll(/\$\$\$\$\{([a-z]+(_[a-z0-9]+)*)}\$\$\$\$/g, (_, key) => {
           return `$\{${key}}`;
@@ -73,7 +71,16 @@ export class Compose {
     );
   }
 
-  private createAgent(): Record<'agent', object> {
+  private newVolumes(): Record<string, object> {
+    return Object.fromEntries(
+      Object.entries(this.chainfile.volumes ?? {}).map(([name]) => {
+        // Volume.type are currently ignored.
+        return [name, {}];
+      }),
+    );
+  }
+
+  private newAgent(): Record<'agent', object> {
     return {
       agent: {
         container_name: `agent-${this.suffix}`,
@@ -82,16 +89,10 @@ export class Compose {
         environment: {
           // Docker compose automatically evaluate environment literals here
           CHAINFILE_JSON: JSON.stringify(this.chainfile),
-          CHAINFILE_VALUES: '$${CHAINFILE_VALUES}$$',
+          CHAINFILE_PARAMS: '$${CHAINFILE_PARAMS}$$',
           DEBUG: process.env.DEBUG ?? 'false',
         },
-        volumes: [
-          {
-            type: 'volume',
-            source: 'chainfile',
-            target: '/var/chainfile',
-          },
-        ],
+        volumes: [],
         networks: {
           chainfile: {},
         },
@@ -99,7 +100,7 @@ export class Compose {
     };
   }
 
-  private createServices(): Record<string, object> {
+  private newServices(): Record<string, object> {
     // TODO: resources (cpu, memory) is not supported for this runtime:
     //  https://docs.docker.com/compose/compose-file/compose-file-v3/#resources
     //  I'm not sure if we should since docker-compose typically runs on a single machine
@@ -115,36 +116,17 @@ export class Compose {
       });
     }
 
-    interface Volume {
-      type: 'volume';
-      source?: string;
-      target: string;
-    }
-
-    function createVolumes(container: Container): Volume[] {
-      const volumes: Volume[] = [
-        {
+    function createVolumes(container: Container): object[] {
+      return (container.mounts ?? []).map((mount) => {
+        return {
           type: 'volume',
-          source: 'chainfile',
-          target: '/var/chainfile',
-        },
-      ];
-
-      container.volumes?.persistent?.paths.forEach((path) => {
-        volumes.push({
-          type: 'volume',
-          target: path,
-        });
+          source: mount.volume,
+          target: mount.mountPath,
+          volume: {
+            subpath: mount.subPath,
+          },
+        };
       });
-
-      container.volumes?.ephemeral?.paths.forEach((path) => {
-        volumes.push({
-          type: 'volume',
-          target: path,
-        });
-      });
-
-      return volumes;
     }
 
     return Object.fromEntries(
@@ -153,11 +135,11 @@ export class Compose {
           name,
           {
             container_name: `${name}-${this.suffix}`,
-            image: container.image + ':' + this.resolveValue(container.tag),
+            image: container.image + ':' + this.getParam(container.tag),
             command: container.command,
             environment: Object.fromEntries(
               Object.entries(container.environment ?? {}).map(([key, valueOrReference]) => {
-                return [key, this.resolveValue(valueOrReference)];
+                return [key, this.getParam(valueOrReference)];
               }),
             ),
             ports: createPorts(container),
@@ -171,47 +153,47 @@ export class Compose {
     );
   }
 
-  private resolveValue(value: string | ValueReference): string {
-    if (typeof value === 'string') {
-      return value;
+  private getParam(param: string | ParamReference): string {
+    if (typeof param === 'string') {
+      return param;
     }
-    return `$$\{${value.$value}}$$`;
+    return `$$\{${param.$param}}$$`;
   }
 }
 
-export class Values {
+export class ComposeParams {
   constructor(protected readonly chainfile: Chainfile) {}
 
   /**
-   * @param override values in the chainfile
+   * @param override params in the chainfile
    */
   public init(override: Record<string, string> = {}): Record<string, string> {
-    if (this.chainfile.values === undefined) {
+    if (this.chainfile.params === undefined) {
       return {};
     }
 
-    const values = Object.fromEntries(
-      Object.entries(this.chainfile.values).map(([name, value]) => {
+    const params = Object.fromEntries(
+      Object.entries(this.chainfile.params).map(([name, param]) => {
         if (override[name] !== undefined) {
           return [name, override[name]];
         }
 
-        if (typeof value === 'string') {
-          return [name, value];
+        if (typeof param === 'string') {
+          return [name, param];
         }
 
-        if (value.default !== undefined) {
-          return this.default(name, value.default);
+        if (param.default !== undefined) {
+          return this.default(name, param.default);
         }
 
-        throw new Error(`Unsupported value: ${JSON.stringify(value)}`);
+        throw new Error(`Unsupported param: ${JSON.stringify(param)}`);
       }),
     );
 
-    return this.interpolate(values);
+    return this.interpolate(params);
   }
 
-  protected default(name: string, options: NonNullable<ValueOptions['default']>): [string, string] {
+  protected default(name: string, options: NonNullable<ParamOptions['default']>): [string, string] {
     if (typeof options === 'string') {
       return [name, options];
     }
@@ -223,17 +205,17 @@ export class Values {
     throw new Error(`Default options not supported: ${JSON.stringify(options)}`);
   }
 
-  protected interpolate(values: Record<string, string>): Record<string, string> {
+  protected interpolate(params: Record<string, string>): Record<string, string> {
     let updated: boolean;
     do {
       updated = false;
-      for (const [name, value] of Object.entries(values)) {
-        values[name] = value.replace(/\$\{([a-z]+(_[a-z0-9]+)*)}/g, (_, key) => {
+      for (const [name, value] of Object.entries(params)) {
+        params[name] = value.replace(/\$\{([a-z]+(_[a-z0-9]+)*)}/g, (_, key) => {
           updated = true;
-          return values[key];
+          return params[key];
         });
       }
     } while (updated);
-    return values;
+    return params;
   }
 }

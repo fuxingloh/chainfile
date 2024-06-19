@@ -7,10 +7,10 @@ import { Chainfile } from '@chainfile/schema';
 import { DockerComposeEnvironment, StartedDockerComposeEnvironment as ComposeInstance, Wait } from 'testcontainers';
 import { StartedGenericContainer } from 'testcontainers/build/generic-container/started-generic-container';
 
-import { AgentContainer } from './agent';
-import { ChainfileContainer } from './container';
+import { CFAgentContainer } from './agent';
+import { CFContainer } from './container';
 
-export class ChainfileTestcontainers {
+export class CFTestcontainers {
   public readonly suffix = randomBytes(4).toString('hex');
   protected readonly cwd: string = join(process.cwd(), '.chainfile', 'testcontainers');
   protected readonly filename = `compose.${this.suffix}.yml`;
@@ -19,9 +19,9 @@ export class ChainfileTestcontainers {
   protected composeSynth: Compose;
   protected composeInstance?: ComposeInstance;
 
-  public constructor(chainfile: Chainfile | object, values: Record<string, string> = {}) {
+  public constructor(chainfile: Chainfile | object, params: Record<string, string> = {}) {
     mkdirSync(this.cwd, { recursive: true });
-    this.composeSynth = new Compose(chainfile as any, values, this.suffix);
+    this.composeSynth = new Compose(chainfile as any, params, this.suffix);
     this.chainfile = chainfile as Chainfile;
   }
 
@@ -48,16 +48,16 @@ export class ChainfileTestcontainers {
     rmSync(join(this.cwd, this.filename));
   }
 
-  get(name: string): ChainfileContainer {
+  get(name: string): CFContainer {
     const containerDef = this.chainfile.containers[name];
     if (containerDef === undefined) {
       throw new Error(`Container ${name} not found`);
     }
-    return new ChainfileContainer(this.getContainer(name), containerDef, this.composeSynth.values);
+    return new CFContainer(this.getContainer(name), containerDef, this.composeSynth.params);
   }
 
-  getAgent(): AgentContainer {
-    return new AgentContainer(this.getContainer(`agent`));
+  getAgent(): CFAgentContainer {
+    return new CFAgentContainer(this.getContainer(`agent`));
   }
 
   private getContainer(name: string): StartedGenericContainer {

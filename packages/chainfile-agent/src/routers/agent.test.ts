@@ -7,7 +7,7 @@ const chainfile: Chainfile = {
   $schema: 'https://chainfile.org/schema.json',
   caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
   name: 'Bitcoin Regtest',
-  values: {
+  params: {
     rpc_user: 'agent',
     rpc_password: 'agent',
   },
@@ -59,7 +59,7 @@ const chainfile: Chainfile = {
 
 const caller = createCaller({
   chainfile: chainfile,
-  values: {},
+  params: {},
 });
 
 it('should getChainfile', async () => {

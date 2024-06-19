@@ -7,7 +7,7 @@ import {
   EndpointHttpAuthorization,
   EndpointHttpJsonRpc,
   EndpointHttpRest,
-  ValueReference,
+  ParamReference,
 } from '@chainfile/schema';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
@@ -29,7 +29,7 @@ const probeProcedure = publicProcedure
   .use((opts) => {
     return opts.next({
       ctx: {
-        probes: new Probes(opts.ctx.chainfile, opts.ctx.values) as any,
+        probes: new Probes(opts.ctx.chainfile, opts.ctx.params) as any,
       },
     });
   });
@@ -68,7 +68,7 @@ type ProbeFunction = () => Promise<ProbeResponse>;
 class Probes {
   constructor(
     private readonly chainfile: Chainfile,
-    private readonly values: Record<string, string>,
+    private readonly params: Record<string, string>,
     private readonly ajv: Ajv = new Ajv(),
   ) {
     addFormats(this.ajv);
@@ -253,16 +253,16 @@ class Probes {
     }
   }
 
-  private resolve(value: string | ValueReference): string {
-    if (typeof value === 'string') {
-      return value;
+  private resolve(param: string | ParamReference): string {
+    if (typeof param === 'string') {
+      return param;
     }
 
-    return this.values[value.$value] ?? '';
+    return this.params[param.$param] ?? '';
   }
 }
 
-// TODO(fuxingloh): Probes (Liveness, Readiness, Startup) currently only allow a single probe per endpoint
+// TODO(?): Probes (Liveness, Readiness, Startup) currently only allow a single probe per endpoint
 //  We should allow multiple endpoints per container where some conditions can only be checked by through calling
 //  multiple endpoints.
 //  For example, a container with 3 conditions required for it to be liveness:

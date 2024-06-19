@@ -2,14 +2,14 @@
   "$schema": "../node_modules/@chainfile/schema/schema.json",
   "caip2": "eip155:31337",
   "name": "Hardhat",
-  "values": {
+  "params": {
     "version": "2.22.1"
   },
   "containers": {
     "hardhat": {
       "image": "ghcr.io/fuxingloh/hardhat-container",
       "tag": {
-        "$value": "version"
+        "$param": "version"
       },
       "source": "https://github.com/fuxingloh/hardhat-container",
       "resources": {

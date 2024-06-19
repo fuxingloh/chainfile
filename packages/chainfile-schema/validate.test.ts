@@ -10,9 +10,15 @@ it('should pass validate', async () => {
   validate({
     caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
     name: 'Bitcoin Regtest',
-    values: {
+    params: {
       rpc_user: 'user',
       rpc_password: 'password',
+    },
+    volumes: {
+      data: {
+        type: 'persistent',
+        size: '250Mi',
+      },
     },
     containers: {
       bitcoind: {
@@ -30,10 +36,10 @@ it('should pass validate', async () => {
             authorization: {
               type: 'HttpBasic',
               username: {
-                $value: 'rpc_user',
+                $param: 'rpc_user',
               },
               password: {
-                $value: 'rpc_password',
+                $param: 'rpc_password',
               },
             },
             probes: {
@@ -63,25 +69,25 @@ it('should pass validate', async () => {
           REGTEST: '1',
           DISABLEWALLET: '0',
           RPCUSER: {
-            $value: 'rpc_user',
+            $param: 'rpc_user',
           },
           RPCPASSWORD: {
-            $value: 'rpc_password',
+            $param: 'rpc_password',
           },
         },
-        volumes: {
-          persistent: {
-            paths: ['/bitcoin/.bitcoin'],
-            size: '250M',
+        mounts: [
+          {
+            volume: 'data',
+            path: '/bitcoin/.bitcoin',
           },
-        },
+        ],
       },
     },
   });
 });
 
 describe('fail with duplicate ports', () => {
-  it('should fail validate with duplicate ports in a single container', async () => {
+  it('should fail validation with duplicate ports in a single container', async () => {
     expect(() =>
       validate({
         caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
@@ -110,7 +116,7 @@ describe('fail with duplicate ports', () => {
     ).toThrow('All ports in all containers must be unique.');
   });
 
-  it('should fail validate with duplicate ports across container', async () => {
+  it('should fail validation with duplicate ports across container', async () => {
     expect(() =>
       validate({
         caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
@@ -155,5 +161,57 @@ describe('fail with duplicate ports', () => {
         },
       }),
     ).toThrow('All ports in all containers must be unique.');
+  });
+});
+
+describe('fail with missing volumes', () => {
+  it('should fail validation with when volume[data] is missing', async () => {
+    expect(() =>
+      validate({
+        caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
+        name: '1 Container',
+        volumes: {
+          database: {
+            type: 'persistent',
+            size: '1Gi',
+          },
+        },
+        containers: {
+          btc1: {
+            image: 'docker.io/kylemanna/bitcoind',
+            tag: 'latest',
+            source: 'https://github.com/kylemanna/docker-bitcoind',
+            endpoints: {},
+            mounts: [{ volume: 'data', mountPath: '/data' }],
+            resources: {
+              cpu: 0.25,
+              memory: 256,
+            },
+          },
+        },
+      }),
+    ).toThrow('Volume data is not defined.');
+  });
+
+  it('should fail validation with when volumes is undefined', async () => {
+    expect(() =>
+      validate({
+        caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
+        name: '1 Container',
+        containers: {
+          btc2: {
+            image: 'docker.io/kylemanna/bitcoind',
+            tag: 'latest',
+            source: 'https://github.com/kylemanna/docker-bitcoind',
+            endpoints: {},
+            mounts: [{ volume: 'database', mountPath: '/data' }],
+            resources: {
+              cpu: 0.25,
+              memory: 256,
+            },
+          },
+        },
+      }),
+    ).toThrow('Volume database is not defined.');
   });
 });

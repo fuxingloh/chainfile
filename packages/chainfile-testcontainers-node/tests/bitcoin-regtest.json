@@ -2,9 +2,15 @@
   "$schema": "../node_modules/@chainfile/schema/schema.json",
   "caip2": "bip122:0f9188f13cb7b2c71f2a335e3a4fc328",
   "name": "Bitcoin Regtest",
-  "values": {
+  "params": {
     "rpc_user": "user",
     "rpc_password": "password"
+  },
+  "volumes": {
+    "data": {
+      "type": "persistent",
+      "size": "250Mi"
+    }
   },
   "containers": {
     "bitcoind": {
@@ -22,10 +28,10 @@
           "authorization": {
             "type": "HttpBasic",
             "username": {
-              "$value": "rpc_user"
+              "$param": "rpc_user"
             },
             "password": {
-              "$value": "rpc_password"
+              "$param": "rpc_password"
             }
           },
           "probes": {
@@ -55,18 +61,18 @@
         "REGTEST": "1",
         "DISABLEWALLET": "0",
         "RPCUSER": {
-          "$value": "rpc_user"
+          "$param": "rpc_user"
         },
         "RPCPASSWORD": {
-          "$value": "rpc_password"
+          "$param": "rpc_password"
         }
       },
-      "volumes": {
-        "persistent": {
-          "paths": ["/bitcoin/.bitcoin"],
-          "size": "250M"
+      "mounts": [
+        {
+          "volume": "data",
+          "mountPath": "/bitcoin/.bitcoin"
         }
-      }
+      ]
     }
   }
 }

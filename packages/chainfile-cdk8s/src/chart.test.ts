@@ -7,12 +7,12 @@ import { Testing } from 'cdk8s';
 import getPort from 'get-port';
 
 import { version } from '../package.json';
-import { ChainfileChart } from './chart';
+import { CFChart } from './chart';
 
 const bitcoin_mainnet: Chainfile = {
   caip2: 'bip122:000000000019d6689c085ae165831e93',
   name: 'Bitcoin Mainnet',
-  values: {
+  params: {
     rpc_user: {
       description: 'Username for RPC authentication',
       secret: true,
@@ -34,6 +34,16 @@ const bitcoin_mainnet: Chainfile = {
       },
     },
   },
+  volumes: {
+    data: {
+      type: 'persistent',
+      size: '600Gi',
+      expansion: {
+        startFrom: '2024-01-01',
+        monthlyRate: '20Gi',
+      },
+    },
+  },
   containers: {
     bitcoind: {
       image: 'docker.io/kylemanna/bitcoind',
@@ -49,10 +59,10 @@ const bitcoin_mainnet: Chainfile = {
           authorization: {
             type: 'HttpBasic',
             username: {
-              $value: 'rpc_user',
+              $param: 'rpc_user',
             },
             password: {
-              $value: 'rpc_password',
+              $param: 'rpc_password',
             },
           },
           probes: {
@@ -81,53 +91,124 @@ const bitcoin_mainnet: Chainfile = {
       environment: {
         DISABLEWALLET: '1',
         RPCUSER: {
-          $value: 'rpc_user',
+          $param: 'rpc_user',
         },
         RPCPASSWORD: {
-          $value: 'rpc_password',
+          $param: 'rpc_password',
         },
       },
-      volumes: {
-        persistent: {
-          paths: ['/bitcoin/.bitcoin'],
-          size: {
-            initial: '600G',
-            from: '2024-01-01',
-            growth: '20G',
-            rate: 'monthly',
-          },
+      mounts: [
+        {
+          volume: 'data',
+          mountPath: '/bitcoin/.bitcoin',
+          subPath: 'bitcoind',
         },
-      },
+      ],
     },
   },
 };
 
-it('should synth bitcoin_mainnet.json and match snapshot', async () => {
+describe('bitcoin_mainnet.json', () => {
   const app = Testing.app();
-  const chart = new ChainfileChart(app, 'bitcoin_mainnet.json', {
+  const chart = new CFChart(app, 'bitcoin_mainnet.json', {
     chainfile: bitcoin_mainnet,
-    values: {
+    params: {
       rpc_user: 'user',
       rpc_password: 'pass',
     },
     spec: {
-      deployment: { replicas: 1 },
-      service: {
-        ports: [
-          {
-            name: 'http',
-            port: 80,
-            target: {
-              container: 'bitcoind',
-              endpoint: 'rpc',
-            },
+      replicas: 2,
+      exposes: [
+        {
+          name: 'http',
+          port: 80,
+          target: {
+            container: 'bitcoind',
+            endpoint: 'rpc',
           },
-        ],
-      },
+        },
+      ],
     },
   });
   const results = Testing.synth(chart);
-  expect(results).toMatchSnapshot();
+
+  it('should have 3 objects', async () => {
+    expect(results).toHaveLength(3);
+  });
+
+  it('should synth bitcoin_mainnet.json and match snapshot', async () => {
+    expect(results).toMatchSnapshot();
+  });
+
+  it('should get labels', async () => {
+    expect(chart.labels).toStrictEqual({
+      bitcoind: 'true',
+      caip2: 'bip122.000000000019d6689c085ae165831e93',
+    });
+  });
+
+  it('should get serviceName', async () => {
+    expect(chart.serviceName).toMatch(/bitcoin_mainnet.json-service-[0-9a-f]{8}/);
+  });
+});
+
+describe.skip('repl', () => {
+  // Convenient tests to repeatedly apply chart to observe behavior
+  // Set to skip by default
+  const cluster = 'repl';
+  const app = Testing.app();
+  const chart = new CFChart(app, cluster, {
+    chainfile: bitcoin_mainnet,
+    params: {
+      rpc_user: 'user',
+      rpc_password: 'pass',
+    },
+    spec: {
+      replicas: 1,
+      exposes: [
+        {
+          port: 80,
+          name: 'http',
+          target: {
+            container: 'bitcoind',
+            endpoint: 'rpc',
+          },
+        },
+      ],
+    },
+  });
+
+  describe('cluster', () => {
+    it('should create cluster', async () => {
+      execSync(`kind create cluster --name ${cluster} --config kind.k8s.yaml`, { stdio: 'inherit' });
+      execSync(`kind load docker-image docker.io/kylemanna/bitcoind:latest --name ${cluster}`, { stdio: 'inherit' });
+      execSync(`kind load docker-image ghcr.io/vetumorg/chainfile-agent:${version} --name ${cluster}`, {
+        stdio: 'inherit',
+      });
+    });
+
+    it('should delete cluster', async () => {
+      execSync(`kind delete cluster --name ${cluster}`, { stdio: 'inherit' });
+    });
+  });
+
+  it('should apply chart', async () => {
+    for (const resource of Testing.synth(chart)) {
+      execSync(`kubectl apply --context kind-${cluster} -f -`, {
+        input: JSON.stringify(resource),
+        stdio: ['pipe', 'inherit', 'inherit'],
+      });
+    }
+  });
+
+  it('should delete chart', async () => {
+    for (const resource of Testing.synth(chart)) {
+      execSync(`kubectl delete --context kind-${cluster} -f -`, {
+        input: JSON.stringify(resource),
+        stdio: ['pipe', 'inherit', 'inherit'],
+      });
+    }
+  });
 });
 
 describe('kind (k8s-in-docker)', () => {
@@ -145,31 +226,29 @@ describe('kind (k8s-in-docker)', () => {
   });
 
   afterAll(() => {
-    execSync(`kind delete cluster --name ${cluster}`, { stdio: 'inherit' });
+    // execSync(`kind delete cluster --name ${cluster}`, { stdio: 'inherit' });
   });
 
   it('should deploy bitcoin_mainnet.json chart and connect to service', async () => {
     const app = Testing.app();
-    const chart = new ChainfileChart(app, cluster, {
+    const chart = new CFChart(app, cluster, {
       chainfile: bitcoin_mainnet,
-      values: {
+      params: {
         rpc_user: 'user',
         rpc_password: 'pass',
       },
       spec: {
-        deployment: { replicas: 1 },
-        service: {
-          ports: [
-            {
-              port: 80,
-              name: 'http',
-              target: {
-                container: 'bitcoind',
-                endpoint: 'rpc',
-              },
+        replicas: 1,
+        exposes: [
+          {
+            port: 80,
+            name: 'http',
+            target: {
+              container: 'bitcoind',
+              endpoint: 'rpc',
             },
-          ],
-        },
+          },
+        ],
       },
     });
 
@@ -189,7 +268,10 @@ describe('kind (k8s-in-docker)', () => {
     });
 
     const port = await getPort();
-    const forwarding = spawn('kubectl', ['port-forward', 'service/cf-bitcoin-main-service-c884ebf6', `${port}:http`], {
+
+    // This is a simple test to check if the pod is running.
+    // Service routing can't actually be tested with kubectl port-forward.
+    const forwarding = spawn('kubectl', ['port-forward', `service/${chart.serviceName}`, `${port}:http`], {
       stdio: 'inherit',
     });
 
