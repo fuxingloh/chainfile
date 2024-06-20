@@ -5,6 +5,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/pnpm-lock.yaml" />
       <excludeFolder url="file://$MODULE_DIR$/.husky" />
+      <excludePattern pattern="__snapshots__" />
       <excludePattern pattern=".chainfile" />
       <excludePattern pattern=".turbo" />
       <excludePattern pattern="dist" />

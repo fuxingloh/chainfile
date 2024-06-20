@@ -226,7 +226,7 @@ describe('kind (k8s-in-docker)', () => {
   });
 
   afterAll(() => {
-    // execSync(`kind delete cluster --name ${cluster}`, { stdio: 'inherit' });
+    execSync(`kind delete cluster --name ${cluster}`, { stdio: 'inherit' });
   });
 
   it('should deploy bitcoin_mainnet.json chart and connect to service', async () => {
