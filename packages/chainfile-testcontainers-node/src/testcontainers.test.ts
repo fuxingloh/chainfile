@@ -143,7 +143,7 @@ describe('testcontainers.start()', () => {
   });
 });
 
-describe('new ChainfileTestcontainers()', () => {
+describe('new CFTestcontainers()', () => {
   it('should have different suffix', async () => {
     const file: Chainfile = {
       $schema: 'https://chainfile.org/schema.json',
