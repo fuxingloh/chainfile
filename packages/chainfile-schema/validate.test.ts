@@ -78,7 +78,7 @@ it('should pass validate', async () => {
         mounts: [
           {
             volume: 'data',
-            path: '/bitcoin/.bitcoin',
+            mountPath: '/bitcoin/.bitcoin',
           },
         ],
       },
