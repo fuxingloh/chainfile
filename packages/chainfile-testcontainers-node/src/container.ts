@@ -6,15 +6,15 @@ import {
   EndpointHttpAuthorization,
   EndpointHttpJsonRpc,
   EndpointHttpRest,
-  ValueReference,
+  ParamReference,
 } from '@chainfile/schema';
 import { AbstractStartedContainer, StartedTestContainer } from 'testcontainers';
 
-export class ChainfileContainer extends AbstractStartedContainer {
+export class CFContainer extends AbstractStartedContainer {
   constructor(
     started: StartedTestContainer,
     protected container: Container,
-    protected values: Record<string, string>,
+    protected params: Record<string, string>,
   ) {
     super(started);
   }
@@ -98,13 +98,13 @@ export class ChainfileContainer extends AbstractStartedContainer {
 
       const type = auth.type;
       if (type === 'HttpBasic') {
-        const username = this.resolveValue(auth.username);
-        const password = this.resolveValue(auth.password);
+        const username = this.resolveParam(auth.username);
+        const password = this.resolveParam(auth.password);
         return {
           Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`,
         };
       } else if (type === 'HttpBearer') {
-        const token = this.resolveValue(auth.token);
+        const token = this.resolveParam(auth.token);
         return {
           Authorization: `Bearer ${token}`,
         };
@@ -195,10 +195,10 @@ export class ChainfileContainer extends AbstractStartedContainer {
     });
   }
 
-  private resolveValue(value: string | ValueReference): string {
-    if (typeof value === 'string') {
-      return value;
+  private resolveParam(param: string | ParamReference): string {
+    if (typeof param === 'string') {
+      return param;
     }
-    return this.values[value.$value] ?? '';
+    return this.params[param.$param] ?? '';
   }
 }

@@ -2,31 +2,32 @@
 
 This package contains the CDK8s application that deploys the Chainfile application to a Kubernetes cluster.
 
-## Contributing Guidelines
+## Local Development
 
-You need to install `kind` to run the tests. You can install it with the following command:
+You can test kubernetes locally with Kubernetes-in-Docker (kind).
+Kind literally runs Kubernetes in Docker containers where each container is a node in the cluster.
+Allowing you to test complex Kubernetes configurations locally.
+To install `kind` on macOS and set up a cluster, run the following commands:
 
-```shell
+```bash
 brew install kind
+kind create cluster --name cdk8s
 ```
 
-### Setting up a kind cluster for local development
+To synth and deploy to the local cluster, run the following commands:
+
+```bash
+turbo synth
+kubectl apply --context kind-cdk8s -f [file_name].k8s.yaml
+```
+
+Other Add-Ons:
+
+<details>
+<summary>Metrics Server</summary>
 
 ```shell
-kind create cluster --config kind.k8s.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/high-availability-1.21+.yaml
 ```
 
-Optionally, you can install the Kubernetes Dashboard to monitor the cluster for better visibility:
-
-```shell
-# Add the Kubernetes Dashboard Helm repository
-helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
-# Install the Kubernetes Dashboard
-helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
-# Get the token to access the Kubernetes Dashboard
-kubectl create serviceaccount dashboard
-kubectl create clusterrolebinding dashboard-admin --clusterrole=cluster-admin --serviceaccount=default:dashboard
-kubectl create token dashboard
-# Start the proxy and access the Kubernetes Dashboard on https://localhost:8443
-kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
-```
+</details>

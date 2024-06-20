@@ -1,12 +1,12 @@
 <h3 className="nx-font-semibold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100 nx-mt-8 nx-text-2xl">
-  Values
+  Params
 </h3>
 
-These values have reasonable defaults or are randomly generated values for secured fields
+These params have reasonable defaults or are randomly generated for secured fields
 which will determine how the Chainfile is run.
-You may override these values to customize the Chainfile for your specific needs.
+You may override these params to customize the Chainfile for your specific needs.
 
-{Object.entries(props.schema.values).map(([key, value]) => {
+{Object.entries(props.schema.params ?? {}).map(([key, value]) => {
 const defaultValue = typeof value === 'string' ? value : typeof value.default === 'string' ? value.default : null;
 const random = typeof value.default === 'object' ? value.default.random : null;
 return (

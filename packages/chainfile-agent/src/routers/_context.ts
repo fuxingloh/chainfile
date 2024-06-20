@@ -17,22 +17,22 @@ function getChainfile(): Chainfile {
   return chainfile;
 }
 
-function getValues(): Record<string, string> {
-  const values = process.env.CHAINFILE_VALUES;
-  if (values !== undefined) {
-    return JSON.parse(values);
+function getParams(): Record<string, string> {
+  const params = process.env.CHAINFILE_PARAMS;
+  if (params !== undefined) {
+    return JSON.parse(params);
   }
 
-  throw new Error('CHAINFILE_VALUES is not defined, cannot start @chainfile/agent.');
+  throw new Error('CHAINFILE_PARAMS is not defined, cannot start @chainfile/agent.');
 }
 
 const chainfile = getChainfile();
-const values = getValues();
+const params = getParams();
 
 export const createContext = async () => {
   return {
     chainfile: chainfile,
-    values: values,
+    params: params,
   };
 };
 

@@ -8,7 +8,7 @@ describe('synth', () => {
     $schema: 'https://chainfile.org/schema.json',
     caip2: 'eip155:0',
     name: 'Example',
-    values: {
+    params: {
       url: 'http://${rpc_user}:${rpc_password}@dns:1234',
       version: {},
       rpc_user: {
@@ -30,11 +30,17 @@ describe('synth', () => {
         },
       },
     },
+    volumes: {
+      data: {
+        type: 'ephemeral',
+        size: '1Gi',
+      },
+    },
     containers: {
       dns: {
         image: 'docker.io/trufflesuite/ganache',
         tag: {
-          $value: 'version',
+          $param: 'version',
         },
         source: 'https://github.com/trufflesuite/ganache',
         endpoints: {
@@ -44,10 +50,10 @@ describe('synth', () => {
             authorization: {
               type: 'HttpBasic',
               username: {
-                $value: 'rpc_user',
+                $param: 'rpc_user',
               },
               password: {
-                $value: 'rpc_password',
+                $param: 'rpc_password',
               },
             },
             probes: {
@@ -65,16 +71,23 @@ describe('synth', () => {
         },
         environment: {
           RPCUSER: {
-            $value: 'rpc_user',
+            $param: 'rpc_user',
           },
           RPCPASSWORD: {
-            $value: 'rpc_password',
+            $param: 'rpc_password',
           },
         },
         resources: {
           cpu: 0.25,
           memory: 256,
         },
+        mounts: [
+          {
+            volume: 'data',
+            mountPath: '/data',
+            subPath: '/dns',
+          },
+        ],
       },
       another: {
         image: 'docker.io/trufflesuite/ganache',
@@ -84,13 +97,20 @@ describe('synth', () => {
         environment: {
           ENV_1: 'value_1',
           ENV_2: {
-            $value: 'url',
+            $param: 'url',
           },
         },
         resources: {
           cpu: 0.25,
           memory: 256,
         },
+        mounts: [
+          {
+            volume: 'data',
+            mountPath: '/data',
+            subPath: '/another',
+          },
+        ],
       },
     },
   };
@@ -109,7 +129,7 @@ describe('synth', () => {
       'version=v1',
       expect.stringMatching(/^rpc_user=[0-9a-f]{32}$/),
       expect.stringMatching(/^rpc_password=[0-9a-f]{32}$/),
-      expect.stringMatching(/^CHAINFILE_VALUES=\{.+}$/),
+      expect.stringMatching(/^CHAINFILE_PARAMS=\{.+}$/),
     ]);
   });
 
@@ -129,17 +149,14 @@ describe('synth', () => {
       "      - '0:1569'",
       '    environment:',
       '      CHAINFILE_JSON: >-',
-      '        {"$$schema":"https://chainfile.org/schema.json","caip2":"eip155:0","name":"Example","values":{"url":"http://$${rpc_user}:$${rpc_password}@dns:1234","version":{},"rpc_user":{"secret":true,"default":{"random":{"bytes":16,"encoding":"hex"}}},"rpc_password":{"secret":true,"default":{"random":{"bytes":16,"encoding":"hex"}}}},"containers":{"dns":{"image":"docker.io/trufflesuite/ganache","tag":{"$$value":"version"},"source":"https://github.com/trufflesuite/ganache","endpoints":{"rpc":{"port":8545,"protocol":"HTTP',
+      '        {"$$schema":"https://chainfile.org/schema.json","caip2":"eip155:0","name":"Example","params":{"url":"http://$${rpc_user}:$${rpc_password}@dns:1234","version":{},"rpc_user":{"secret":true,"default":{"random":{"bytes":16,"encoding":"hex"}}},"rpc_password":{"secret":true,"default":{"random":{"bytes":16,"encoding":"hex"}}}},"volumes":{"data":{"type":"ephemeral","size":"1Gi"}},"containers":{"dns":{"image":"docker.io/trufflesuite/ganache","tag":{"$$param":"version"},"source":"https://github.com/trufflesuite/ganache","endpoints":{"rpc":{"port":8545,"protocol":"HTTP',
       '        JSON-RPC',
-      '        2.0","authorization":{"type":"HttpBasic","username":{"$$value":"rpc_user"},"password":{"$$value":"rpc_password"}},"probes":{"readiness":{"params":[],"method":"eth_blockNumber","match":{"result":{"type":"string"}}}}}},"environment":{"RPCUSER":{"$$value":"rpc_user"},"RPCPASSWORD":{"$$value":"rpc_password"}},"resources":{"cpu":0.25,"memory":256}},"another":{"image":"docker.io/trufflesuite/ganache","tag":"v7.9.2","source":"https://github.com/trufflesuite/ganache","command":["sh","-c","echo',
+      '        2.0","authorization":{"type":"HttpBasic","username":{"$$param":"rpc_user"},"password":{"$$param":"rpc_password"}},"probes":{"readiness":{"params":[],"method":"eth_blockNumber","match":{"result":{"type":"string"}}}}}},"environment":{"RPCUSER":{"$$param":"rpc_user"},"RPCPASSWORD":{"$$param":"rpc_password"}},"resources":{"cpu":0.25,"memory":256},"mounts":[{"volume":"data","mountPath":"/data","subPath":"/dns"}]},"another":{"image":"docker.io/trufflesuite/ganache","tag":"v7.9.2","source":"https://github.com/trufflesuite/ganache","command":["sh","-c","echo',
       '        $${ENV_1}',
-      '        $${ENV_2}"],"environment":{"ENV_1":"value_1","ENV_2":{"$$value":"url"}},"resources":{"cpu":0.25,"memory":256}}}}',
-      '      CHAINFILE_VALUES: ${CHAINFILE_VALUES}',
+      '        $${ENV_2}"],"environment":{"ENV_1":"value_1","ENV_2":{"$$param":"url"}},"resources":{"cpu":0.25,"memory":256},"mounts":[{"volume":"data","mountPath":"/data","subPath":"/another"}]}}}',
+      '      CHAINFILE_PARAMS: ${CHAINFILE_PARAMS}',
       expect.stringMatching(/ {6}DEBUG: .+/),
-      '    volumes:',
-      '      - type: volume',
-      '        source: chainfile',
-      '        target: /var/chainfile',
+      '    volumes: []',
       '    networks:',
       '      chainfile: {}',
       '  dns:',
@@ -152,8 +169,10 @@ describe('synth', () => {
       "      - '0:8545'",
       '    volumes:',
       '      - type: volume',
-      '        source: chainfile',
-      '        target: /var/chainfile',
+      '        source: data',
+      '        target: /data',
+      '        volume:',
+      '          subpath: /dns',
       '    networks:',
       '      chainfile: {}',
       '  another:',
@@ -169,14 +188,16 @@ describe('synth', () => {
       '    ports: []',
       '    volumes:',
       '      - type: volume',
-      '        source: chainfile',
-      '        target: /var/chainfile',
+      '        source: data',
+      '        target: /data',
+      '        volume:',
+      '          subpath: /another',
       '    networks:',
       '      chainfile: {}',
       'networks:',
       '  chainfile: {}',
       'volumes:',
-      '  chainfile: {}',
+      '  data: {}',
       '',
     ]);
   });

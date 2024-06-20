@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it } from '@workspace/jest/globals';
 import waitFor from '@workspace/jest/wait-for';
 
-import { ChainfileContainer, ChainfileTestcontainers } from '../src';
+import { CFContainer, CFTestcontainers } from '../src';
 import mainnet from './bitcoin-mainnet.json';
 
-const testcontainers = new ChainfileTestcontainers(mainnet);
+const testcontainers = new CFTestcontainers(mainnet);
 
 beforeAll(async () => {
   await testcontainers.start();
@@ -15,7 +15,7 @@ afterAll(async () => {
 });
 
 describe('bitcoind', () => {
-  let bitcoind: ChainfileContainer;
+  let bitcoind: CFContainer;
 
   beforeAll(() => {
     bitcoind = testcontainers.get('bitcoind');

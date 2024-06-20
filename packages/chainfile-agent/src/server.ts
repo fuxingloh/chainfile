@@ -12,5 +12,5 @@ const server = http.createServer(
   }),
 );
 
-/** The sum of the ASCII values for the string "@chainfile/agent" is 1569. */
+/** The sum of the ASCII for the string "@chainfile/agent" is 1569. */
 server.listen(1569);

@@ -2,14 +2,14 @@
   "$schema": "../node_modules/@chainfile/schema/schema.json",
   "caip2": "solana:00000000000000000000000000000000",
   "name": "Solana Test Validator",
-  "values": {
+  "params": {
     "version": "1.17.26"
   },
   "containers": {
     "solana-test-validator": {
       "image": "ghcr.io/fuxingloh/solana-container",
       "tag": {
-        "$value": "version"
+        "$param": "version"
       },
       "source": "https://github.com/fuxingloh/solana-container",
       "resources": {

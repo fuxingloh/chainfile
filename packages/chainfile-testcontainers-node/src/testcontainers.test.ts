@@ -1,14 +1,14 @@
 import { Chainfile } from '@chainfile/schema';
 import { afterAll, beforeAll, describe, expect, it } from '@workspace/jest/globals';
 
-import { AgentContainer } from './agent';
-import { ChainfileTestcontainers } from './testcontainers';
+import { CFAgentContainer } from './agent';
+import { CFTestcontainers } from './testcontainers';
 
 const chainfile: Chainfile = {
   $schema: 'https://chainfile.org/schema.json',
   caip2: 'bip122:0f9188f13cb7b2c71f2a335e3a4fc328',
   name: 'Bitcoin Regtest',
-  values: {
+  params: {
     rpc_user: 'user',
     rpc_password: 'password',
   },
@@ -24,10 +24,10 @@ const chainfile: Chainfile = {
           authorization: {
             type: 'HttpBasic',
             username: {
-              $value: 'rpc_user',
+              $param: 'rpc_user',
             },
             password: {
-              $value: 'rpc_password',
+              $param: 'rpc_password',
             },
           },
           probes: {
@@ -56,10 +56,10 @@ const chainfile: Chainfile = {
       environment: {
         REGTEST: '1',
         RPCUSER: {
-          $value: 'rpc_user',
+          $param: 'rpc_user',
         },
         RPCPASSWORD: {
-          $value: 'rpc_password',
+          $param: 'rpc_password',
         },
       },
     },
@@ -67,7 +67,7 @@ const chainfile: Chainfile = {
 };
 
 describe('testcontainers.start()', () => {
-  const testcontainers = new ChainfileTestcontainers(chainfile);
+  const testcontainers = new CFTestcontainers(chainfile);
 
   beforeAll(async () => {
     await testcontainers.start();
@@ -101,7 +101,7 @@ describe('testcontainers.start()', () => {
   });
 
   describe('agent', () => {
-    let agent: AgentContainer;
+    let agent: CFAgentContainer;
 
     beforeAll(() => {
       agent = testcontainers.getAgent();
@@ -163,8 +163,8 @@ describe('new ChainfileTestcontainers()', () => {
       },
     };
 
-    const test1 = new ChainfileTestcontainers(file);
-    const test2 = new ChainfileTestcontainers(file);
+    const test1 = new CFTestcontainers(file);
+    const test2 = new CFTestcontainers(file);
     expect(test1.suffix).not.toEqual(test2.suffix);
   });
 });

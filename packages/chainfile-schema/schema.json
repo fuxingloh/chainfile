@@ -28,8 +28,31 @@
           "minLength": 1,
           "maxLength": 128
         },
-        "values": {
-          "$ref": "#/definitions/Values"
+        "params": {
+          "type": "object",
+          "maxProperties": 30,
+          "patternProperties": {
+            "^[a-z]+(_[a-z0-9]+)*$": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "#/definitions/ParamOptions"
+                }
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "volumes": {
+          "type": "object",
+          "patternProperties": {
+            "^(?!chainfile)[a-z0-9][a-z0-9-]{0,28}[a-z0-9]$": {
+              "$ref": "#/definitions/Volume"
+            }
+          },
+          "additionalProperties": false
         },
         "containers": {
           "type": "object",
@@ -45,24 +68,7 @@
       },
       "required": ["caip2", "name", "containers"]
     },
-    "Values": {
-      "type": "object",
-      "maxProperties": 30,
-      "patternProperties": {
-        "^[a-z]+(_[a-z0-9]+)*$": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/definitions/ValueOptions"
-            }
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
-    "ValueOptions": {
+    "ParamOptions": {
       "type": "object",
       "properties": {
         "secret": {
@@ -107,16 +113,66 @@
       },
       "additionalProperties": false
     },
-    "ValueReference": {
+    "ParamReference": {
       "type": "object",
       "properties": {
-        "$value": {
+        "$param": {
           "type": "string",
-          "description": "Name of the value to reference in the values section.",
+          "description": "Name of the value to reference in the params section.",
           "pattern": "^[a-z]+(_[a-z0-9]+)*$"
         }
       },
-      "required": ["$value"],
+      "required": ["$param"],
+      "additionalProperties": false
+    },
+    "Volume": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": ["persistent", "ephemeral"]
+        },
+        "size": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*[MGT]i$"
+        },
+        "expansion": {
+          "type": "object",
+          "description": "Optional growth rate for volumes for evolving storage needs. [(size) + (rate * time)]",
+          "properties": {
+            "startFrom": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+              "description": "Formatted as YYYY-MM-DD to denote the date the growth rate starts."
+            },
+            "monthlyRate": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]*[MGT]i$",
+              "description": "The monthly rate at which the volume grows."
+            }
+          },
+          "required": ["startFrom", "monthlyRate"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["type", "size"],
+      "additionalProperties": false
+    },
+    "VolumeMount": {
+      "type": "object",
+      "properties": {
+        "volume": {
+          "type": "string",
+          "pattern": "^(?!chainfile)[a-z0-9][a-z0-9-]{0,28}[a-z0-9]$",
+          "description": "Name of the volume to mount, defined in the volumes section."
+        },
+        "mountPath": {
+          "type": "string"
+        },
+        "subPath": {
+          "type": "string"
+        }
+      },
+      "required": ["volume", "mountPath"],
       "additionalProperties": false
     },
     "Container": {
@@ -132,7 +188,7 @@
               "type": "string"
             },
             {
-              "$ref": "#/definitions/ValueReference"
+              "$ref": "#/definitions/ParamReference"
             }
           ]
         },
@@ -189,7 +245,7 @@
                   "type": "string"
                 },
                 {
-                  "$ref": "#/definitions/ValueReference"
+                  "$ref": "#/definitions/ParamReference"
                 }
               ]
             }
@@ -202,17 +258,11 @@
             "type": "string"
           }
         },
-        "volumes": {
-          "type": "object",
-          "properties": {
-            "persistent": {
-              "$ref": "#/definitions/ContainerVolume"
-            },
-            "ephemeral": {
-              "$ref": "#/definitions/ContainerVolume"
-            }
-          },
-          "additionalProperties": false
+        "mounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VolumeMount"
+          }
         }
       },
       "required": ["image", "tag", "source", "resources"],
@@ -418,7 +468,7 @@
                   "type": "string"
                 },
                 {
-                  "$ref": "#/definitions/ValueReference"
+                  "$ref": "#/definitions/ParamReference"
                 }
               ]
             },
@@ -428,7 +478,7 @@
                   "type": "string"
                 },
                 {
-                  "$ref": "#/definitions/ValueReference"
+                  "$ref": "#/definitions/ParamReference"
                 }
               ]
             }
@@ -448,7 +498,7 @@
                   "type": "string"
                 },
                 {
-                  "$ref": "#/definitions/ValueReference"
+                  "$ref": "#/definitions/ParamReference"
                 }
               ]
             }
@@ -457,50 +507,6 @@
           "additionalProperties": false
         }
       ]
-    },
-    "ContainerVolume": {
-      "type": "object",
-      "properties": {
-        "paths": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "size": {
-          "oneOf": [
-            {
-              "type": "string",
-              "pattern": "^[1-9][0-9]*([MGT])$"
-            },
-            {
-              "type": "object",
-              "properties": {
-                "initial": {
-                  "type": "string",
-                  "pattern": "^[1-9][0-9]*([MGT])$"
-                },
-                "from": {
-                  "type": "string",
-                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
-                  "description": "YYYY-MM-DD"
-                },
-                "growth": {
-                  "type": "string",
-                  "pattern": "^[1-9][0-9]*([MGT])$"
-                },
-                "rate": {
-                  "enum": ["daily", "weekly", "monthly", "yearly"]
-                }
-              },
-              "required": ["initial", "from", "growth", "rate"],
-              "additionalProperties": false
-            }
-          ]
-        }
-      },
-      "required": ["paths", "size"],
-      "additionalProperties": false
     }
   }
 }
