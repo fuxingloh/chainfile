@@ -1,10 +1,8 @@
 import * as schema from '@chainfile/schema';
 import { Container, EnvVar, IntOrString, Quantity, VolumeMount } from 'cdk8s-plus-25/lib/imports/k8s';
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { version } from '../package.json';
 import { CFParamsSource } from './params';
+import version from './version';
 
 interface CFAgentProps {
   chainfile: schema.Chainfile;
