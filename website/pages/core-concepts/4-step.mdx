@@ -35,7 +35,7 @@ Using containers to ensure your blockchain application integrates well with the 
 ```ts filename="app.test.ts"
 import definition from '@chainfile/hardhat/localhost.json';
 
-const testcontainers = await ChainfileTestcontainers.start(definition);
+const testcontainers = await CFTestcontainers.start(definition);
 ```
 
 ### Deploy anywhere
@@ -53,14 +53,14 @@ docker compose up
 With planet-scale cloud constructs that are future-proof to run on decentralized computing when ready.
 
 ```ts filename="cdk8s/chart.ts" {8-11}
-import { ChainfileChart } from 'chainfile-cdk8s';
+import { CFChart } from 'chainfile-cdk8s';
 import mainnet from '@chainfile/geth-lighthouse/mainnet.json';
 
 class App extends Stack {
   constructor(scope: App, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    new ChainfileChart(this, 'geth-lighthouse', {
+    new CFChart(this, 'geth-lighthouse', {
       definition: mainnet,
       spec: { replicas: 1 },
     });
