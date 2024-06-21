@@ -35,7 +35,7 @@ export class CFService extends KubeService {
 }
 
 function findTargetPort(chainfile: schema.Chainfile, container: string, endpoint: string): IntOrString {
-  const port = chainfile.containers[container].endpoints?.[endpoint]?.port;
+  const port = chainfile.containers[container]?.endpoints?.[endpoint]?.port;
   if (port === undefined) {
     throw new Error(`Port not found for container ${container} endpoint ${endpoint}`);
   }
