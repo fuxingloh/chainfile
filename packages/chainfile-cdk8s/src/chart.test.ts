@@ -9,6 +9,12 @@ import getPort from 'get-port';
 import { version } from '../package.json';
 import { CFChart } from './chart';
 
+global.Date.now = jest.fn(() => new Date('2024-01-01T00:00:00Z').getTime());
+
+afterAll(() => {
+  jest.restoreAllMocks();
+});
+
 const bitcoin_mainnet: Chainfile = {
   caip2: 'bip122:000000000019d6689c085ae165831e93',
   name: 'Bitcoin Mainnet',

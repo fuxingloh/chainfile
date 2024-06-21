@@ -190,7 +190,7 @@ exports[`bitcoin_mainnet.json should synth bitcoin_mainnet.json and match snapsh
             ],
             "resources": {
               "requests": {
-                "storage": "600Gi",
+                "storage": "737280Mi",
               },
             },
           },
