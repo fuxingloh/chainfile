@@ -1,17 +1,11 @@
 import * as schema from '@chainfile/schema';
 import { Names } from 'cdk8s';
-import {
-  KubeStatefulSet,
-  ObjectMeta,
-  PodSpec,
-  PodTemplateSpec,
-  Quantity,
-  StatefulSetSpec,
-} from 'cdk8s-plus-25/lib/imports/k8s';
+import { KubeStatefulSet, ObjectMeta, PodSpec, PodTemplateSpec, StatefulSetSpec } from 'cdk8s-plus-25/lib/imports/k8s';
 import { Construct } from 'constructs';
 
 import { CFAgent, CFContainer } from './container';
 import { CFParamsSource } from './params';
+import { CFEphemeralVolume, CFPersistentVolumeClaimSpec } from './volume';
 
 export interface CFStatefulSetProps {
   readonly chainfile: schema.Chainfile;
@@ -49,12 +43,10 @@ export class CFStatefulSet extends KubeStatefulSet {
             volumes: Object.entries(volumes)
               .filter(([, volume]) => volume.type === 'ephemeral')
               .map(([volumeName, volume]) => {
-                return {
+                return CFEphemeralVolume({
                   name: volumeName,
-                  emptyDir: {
-                    sizeLimit: Quantity.fromString(volume.size),
-                  },
-                };
+                  volume: volume,
+                });
               }),
             containers: [
               CFAgent({ params: props.params, chainfile: props.chainfile }),
@@ -68,9 +60,7 @@ export class CFStatefulSet extends KubeStatefulSet {
                       return mount.volume;
                     }
 
-                    return Names.toDnsLabel(scope, {
-                      extra: ['pvc', mount.volume],
-                    });
+                    return Names.toDnsLabel(scope, { extra: ['pvc', mount.volume] });
                   },
                 });
               }),
@@ -84,15 +74,9 @@ export class CFStatefulSet extends KubeStatefulSet {
               metadata: {
                 name: Names.toDnsLabel(scope, { extra: ['pvc', volumeName] }),
               },
-              spec: {
-                accessModes: ['ReadWriteOnce'],
-                resources: {
-                  requests: {
-                    // TODO(?): expansion support,
-                    storage: Quantity.fromString(volume.size),
-                  },
-                },
-              },
+              spec: CFPersistentVolumeClaimSpec({
+                volume: volume,
+              }),
             };
           }),
       },
