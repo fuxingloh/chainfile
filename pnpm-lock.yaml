@@ -170,23 +170,23 @@ importers:
         specifier: ^10.4.19
         version: 10.4.19(postcss@8.4.38)
       chainfile-bitcoin:
-        specifier: ^0.1.2
-        version: 0.1.2
+        specifier: ^0.2.0
+        version: 0.2.0
       chainfile-defichain:
-        specifier: ^0.1.2
-        version: 0.1.2
+        specifier: ^0.1.3
+        version: 0.1.3
       chainfile-ganache:
-        specifier: ^0.1.1
-        version: 0.1.1
+        specifier: ^0.2.0
+        version: 0.2.0
       chainfile-hardhat:
-        specifier: ^0.4.5
-        version: 0.4.5
+        specifier: ^0.4.6
+        version: 0.4.6
       chainfile-ord:
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.2.0
+        version: 0.2.0
       chainfile-solana:
-        specifier: ^0.2.2
-        version: 0.2.2
+        specifier: ^0.2.3
+        version: 0.2.3
       postcss:
         specifier: ^8.4.38
         version: 8.4.38
@@ -1484,23 +1484,23 @@ packages:
       - follow-redirects
       - yaml
 
-  chainfile-bitcoin@0.1.2:
-    resolution: {integrity: sha512-2M474C4rAToPn/O6SkZjs7NFS0AR4JZbUL0D0ngly6lnidezPCmBFuTESqfO0dZ+ux1e01LARWM5qC/3kU7uxQ==}
+  chainfile-bitcoin@0.2.0:
+    resolution: {integrity: sha512-OBcl51hfqEm53337eDyDPcJKfklTeNEaa900vgSroADewp96QGsTEUqxIjr6LClQtSOT6/WH98h2MzQ4+BcGOg==}
 
-  chainfile-defichain@0.1.2:
-    resolution: {integrity: sha512-ufn+43JCePNCtOTg7KXbTCcKfCqWTaghBDLKXwhLYsgCP3XOij0CIjk6yBm8bnEiztJ7SC9YVIrclJWy5xzEWQ==}
+  chainfile-defichain@0.1.3:
+    resolution: {integrity: sha512-fjjshy9MYpncpAsErMBBPXx9iT0Jr9nSJz3snYD3pUk5yFtnD8o3R90HCCJOV1XR2fxTDJkCBNgk4WUdaP9xsw==}
 
-  chainfile-ganache@0.1.1:
-    resolution: {integrity: sha512-ELsORhx/UWd8S0ICuBqlSx/oF/32g7A12VHd2pcHaH+ZnP6cRa9ZJgNgucb1lzShxcPgAx57Ckk9+ozlG7MaCA==}
+  chainfile-ganache@0.2.0:
+    resolution: {integrity: sha512-f8yxTPJA/ifQ21BRIguoF9y4qgEZFuhH9frUo9oy+HG0NtsuHX2UMMhPgBunJmT9NEZOQfWXzXz4uxEUGRSREA==}
 
-  chainfile-hardhat@0.4.5:
-    resolution: {integrity: sha512-rtmKx812cIfiqX1sJQV61xSTBKoVXGhfsHca7l2ADvwTWUPRoZyE+LiMkcuPiP4//lQ/qwFGI1je5g4GDobUfg==}
+  chainfile-hardhat@0.4.6:
+    resolution: {integrity: sha512-iyD4Afb03cEhi5JI3c65G7wWczrnkRq1ePay2KPSPdzeBI8jS/aiwTVe76E87HWnLmAfvJbw1iZTrpW6omx/7A==}
 
-  chainfile-ord@0.1.0:
-    resolution: {integrity: sha512-T/6zrow9eTlpRiNtLzuMcMvfRc4jtlFSziMSHTgdj+3KAcW0IbUA+yDNAmX4qVF6xlQpLH8GOu9Iv/EAeEUmwA==}
+  chainfile-ord@0.2.0:
+    resolution: {integrity: sha512-XaOsyGtOdl/Eb3aNZzmGfVpCQUuzOgKYBhUslVQVs+83b2pyaDRX+EzQmGTXUrJsjKk98J48dGfe9QMA3lggtw==}
 
-  chainfile-solana@0.2.2:
-    resolution: {integrity: sha512-eF8JdO+4iwEpqckC5lFuLxkYtCRTVpeYl544pGzIHDfmIHhgiCQWZekG+epUstJwsNGWkSSzW8dJ23eAjNzEiw==}
+  chainfile-solana@0.2.3:
+    resolution: {integrity: sha512-osK+ZOgrqO8wudP1NF21uEylJLTHPtsrqb8EOuJyS6uEj/kztJz1nvlbY9ardDBB3642F422sI05ALuVGKl0MA==}
 
   chalk@2.3.0:
     resolution: {integrity: sha512-Az5zJR2CBujap2rqXGaJKaPHyJ0IrUimvYNX+ncCy8PJP4ltOGTrHUIo097ZaL2zMeKYpiCdqDvS6zdrTFok3Q==}
@@ -6520,17 +6520,17 @@ snapshots:
     dependencies:
       constructs: 10.3.0
 
-  chainfile-bitcoin@0.1.2: {}
+  chainfile-bitcoin@0.2.0: {}
 
-  chainfile-defichain@0.1.2: {}
+  chainfile-defichain@0.1.3: {}
 
-  chainfile-ganache@0.1.1: {}
+  chainfile-ganache@0.2.0: {}
 
-  chainfile-hardhat@0.4.5: {}
+  chainfile-hardhat@0.4.6: {}
 
-  chainfile-ord@0.1.0: {}
+  chainfile-ord@0.2.0: {}
 
-  chainfile-solana@0.2.2: {}
+  chainfile-solana@0.2.3: {}
 
   chalk@2.3.0:
     dependencies:
