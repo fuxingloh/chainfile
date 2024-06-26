@@ -40,6 +40,6 @@
     "ajv-formats": "^3.0.1"
   },
   "devDependencies": {
-    "json-schema-to-typescript": "^14.0.4"
+    "json-schema-to-typescript": "^14.1.0"
   }
 }
