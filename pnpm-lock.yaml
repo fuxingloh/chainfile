@@ -83,11 +83,11 @@ importers:
         version: link:../chainfile-schema
     devDependencies:
       cdk8s:
-        specifier: ^2.68.81
-        version: 2.68.81(constructs@10.3.0)
+        specifier: ^2.68.83
+        version: 2.68.83(constructs@10.3.0)
       cdk8s-plus-25:
         specifier: ^2.22.79
-        version: 2.22.79(cdk8s@2.68.81(constructs@10.3.0))(constructs@10.3.0)
+        version: 2.22.79(cdk8s@2.68.83(constructs@10.3.0))(constructs@10.3.0)
       constructs:
         specifier: ^10.3.0
         version: 10.3.0
@@ -1474,8 +1474,8 @@ packages:
     bundledDependencies:
       - minimatch
 
-  cdk8s@2.68.81:
-    resolution: {integrity: sha512-044RW04hXVP6rPxd4j2IRACN1rPcxc6YpT2pdycbE0WKRg4ZYPDAkTeknq+/ESiBrXF4xsIuqDsnLQ3QClqPFw==}
+  cdk8s@2.68.83:
+    resolution: {integrity: sha512-RB3EjtcE3mbWIkAxJ5t6HWNu1H9/VeFCJwIgt+59thdIxpDAxUWFsJ4BypV8l5m7/M2KKfha6iAjTy5U9QK1uA==}
     engines: {node: '>= 16.20.0'}
     peerDependencies:
       constructs: ^10
@@ -6506,9 +6506,9 @@ snapshots:
 
   ccount@2.0.1: {}
 
-  cdk8s-plus-25@2.22.79(cdk8s@2.68.81(constructs@10.3.0))(constructs@10.3.0):
+  cdk8s-plus-25@2.22.79(cdk8s@2.68.83(constructs@10.3.0))(constructs@10.3.0):
     dependencies:
-      cdk8s: 2.68.81(constructs@10.3.0)
+      cdk8s: 2.68.83(constructs@10.3.0)
       constructs: 10.3.0
     optionalDependencies:
       backport: 8.5.0
@@ -6516,7 +6516,7 @@ snapshots:
       - debug
       - encoding
 
-  cdk8s@2.68.81(constructs@10.3.0):
+  cdk8s@2.68.83(constructs@10.3.0):
     dependencies:
       constructs: 10.3.0
 
