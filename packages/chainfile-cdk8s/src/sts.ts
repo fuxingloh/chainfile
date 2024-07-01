@@ -15,6 +15,12 @@ export interface CFStatefulSetProps {
     readonly template?: Omit<PodTemplateSpec, 'spec'> & {
       readonly spec?: Omit<PodSpec, 'hostAliases' | 'volumes' | 'containers'>;
     };
+    readonly volumeClaimTemplates?: {
+      readonly metadata?: Omit<ObjectMeta, 'name'>;
+      readonly spec?: {
+        readonly storageClassName?: string;
+      };
+    };
   };
 }
 
@@ -72,9 +78,11 @@ export class CFStatefulSet extends KubeStatefulSet {
           .map(([volumeName, volume]) => {
             return {
               metadata: {
+                ...props.spec.volumeClaimTemplates?.metadata,
                 name: Names.toDnsLabel(scope, { extra: ['pvc', volumeName] }),
               },
               spec: CFPersistentVolumeClaimSpec({
+                storageClassName: props.spec.volumeClaimTemplates?.spec?.storageClassName,
                 volume: volume,
               }),
             };

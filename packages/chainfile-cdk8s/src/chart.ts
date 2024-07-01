@@ -24,6 +24,7 @@ export interface CFChartProps {
 
   spec: {
     replicas?: number;
+    storageClassName?: string;
 
     /**
      * Ports to expose on the service.
@@ -80,6 +81,11 @@ export class CFChart extends Chart {
         replicas: props.spec.replicas,
         selector: {
           matchLabels: labels,
+        },
+        volumeClaimTemplates: {
+          spec: {
+            storageClassName: props.spec.storageClassName,
+          },
         },
       },
     });
