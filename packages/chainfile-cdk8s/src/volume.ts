@@ -13,9 +13,13 @@ export function CFEphemeralVolume(props: { name: string; volume: schema.Volume }
   };
 }
 
-export function CFPersistentVolumeClaimSpec(props: { volume: schema.Volume }): PersistentVolumeClaimSpec {
+export function CFPersistentVolumeClaimSpec(props: {
+  storageClassName?: string;
+  volume: schema.Volume;
+}): PersistentVolumeClaimSpec {
   return {
     accessModes: ['ReadWriteOnce'],
+    storageClassName: props.storageClassName,
     resources: {
       requests: {
         storage: calculateStorage(props.volume, {
