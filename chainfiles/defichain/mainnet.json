@@ -1,0 +1,104 @@
+{
+  "$schema": "https://chainfile.org/schema.json",
+  "caip2": "bip122:279b1a87aedc7b9471d4ad4e5f12967a",
+  "name": "DeFiChain Mainnet",
+  "params": {
+    "version": {
+      "description": "The version of defid to run, refer to https://hub.docker.com/r/defi/defichain/tags for available versions/tag.",
+      "default": "4.1.0"
+    },
+    "rpc_user": {
+      "description": "Username for defid RPC using Basic HTTP authentication scheme defined in RFC 7617. You may set this value to a custom value or blank it empty to generate a random value.",
+      "secret": true,
+      "default": {
+        "random": {
+          "bytes": 16,
+          "encoding": "hex"
+        }
+      }
+    },
+    "rpc_password": {
+      "description": "Password for defid RPC using Basic HTTP authentication scheme defined in RFC 7617. You may set this value to a custom value or leave it empty to generate a random value.",
+      "secret": true,
+      "default": {
+        "random": {
+          "bytes": 16,
+          "encoding": "hex"
+        }
+      }
+    }
+  },
+  "volumes": {
+    "data": {
+      "type": "persistent",
+      "size": "100Gi"
+    }
+  },
+  "containers": {
+    "defid": {
+      "image": "docker.io/defi/defichain",
+      "tag": {
+        "$param": "version"
+      },
+      "source": "https://github.com/DeFiCh/ain",
+      "endpoints": {
+        "p2p": {
+          "port": 8555
+        },
+        "rpc": {
+          "port": 8554,
+          "protocol": "HTTP JSON-RPC 2.0",
+          "authorization": {
+            "type": "HttpBasic",
+            "username": {
+              "$param": "rpc_user"
+            },
+            "password": {
+              "$param": "rpc_password"
+            }
+          },
+          "probes": {
+            "readiness": {
+              "method": "getblockchaininfo",
+              "params": [],
+              "match": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "blocks": {
+                      "type": "number"
+                    }
+                  },
+                  "required": ["blocks"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "resources": {
+        "cpu": 1,
+        "memory": 4096
+      },
+      "command": [
+        "sh",
+        "-c",
+        "defid -maxconnections=512 -printtoconsole -rpcallowip=0.0.0.0/0 -rpcbind=0.0.0.0 -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} -txindex=1 -acindex=1"
+      ],
+      "environment": {
+        "RPC_USER": {
+          "$param": "rpc_user"
+        },
+        "RPC_PASSWORD": {
+          "$param": "rpc_password"
+        }
+      },
+      "mounts": [
+        {
+          "volume": "data",
+          "mountPath": "/data"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "$schema": "https://chainfile.org/schema.json",
+  "caip2": "bip122:d744db74fb70ed42767ae028a129365f",
+  "name": "DeFiChain Regtest (defid and whale)",
+  "params": {
+    "defid_version": "4.1.0",
+    "jellyfish_version": "4.0.7"
+  },
+  "volumes": {
+    "data": {
+      "type": "persistent",
+      "size": "1Gi"
+    }
+  },
+  "containers": {
+    "defid": {
+      "image": "docker.io/defi/defichain",
+      "tag": {
+        "$param": "defid_version"
+      },
+      "source": "https://github.com/DeFiCh/ain",
+      "endpoints": {
+        "p2p": {
+          "port": 19555
+        },
+        "rpc": {
+          "port": 19554,
+          "protocol": "HTTP JSON-RPC 2.0",
+          "authorization": {
+            "type": "HttpBasic",
+            "username": "user",
+            "password": "pass"
+          },
+          "probes": {
+            "readiness": {
+              "method": "getblockchaininfo",
+              "params": [],
+              "match": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "blocks": {
+                      "type": "number"
+                    }
+                  },
+                  "required": ["blocks"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "resources": {
+        "cpu": 0.25,
+        "memory": 256
+      },
+      "command": [
+        "defid",
+        "-maxconnections=512",
+        "-printtoconsole",
+        "-rpcallowip=0.0.0.0/0",
+        "-rpcbind=0.0.0.0",
+        "-rpcuser=user",
+        "-rpcpassword=pass",
+        "-txindex=1",
+        "-acindex=1",
+        "-regtest=1",
+        "-jellyfish_regtest=1",
+        "-txnotokens=0",
+        "-amkheight=0",
+        "-bayfrontheight=1",
+        "-bayfrontgardensheight=2",
+        "-clarkequayheight=3",
+        "-dakotaheight=4",
+        "-dakotacrescentheight=5",
+        "-eunosheight=6",
+        "-eunospayaheight=7",
+        "-fortcanningheight=8"
+      ],
+      "mounts": [
+        {
+          "volume": "data",
+          "mountPath": "/data"
+        }
+      ]
+    },
+    "whale": {
+      "image": "ghcr.io/birthdayresearch/whale-api",
+      "tag": {
+        "$param": "jellyfish_version"
+      },
+      "source": "https://github.com/BirthdayResearch/jellyfishsdk",
+      "endpoints": {
+        "api": {
+          "port": 3000,
+          "protocol": "HTTP REST",
+          "probes": {
+            "readiness": {
+              "method": "GET",
+              "path": "/_actuator/probes/liveness",
+              "match": {
+                "status": 200
+              }
+            }
+          }
+        }
+      },
+      "environment": {
+        "WHALE_DEFID_URL": "http://user:pass@defid:19554",
+        "WHALE_NETWORK": "regtest",
+        "WHALE_VERSION": "v0"
+      },
+      "resources": {
+        "cpu": 0.25,
+        "memory": 256
+      }
+    }
+  }
+}

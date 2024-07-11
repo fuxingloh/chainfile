@@ -1,0 +1,42 @@
+{
+  "$schema": "https://chainfile.org/schema.json",
+  "caip2": "eip155:1337",
+  "name": "Ganache",
+  "params": {
+    "version": {
+      "description": "Ganache version to use. See github.com/trufflesuite/ganache/releases",
+      "default": "v7.9.2"
+    }
+  },
+  "description": "Ganache is an Ethereum simulator that makes developing Ethereum applications faster, easier, and safer. It includes all popular RPC functions and features (like events) and can be run deterministically to make development a breeze.",
+  "containers": {
+    "ganache": {
+      "image": "docker.io/trufflesuite/ganache",
+      "tag": {
+        "$param": "version"
+      },
+      "source": "https://github.com/trufflesuite/ganache",
+      "resources": {
+        "cpu": 0.25,
+        "memory": 256
+      },
+      "endpoints": {
+        "rpc": {
+          "port": 8545,
+          "protocol": "HTTP JSON-RPC 2.0",
+          "probes": {
+            "readiness": {
+              "params": [],
+              "method": "eth_blockNumber",
+              "match": {
+                "result": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

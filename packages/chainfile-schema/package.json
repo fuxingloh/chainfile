@@ -4,7 +4,7 @@
   "private": false,
   "description": "A schema-oriented ecosystem packed with compute primitives such as cpu, memory, env, volume, snapshot, endpoint, and probes that can be composed to launch any blockchain node on any container-orchestration platform.",
   "repository": {
-    "url": "git+https://github.com/vetumorg/chainfile"
+    "url": "git+https://github.com/fuxingloh/chainfile"
   },
   "license": "MIT",
   "main": "index.js",

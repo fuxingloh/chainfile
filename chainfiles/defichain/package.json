@@ -1,19 +1,15 @@
 {
-  "name": "@chainfile/docker",
+  "name": "chainfile-defichain",
   "version": "0.0.0",
   "private": false,
   "repository": {
     "url": "git+https://github.com/fuxingloh/chainfile"
   },
-  "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "license": "MPL-2.0",
   "files": [
-    "dist/*"
+    "*.json"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
-    "clean": "rm -rf dist",
     "lint": "eslint .",
     "test": "jest"
   },
@@ -29,11 +25,7 @@
   "jest": {
     "preset": "@workspace/jest"
   },
-  "dependencies": {
-    "@chainfile/schema": "workspace:^",
-    "js-yaml": "^4.1.0"
-  },
   "devDependencies": {
-    "@types/js-yaml": "^4.0.9"
+    "@chainfile/testcontainers": "workspace:*"
   }
 }

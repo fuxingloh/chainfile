@@ -1,0 +1,98 @@
+{
+  "$schema": "https://chainfile.org/schema.json",
+  "caip2": "bip122:000000000019d6689c085ae165831e93",
+  "name": "Bitcoin Mainnet",
+  "params": {
+    "rpc_user": {
+      "description": "Username for Basic HTTP authentication to the RPC server.",
+      "secret": true,
+      "default": {
+        "random": {
+          "bytes": 16,
+          "encoding": "hex"
+        }
+      }
+    },
+    "rpc_password": {
+      "description": "Password for Basic HTTP authentication to the RPC server.",
+      "secret": true,
+      "default": {
+        "random": {
+          "bytes": 16,
+          "encoding": "hex"
+        }
+      }
+    }
+  },
+  "volumes": {
+    "data": {
+      "type": "persistent",
+      "size": "600Gi",
+      "expansion": {
+        "startFrom": "2024-01-01",
+        "monthlyRate": "20Gi"
+      }
+    }
+  },
+  "containers": {
+    "bitcoind": {
+      "image": "docker.io/kylemanna/bitcoind",
+      "tag": "latest",
+      "source": "https://github.com/kylemanna/docker-bitcoind",
+      "endpoints": {
+        "p2p": {
+          "port": 8333
+        },
+        "rpc": {
+          "port": 8332,
+          "protocol": "HTTP JSON-RPC 2.0",
+          "authorization": {
+            "type": "HttpBasic",
+            "username": {
+              "$param": "rpc_user"
+            },
+            "password": {
+              "$param": "rpc_password"
+            }
+          },
+          "probes": {
+            "readiness": {
+              "method": "getblockchaininfo",
+              "params": [],
+              "match": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "blocks": {
+                      "type": "number"
+                    }
+                  },
+                  "required": ["blocks"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "resources": {
+        "cpu": 1,
+        "memory": 2048
+      },
+      "environment": {
+        "DISABLEWALLET": "1",
+        "RPCUSER": {
+          "$param": "rpc_user"
+        },
+        "RPCPASSWORD": {
+          "$param": "rpc_password"
+        }
+      },
+      "mounts": [
+        {
+          "volume": "data",
+          "mountPath": "/bitcoin/.bitcoin"
+        }
+      ]
+    }
+  }
+}

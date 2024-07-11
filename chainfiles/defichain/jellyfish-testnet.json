@@ -1,0 +1,170 @@
+{
+  "$schema": "https://chainfile.org/schema.json",
+  "caip2": "bip122:d744db74fb70ed42767ae028a129365f",
+  "name": "DeFiChain Testnet (defid and whale)",
+  "params": {
+    "defid_version": "4.1.0",
+    "jellyfish_version": "4.0.7",
+    "rpc_user": {
+      "description": "Username for defid RPC using Basic HTTP authentication scheme defined in RFC 7617. You may set this value to a custom value or blank it empty to generate a random value.",
+      "secret": true,
+      "default": {
+        "random": {
+          "bytes": 16,
+          "encoding": "hex"
+        }
+      }
+    },
+    "rpc_password": {
+      "description": "Password for defid RPC using Basic HTTP authentication scheme defined in RFC 7617. You may set this value to a custom value or leave it empty to generate a random value.",
+      "secret": true,
+      "default": {
+        "random": {
+          "bytes": 16,
+          "encoding": "hex"
+        }
+      }
+    },
+    "defid_url": {
+      "description": "Endpoint to the defid node RPC endpoint, used by whale-api to connect to defid.",
+      "secret": true,
+      "default": "http://${rpc_user}:${rpc_password}@defid:18554"
+    }
+  },
+  "volumes": {
+    "data": {
+      "type": "persistent",
+      "size": "100Gi"
+    }
+  },
+  "containers": {
+    "defid": {
+      "image": "docker.io/defi/defichain",
+      "tag": {
+        "$param": "defid_version"
+      },
+      "source": "https://github.com/DeFiCh/ain",
+      "endpoints": {
+        "p2p": {
+          "port": 18555
+        },
+        "rpc": {
+          "port": 18554,
+          "protocol": "HTTP JSON-RPC 2.0",
+          "authorization": {
+            "type": "HttpBasic",
+            "username": {
+              "$param": "rpc_user"
+            },
+            "password": {
+              "$param": "rpc_password"
+            }
+          },
+          "probes": {
+            "readiness": {
+              "method": "getblockchaininfo",
+              "params": [],
+              "match": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "initialBlockDownload": {
+                      "const": false
+                    }
+                  },
+                  "required": ["initialBlockDownload"]
+                }
+              }
+            },
+            "liveness": {
+              "method": "getblockchaininfo",
+              "params": [],
+              "match": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "blocks": {
+                      "type": "number"
+                    }
+                  },
+                  "required": ["blocks"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "resources": {
+        "cpu": 1,
+        "memory": 2048
+      },
+      "command": [
+        "sh",
+        "-c",
+        "defid -testnet=1 -maxconnections=512 -printtoconsole -rpcallowip=0.0.0.0/0 -rpcbind=0.0.0.0 -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} -txindex=1 -acindex=1"
+      ],
+      "environment": {
+        "RPC_USER": {
+          "$param": "rpc_user"
+        },
+        "RPC_PASSWORD": {
+          "$param": "rpc_password"
+        }
+      },
+      "mounts": [
+        {
+          "volume": "data",
+          "mountPath": "/data"
+        }
+      ]
+    },
+    "whale": {
+      "image": "ghcr.io/birthdayresearch/whale-api",
+      "tag": {
+        "$param": "jellyfish_version"
+      },
+      "source": "https://github.com/BirthdayResearch/jellyfishsdk",
+      "endpoints": {
+        "api": {
+          "port": 3000,
+          "protocol": "HTTP REST",
+          "probes": {
+            "liveness": {
+              "method": "GET",
+              "path": "/_actuator/probes/liveness",
+              "match": {
+                "status": 200
+              }
+            },
+            "readiness": {
+              "method": "GET",
+              "path": "/_actuator/probes/readiness",
+              "match": {
+                "status": 200
+              }
+            }
+          }
+        }
+      },
+      "environment": {
+        "WHALE_DEFID_URL": {
+          "$param": "defid_url"
+        },
+        "WHALE_NETWORK": "testnet",
+        "WHALE_VERSION": "v0",
+        "WHALE_DATABASE_LEVEL_LOCATION": "/data"
+      },
+      "resources": {
+        "cpu": 1,
+        "memory": 2048
+      },
+      "mounts": [
+        {
+          "volume": "data",
+          "mountPath": "/data",
+          "subPath": "whale"
+        }
+      ]
+    }
+  }
+}

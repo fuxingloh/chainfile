@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/vetumorg/chainfile">
+  <a href="https://github.com/fuxingloh/chainfile">
     <h3 align="center">Chainfile</h3>
     <p align="center">Define, Test, Deploy, Scale<br>Blockchain</p>
   </a>
@@ -125,10 +125,9 @@ class BitcoinK8sChart extends Chart {
 
 ## License
 
-This project is divided into two main parts, each with its own licensing:
-
-- **`./packages`:** The source code for packages is licensed under the MIT License. For more details, see the [MIT License](./packages/LICENSE) file.
-- **`./definitions`:** The definitions and related components are licensed under the Mozilla Public License 2.0 (MPL-2.0). For more information, refer to the [MPL-2.0 License](./definitions/LICENSE) file.
+This project is separately licensed under two different licenses.
+MIT for the `./packages` which provided the functionality
+and MPL-2.0 for the `./definitions` which hosts how the blockchain nodes are defined.
 
 This dual-licensing approach best accommodates the usage of both the packages and the definitions,
 ensuring flexibility for package users while protecting the integrity of the definitions.

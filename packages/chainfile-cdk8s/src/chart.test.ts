@@ -188,7 +188,7 @@ describe.skip('repl', () => {
     it('should create cluster', async () => {
       execSync(`kind create cluster --name ${cluster} --config kind.k8s.yaml`, { stdio: 'inherit' });
       execSync(`kind load docker-image docker.io/kylemanna/bitcoind:latest --name ${cluster}`, { stdio: 'inherit' });
-      execSync(`kind load docker-image ghcr.io/vetumorg/chainfile-agent:${version} --name ${cluster}`, {
+      execSync(`kind load docker-image ghcr.io/fuxingloh/chainfile-agent:${version} --name ${cluster}`, {
         stdio: 'inherit',
       });
     });
@@ -226,7 +226,7 @@ describe('kind (k8s-in-docker)', () => {
     // Preload images from local environment to speed up tests
     execSync('docker pull kylemanna/bitcoind:latest', { stdio: 'inherit' });
     execSync(`kind load docker-image docker.io/kylemanna/bitcoind:latest --name ${cluster}`, { stdio: 'inherit' });
-    execSync(`kind load docker-image ghcr.io/vetumorg/chainfile-agent:${version} --name ${cluster}`, {
+    execSync(`kind load docker-image ghcr.io/fuxingloh/chainfile-agent:${version} --name ${cluster}`, {
       stdio: 'inherit',
     });
   });

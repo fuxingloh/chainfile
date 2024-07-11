@@ -1,0 +1,103 @@
+{
+  "$schema": "https://chainfile.org/schema.json",
+  "caip2": "bip122:0f9188f13cb7b2c71f2a335e3a4fc328",
+  "name": "Bitcoin Regtest",
+  "params": {
+    "bitcoind_rpc_user": "user",
+    "bitcoind_rpc_password": "password",
+    "ord_version": "0.18.5"
+  },
+  "containers": {
+    "bitcoind": {
+      "image": "docker.io/kylemanna/bitcoind",
+      "tag": "latest",
+      "source": "https://github.com/kylemanna/docker-bitcoind",
+      "command": ["btc_oneshot", "-fallbackfee=0.00000200", "-rpcbind=:8332", "-rpcallowip=0.0.0.0/0"],
+      "endpoints": {
+        "p2p": {
+          "port": 18445
+        },
+        "rpc": {
+          "port": 8332,
+          "protocol": "HTTP JSON-RPC 2.0",
+          "authorization": {
+            "type": "HttpBasic",
+            "username": {
+              "$param": "bitcoind_rpc_user"
+            },
+            "password": {
+              "$param": "bitcoind_rpc_password"
+            }
+          },
+          "probes": {
+            "readiness": {
+              "method": "getblockchaininfo",
+              "params": [],
+              "match": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "blocks": {
+                      "type": "number"
+                    }
+                  },
+                  "required": ["blocks"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "resources": {
+        "cpu": 0.25,
+        "memory": 256
+      },
+      "environment": {
+        "REGTEST": "1",
+        "RPCUSER": {
+          "$param": "bitcoind_rpc_user"
+        },
+        "RPCPASSWORD": {
+          "$param": "bitcoind_rpc_password"
+        }
+      }
+    },
+    "ord": {
+      "image": "ghcr.io/fuxingloh/ord-container",
+      "tag": {
+        "$param": "ord_version"
+      },
+      "source": "https://github.com/fuxingloh/ord-container",
+      "endpoints": {
+        "api": {
+          "port": 8080,
+          "protocol": "HTTP REST",
+          "probes": {
+            "readiness": {
+              "method": "GET",
+              "path": "/status",
+              "match": {
+                "status": 200
+              }
+            }
+          }
+        }
+      },
+      "resources": {
+        "cpu": 0.25,
+        "memory": 256
+      },
+      "environment": {
+        "ORD_CHAIN": "regtest",
+        "ORD_BITCOIN_HOST_PORT": "bitcoind:8332",
+        "ORD_BITCOIN_RPC_URL": "http://bitcoind:8332",
+        "ORD_BITCOIN_RPC_USERNAME": {
+          "$param": "bitcoind_rpc_user"
+        },
+        "ORD_BITCOIN_RPC_PASSWORD": {
+          "$param": "bitcoind_rpc_password"
+        }
+      }
+    }
+  }
+}

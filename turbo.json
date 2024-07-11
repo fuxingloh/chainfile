@@ -1,6 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["tsconfig.json"],
+  "ui": "tui",
   "tasks": {
     "clean": {
       "cache": false
@@ -17,7 +18,7 @@
       "cache": false
     },
     "test": {
-      "inputs": ["./src/**"],
+      "inputs": ["./src/**", "./**/*.test.ts"],
       "dependsOn": ["^build"]
     },
     "lint": {
