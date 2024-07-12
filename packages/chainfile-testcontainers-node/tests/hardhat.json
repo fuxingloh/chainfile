@@ -3,7 +3,7 @@
   "caip2": "eip155:31337",
   "name": "Hardhat",
   "params": {
-    "version": "2.22.1"
+    "version": "2.22.5"
   },
   "containers": {
     "hardhat": {
