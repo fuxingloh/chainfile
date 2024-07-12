@@ -5,7 +5,7 @@
   "params": {
     "bitcoind_rpc_user": "user",
     "bitcoind_rpc_password": "password",
-    "ord_version": "0.18.5"
+    "ord_version": "0.19.0"
   },
   "containers": {
     "bitcoind": {

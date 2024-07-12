@@ -6,7 +6,7 @@
   "params": {
     "version": {
       "description": "Hardhat version to use, the container image is built in chainfile-hardhat repository. Published in to ghcr.io/fuxingloh/hardhat-container, to see the available versions check github.com/fuxingloh/chainfile-hardhat/pkgs/container/hardhat",
-      "default": "2.22.5"
+      "default": "2.22.6"
     }
   },
   "containers": {
