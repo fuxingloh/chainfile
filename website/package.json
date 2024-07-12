@@ -32,12 +32,12 @@
     "@types/react": "^18.3.3",
     "@workspace/eslint-config-next": "workspace:*",
     "autoprefixer": "^10.4.19",
-    "chainfile-bitcoin": "^0.2.0",
-    "chainfile-defichain": "^0.1.3",
-    "chainfile-ganache": "^0.2.0",
-    "chainfile-hardhat": "^0.4.6",
-    "chainfile-ord": "^0.2.0",
-    "chainfile-solana": "^0.2.3",
+    "chainfile-bitcoin": "workspace:*",
+    "chainfile-defichain": "workspace:*",
+    "chainfile-ganache": "workspace:*",
+    "chainfile-hardhat": "workspace:*",
+    "chainfile-ord": "workspace:*",
+    "chainfile-solana": "workspace:*",
     "postcss": "^8.4.39",
     "tailwindcss": "^3.4.4"
   }
