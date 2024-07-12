@@ -89,7 +89,7 @@ exports[`bitcoin_mainnet.json should synth bitcoin_mainnet.json and match snapsh
                   },
                 },
               ],
-              "image": "ghcr.io/vetumorg/chainfile-agent:0.0.0",
+              "image": "ghcr.io/fuxingloh/chainfile-agent:0.0.0",
               "livenessProbe": {
                 "httpGet": {
                   "path": "/probes/liveness",
