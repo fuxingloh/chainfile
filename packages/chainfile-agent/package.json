@@ -3,15 +3,15 @@
   "version": "0.0.0",
   "private": false,
   "repository": {
-    "url": "git+https://github.com/vetumorg/chainfile"
+    "url": "git+https://github.com/fuxingloh/chainfile"
   },
   "license": "MIT",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
-    "build:docker": "docker buildx build --progress=plain -t ghcr.io/vetumorg/chainfile-agent:$(node -p \"require('./package.json').version\") -f Dockerfile ../../",
+    "build:docker": "docker buildx build --progress=plain -t ghcr.io/fuxingloh/chainfile-agent:$(node -p \"require('./package.json').version\") -f Dockerfile ../../",
     "clean": "rm -rf dist",
     "lint": "eslint .",
-    "push:docker": "docker buildx build --progress=plain -t ghcr.io/vetumorg/chainfile-agent:$(node -p \"require('./package.json').version\") -f Dockerfile ../../ --output type=registry --platform linux/amd64,linux/arm64",
+    "push:docker": "docker buildx build --progress=plain -t ghcr.io/fuxingloh/chainfile-agent:$(node -p \"require('./package.json').version\") -f Dockerfile ../../ --output type=registry --platform linux/amd64,linux/arm64",
     "test": "jest"
   },
   "lint-staged": {

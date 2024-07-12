@@ -144,7 +144,7 @@ describe('synth', () => {
       'services:',
       '  agent:',
       '    container_name: agent-suffix',
-      '    image: ghcr.io/vetumorg/chainfile-agent:0.0.0',
+      '    image: ghcr.io/fuxingloh/chainfile-agent:0.0.0',
       '    ports:',
       "      - '0:1569'",
       '    environment:',

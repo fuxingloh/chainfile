@@ -84,7 +84,7 @@ export class Compose {
     return {
       agent: {
         container_name: `agent-${this.suffix}`,
-        image: `ghcr.io/vetumorg/chainfile-agent:${version}`,
+        image: `ghcr.io/fuxingloh/chainfile-agent:${version}`,
         ports: ['0:1569'],
         environment: {
           // Docker compose automatically evaluate environment literals here

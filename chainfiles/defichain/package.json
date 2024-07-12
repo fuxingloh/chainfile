@@ -1,0 +1,31 @@
+{
+  "name": "chainfile-defichain",
+  "version": "0.0.0",
+  "private": false,
+  "repository": {
+    "url": "git+https://github.com/fuxingloh/chainfile"
+  },
+  "license": "MPL-2.0",
+  "files": [
+    "*.json"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "test": "jest"
+  },
+  "lint-staged": {
+    "*": [
+      "prettier --write --ignore-unknown"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "jest": {
+    "preset": "@workspace/jest"
+  },
+  "devDependencies": {
+    "@chainfile/testcontainers": "workspace:*"
+  }
+}

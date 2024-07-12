@@ -10,9 +10,6 @@ updates:
     schedule:
       interval: 'daily'
     groups:
-      chainfile:
-        patterns:
-          - 'chainfile-*'
       react:
         patterns:
           - 'react'

@@ -12,7 +12,7 @@ interface CFAgentProps {
 export function CFAgent(props: CFAgentProps): Container {
   return {
     name: 'agent',
-    image: `ghcr.io/vetumorg/chainfile-agent:${version}`,
+    image: `ghcr.io/fuxingloh/chainfile-agent:${version}`,
     ports: [
       {
         name: 'agent',
