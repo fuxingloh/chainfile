@@ -269,3 +269,4 @@ class Probes {
 //  Container: /api/condition-1  <-|
 //           : /api/condition-2  <-| Agent: /probes/liveness
 //           : /api/condition-3  <-|
+//  You should be able to check each condition individually.

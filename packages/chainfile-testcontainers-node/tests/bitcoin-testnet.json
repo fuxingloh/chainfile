@@ -1,0 +1,78 @@
+{
+  "$schema": "../node_modules/@chainfile/schema/schema.json",
+  "caip2": "bip122:0f9188f13cb7b2c71f2a335e3a4fc328",
+  "name": "Bitcoin Testnet",
+  "params": {
+    "rpc_user": "user",
+    "rpc_password": "pass"
+  },
+  "volumes": {
+    "data": {
+      "type": "persistent",
+      "size": "10Gi"
+    }
+  },
+  "containers": {
+    "bitcoind": {
+      "image": "docker.io/kylemanna/bitcoind",
+      "tag": "latest",
+      "source": "https://github.com/kylemanna/docker-bitcoind",
+      "command": ["btc_oneshot", "-testnet", "-fallbackfee=0.00000200", "-rpcbind=:8332", "-rpcallowip=0.0.0.0/0"],
+      "endpoints": {
+        "p2p": {
+          "port": 18334
+        },
+        "rpc": {
+          "port": 8332,
+          "protocol": "HTTP JSON-RPC 2.0",
+          "authorization": {
+            "type": "HttpBasic",
+            "username": {
+              "$param": "rpc_user"
+            },
+            "password": {
+              "$param": "rpc_password"
+            }
+          },
+          "probes": {
+            "readiness": {
+              "method": "getblockchaininfo",
+              "params": [],
+              "match": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "blocks": {
+                      "type": "number"
+                    }
+                  },
+                  "required": ["blocks"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "resources": {
+        "cpu": 0.25,
+        "memory": 256
+      },
+      "environment": {
+        "DISABLEWALLET": "0",
+        "RPCUSER": {
+          "$param": "rpc_user"
+        },
+        "RPCPASSWORD": {
+          "$param": "rpc_password"
+        }
+      },
+      "mounts": [
+        {
+          "volume": "data",
+          "mountPath": "/bitcoin/.bitcoin",
+          "subPath": "bitcoind"
+        }
+      ]
+    }
+  }
+}
