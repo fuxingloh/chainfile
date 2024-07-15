@@ -29,7 +29,7 @@
   "dependencies": {
     "@chainfile/schema": "workspace:^",
     "@trpc/server": "^10.45.2",
-    "ajv": "^8.16.0",
+    "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "debug": "^4.3.5",
     "trpc-openapi": "^1.2.0",
