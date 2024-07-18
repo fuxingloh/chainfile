@@ -32,6 +32,6 @@
   "dependencies": {
     "@chainfile/docker": "workspace:^",
     "@chainfile/schema": "workspace:^",
-    "testcontainers": "^10.10.3"
+    "testcontainers": "^10.10.4"
   }
 }
