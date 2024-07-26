@@ -39,6 +39,6 @@
     "chainfile-ord": "workspace:*",
     "chainfile-solana": "workspace:*",
     "postcss": "^8.4.39",
-    "tailwindcss": "^3.4.4"
+    "tailwindcss": "^3.4.7"
   }
 }
