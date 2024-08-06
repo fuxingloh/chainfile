@@ -34,7 +34,7 @@
     "@chainfile/schema": "workspace:^"
   },
   "devDependencies": {
-    "cdk8s": "^2.68.86",
+    "cdk8s": "^2.68.92",
     "cdk8s-plus-25": "^2.22.79",
     "constructs": "^10.3.0",
     "get-port": "^5.1.1",
