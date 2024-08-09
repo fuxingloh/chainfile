@@ -31,14 +31,14 @@
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@workspace/eslint-config-next": "workspace:*",
-    "autoprefixer": "^10.4.19",
+    "autoprefixer": "^10.4.20",
     "chainfile-bitcoin": "workspace:*",
     "chainfile-defichain": "workspace:*",
     "chainfile-ganache": "workspace:*",
     "chainfile-hardhat": "workspace:*",
     "chainfile-ord": "workspace:*",
     "chainfile-solana": "workspace:*",
-    "postcss": "^8.4.39",
+    "postcss": "^8.4.41",
     "tailwindcss": "^3.4.4"
   }
 }
